@@ -1,0 +1,445 @@
+object Form1: TForm1
+  Left = 275
+  Height = 404
+  Top = 142
+  Width = 529
+  Caption = 'Form1'
+  ClientHeight = 404
+  ClientWidth = 529
+  OnCreate = FormCreate
+  LCLVersion = '1.2.6.0'
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 454
+    Top = 0
+    Width = 529
+    ActivePage = TabInfo
+    TabIndex = 3
+    TabOrder = 0
+    OnChange = PageControl1Change
+    object TabRent: TTabSheet
+      Caption = 'Ausleihen'
+      ClientHeight = 428
+      ClientWidth = 521
+      object EdStud: TEdit
+        Left = 8
+        Height = 21
+        Top = 64
+        Width = 408
+        TabOrder = 0
+      end
+      object EdBook: TEdit
+        Left = 8
+        Height = 21
+        Top = 136
+        Width = 408
+        TabOrder = 1
+      end
+      object LbStudInstruct: TLabel
+        Left = 8
+        Height = 26
+        Top = 25
+        Width = 400
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        ParentColor = False
+      end
+      object LbStudInstruct1: TLabel
+        Left = 8
+        Height = 13
+        Top = 112
+        Width = 388
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
+        ParentColor = False
+      end
+      object BtRent: TButton
+        Left = 8
+        Height = 25
+        Top = 184
+        Width = 75
+        Caption = 'Ausleihen'
+        TabOrder = 2
+      end
+      object LbStudName: TLabel
+        Left = 8
+        Height = 13
+        Top = 88
+        Width = 60
+        Caption = 'LbStudName'
+        ParentColor = False
+      end
+      object LbBookName: TLabel
+        Left = 8
+        Height = 13
+        Top = 160
+        Width = 61
+        Caption = 'LbBookName'
+        ParentColor = False
+      end
+    end
+    object TabRet: TTabSheet
+      Caption = 'Zurückgeben'
+      ClientHeight = 428
+      ClientWidth = 521
+      OnContextPopup = TabRetContextPopup
+      object EdStud1: TEdit
+        Left = 8
+        Height = 21
+        Top = 64
+        Width = 408
+        TabOrder = 0
+      end
+      object EdBook1: TEdit
+        Left = 8
+        Height = 21
+        Top = 136
+        Width = 408
+        TabOrder = 1
+      end
+      object LbStudInstruct2: TLabel
+        Left = 8
+        Height = 26
+        Top = 25
+        Width = 400
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        ParentColor = False
+      end
+      object LbStudInstruct3: TLabel
+        Left = 8
+        Height = 13
+        Top = 112
+        Width = 388
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
+        ParentColor = False
+      end
+      object BtRet: TButton
+        Left = 8
+        Height = 25
+        Top = 184
+        Width = 75
+        Caption = 'Zurückgeben'
+        TabOrder = 2
+      end
+      object LbStudName1: TLabel
+        Left = 8
+        Height = 13
+        Top = 88
+        Width = 66
+        Caption = 'LbStudName1'
+        ParentColor = False
+      end
+      object LbBookName1: TLabel
+        Left = 8
+        Height = 13
+        Top = 160
+        Width = 67
+        Caption = 'LbBookName1'
+        ParentColor = False
+      end
+    end
+    object TabAdd: TTabSheet
+      Caption = 'Einpflegen'
+      ClientHeight = 428
+      ClientWidth = 521
+      object EdAddBookName: TEdit
+        Left = 232
+        Height = 21
+        Top = 8
+        Width = 208
+        TabOrder = 0
+      end
+      object EdAddBookISBN: TEdit
+        Left = 232
+        Height = 21
+        Top = 40
+        Width = 208
+        TabOrder = 1
+      end
+      object SEAddBookQuantity: TSpinEdit
+        Left = 232
+        Height = 21
+        Top = 104
+        Width = 50
+        TabOrder = 2
+      end
+      object CBSubject: TComboBox
+        Left = 232
+        Height = 21
+        Top = 72
+        Width = 100
+        ItemHeight = 13
+        ItemIndex = 5
+        Items.Strings = (
+          'Arbeitsgemeinschaft'
+          'Biologie'
+          'Chemie'
+          'Chinesisch'
+          'Deutsch'
+          'Englisch'
+          'Ethik'
+          'Französisch'
+          'Geographie'
+          'Geschichte'
+          'Informatik'
+          'Kunst'
+          'Latein'
+          'Mathe'
+          'Musik'
+          'NaWi'
+          'Philosophie'
+          'Physik'
+          'Politikwissenschaften'
+          'Religion'
+          'Sozialkunde'
+          'Spanisch'
+          'Theater/DS'
+        )
+        TabOrder = 3
+        Text = 'Englisch'
+      end
+      object LbAddBookName: TLabel
+        Left = 8
+        Height = 13
+        Top = 16
+        Width = 197
+        Caption = 'Bitte geben Sie den Namen des Buchs ein'
+        ParentColor = False
+      end
+      object LbAddBookISBN: TLabel
+        Left = 8
+        Height = 13
+        Top = 48
+        Width = 183
+        Caption = 'Bitte geben Sie die ISBN des Buchs ein'
+        ParentColor = False
+      end
+      object LbAddBookQuantity: TLabel
+        Left = 8
+        Height = 13
+        Top = 112
+        Width = 141
+        Caption = 'Bitte geben Sie die Anzahl ein'
+        ParentColor = False
+      end
+      object LbAddBookISBN1: TLabel
+        Left = 8
+        Height = 13
+        Top = 80
+        Width = 142
+        Caption = 'Bitte wählen Sie das Fach aus'
+        ParentColor = False
+      end
+      object BtAddBook: TButton
+        Left = 8
+        Height = 25
+        Top = 144
+        Width = 136
+        Caption = 'Zum Drucken übergehen'
+        TabOrder = 4
+      end
+    end
+    object TabInfo: TTabSheet
+      Caption = 'Informationen betrachten und verändern'
+      ClientHeight = 428
+      ClientWidth = 521
+      object PCInfos: TPageControl
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 382
+        Top = 0
+        Width = 525
+        ActivePage = TabCredits
+        ParentBiDiMode = False
+        TabIndex = 4
+        TabOrder = 0
+        object TabStud: TTabSheet
+          Caption = 'Schüler'
+          ClientHeight = 356
+          ClientWidth = 517
+          object EdInfoStudSur: TEdit
+            Left = 240
+            Height = 21
+            Top = 8
+            Width = 264
+            TabOrder = 0
+          end
+          object EdInfoStudName: TEdit
+            Left = 240
+            Height = 21
+            Top = 40
+            Width = 264
+            TabOrder = 1
+          end
+          object LbInfoStudSur: TLabel
+            Left = 16
+            Height = 13
+            Top = 16
+            Width = 42
+            Caption = 'Vorname'
+            ParentColor = False
+          end
+          object LbInfoStudName: TLabel
+            Left = 16
+            Height = 13
+            Top = 48
+            Width = 50
+            Caption = 'Nachname'
+            ParentColor = False
+          end
+          object EdInfoStudGrade: TEdit
+            Left = 240
+            Height = 21
+            Top = 72
+            Width = 264
+            TabOrder = 2
+          end
+          object EdInfoStudUser: TEdit
+            Left = 240
+            Height = 21
+            Top = 104
+            Width = 264
+            TabOrder = 3
+          end
+          object LbInfoStudGrade: TLabel
+            Left = 16
+            Height = 13
+            Top = 80
+            Width = 30
+            Caption = 'Klasse'
+            ParentColor = False
+          end
+          object LbInfoStudUser: TLabel
+            Left = 16
+            Height = 13
+            Top = 112
+            Width = 172
+            Caption = 'Benutzerame in der Schuldatenbank'
+            ParentColor = False
+          end
+          object EdInfoStudID: TEdit
+            Left = 240
+            Height = 21
+            Top = 136
+            Width = 264
+            TabOrder = 4
+          end
+          object LbInfoStudID: TLabel
+            Left = 16
+            Height = 13
+            Top = 144
+            Width = 104
+            Caption = 'ID-Nummer (Barcode)'
+            ParentColor = False
+          end
+          object BtInfoStudShow: TButton
+            Left = 16
+            Height = 25
+            Top = 176
+            Width = 147
+            Caption = 'Schüer anzeigen'
+            TabOrder = 5
+          end
+          object BtInfoStudEdit: TButton
+            Left = 16
+            Height = 25
+            Top = 208
+            Width = 147
+            Caption = 'Daten verändern'
+            TabOrder = 6
+          end
+        end
+        object TabBook: TTabSheet
+          Caption = 'Bücher'
+          ClientHeight = 356
+          ClientWidth = 517
+          object EdInfoBookISBN: TEdit
+            Left = 240
+            Height = 21
+            Top = 16
+            Width = 264
+            TabOrder = 0
+          end
+          object EdInfoBookName: TEdit
+            Left = 240
+            Height = 21
+            Top = 48
+            Width = 264
+            TabOrder = 1
+          end
+          object LbInfoBookName: TLabel
+            Left = 16
+            Height = 13
+            Top = 56
+            Width = 49
+            Caption = 'Buchname'
+            ParentColor = False
+          end
+          object LbInfoBookISBN: TLabel
+            Left = 16
+            Height = 13
+            Top = 24
+            Width = 23
+            Caption = 'ISBN'
+            ParentColor = False
+          end
+        end
+        object TabRel: TTabSheet
+          Caption = 'Ausleihbeziehungen'
+        end
+        object TabBooktype: TTabSheet
+          Caption = 'Buchtyp'
+        end
+        object TabCredits: TTabSheet
+          Caption = 'Impressum'
+          ClientHeight = 356
+          ClientWidth = 517
+          object MeCredits: TMemo
+            Left = 8
+            Height = 322
+            Top = 16
+            Width = 502
+            Lines.Strings = (
+              'Copyright (C) 2017'
+              'Informatik-LK am Herder-Gymnasium '
+              ''
+              'PROJECT LEAD'
+              '-----------------'
+              'Pascal Walter'
+              'Tobias Woltmann'
+              ''
+              'GUI TEAM'
+              '------------------'
+              'Felix Roth'
+              'Marten Kremser'
+              'Paul Barth'
+              'John Huynh'
+              'Lars Rösener'
+              ''
+              'DATABASE TEAM '
+              '---------------------------'
+              'Michael Brunklaus'
+              'Janne'
+              'Pablo-André Schlesselmann'
+              'Chi Cuong Ngo'
+              ''
+              'UNIT TEAM'
+              '-------------------'
+              'Max'
+              'Jan'
+            )
+            ScrollBars = ssAutoVertical
+            TabOrder = 0
+          end
+        end
+      end
+    end
+  end
+  object Label3: TLabel
+    Left = 42
+    Height = 13
+    Top = 7
+    Width = 31
+    Caption = 'Label3'
+    ParentColor = False
+  end
+end
