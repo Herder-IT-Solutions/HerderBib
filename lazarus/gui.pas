@@ -6,15 +6,17 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, Spin, ExtCtrls, Grids, types;
+  StdCtrls, Spin, ExtCtrls, Grids, types, sqldb, sqlite3conn;
 
 type
 
   { TForm1 }
 
   TForm1 = class(TForm)
+    BtInfoBooktypeEdit: TButton;
     BtInfoBookEdit: TButton;
-    BtInfoBookShow: TButton;
+    BtInfoBooktypeShow: TButton;
+    BtInfoBookShow1: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
@@ -25,21 +27,33 @@ type
     EdBook1: TEdit;
     EdAddBookName: TEdit;
     EdAddBookISBN: TEdit;
-    EdInfoBookName: TEdit;
+    EdInfoBooktypeISBN: TEdit;
+    EdInfoBookID: TEdit;
+    EdInfoBooktypeName: TEdit;
     EdInfoStudSur: TEdit;
     EdInfoStudName: TEdit;
     EdInfoStudGrade: TEdit;
-    EdInfoBookISBN: TEdit;
     EdInfoStudUser: TEdit;
     EdInfoStudID: TEdit;
+    EdInfoBookRent: TEdit;
     EdStud: TEdit;
     EdStud1: TEdit;
-    LbInfoBookISBN: TLabel;
+    Image1: TImage;
+    LbBookState: TLabel;
+    LbInfoBookRent: TLabel;
+    LbInfoBookTrack1: TLabel;
+    LbBookTrack1: TLabel;
+    LbInfoBookTrack3: TLabel;
+    LbBookTrack3: TLabel;
+    LbInfoBookTrack5: TLabel;
+    LbBookTrack5: TLabel;
+    LbInfoBooktypeISBN: TLabel;
+    LbInfoBookID: TLabel;
+    LbInfoBooktypeName: TLabel;
+    LbInfoBookState: TLabel;
     LbInfoStudID: TLabel;
-    LbInfoBookName: TLabel;
     LbInfoStudSur: TLabel;
     LbInfoStudName: TLabel;
-    Label3: TLabel;
     LbInfoStudGrade: TLabel;
     LbInfoStudUser: TLabel;
     LbAddBookISBN1: TLabel;
@@ -55,9 +69,13 @@ type
     LbBookName: TLabel;
     LbStudName1: TLabel;
     MeCredits: TMemo;
+    MeInfoStudRel: TMemo;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
+    SQLite3Connection: TSQLite3Connection;
+    SQLQuery: TSQLQuery;
+    SQLTransaction: TSQLTransaction;
     StringGrid1: TStringGrid;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
@@ -68,6 +86,8 @@ type
     TabBooktype: TTabSheet;
     TabCredits: TTabSheet;
     TabStud: TTabSheet;
+    TBInfoBookState: TTrackBar;
+    TBBookState: TTrackBar;
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
