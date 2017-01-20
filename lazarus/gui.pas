@@ -13,6 +13,8 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    BtInfoBookEdit: TButton;
+    BtInfoBookShow: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
