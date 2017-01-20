@@ -15,17 +15,104 @@ type
       subject:STRING;
       storage:INTEGER;
     public
+      // Returns the booktype ISBN
+      // result: isbn[13]
       function getIsbn():CARDINAL;
-      function setIsbn(newIsbn:CARDINAL):BOOLEAN; //true on success
+
+      // Sets a new booktype ISBN
+      // parameter: newIsbn
+      // result: TRUE on success, so if newIsbn has 13 characters and is not NULL
+      function setIsbn(newIsbn:CARDINAL):BOOLEAN;
+
+      // Returns the booktype title
+      // result: title[0..255]
       function getTitle():STRING;
+
+      // Sets a new booktype title
+      // parameter: newTitle
+      // result: TRUE on success, so if newTitle is not NULL
       function setTitle(newTitle:STRING):BOOLEAN;
+
+      // Returns the booktype subject
+      // result: subject
       function getSubject():STRING;
+
+      // Sets a new booktype subject
+      // parameter: newSubject
+      // result: TRUE on success, so if newSubject is not NULL
       function setSubject(newSubject:STRING):BOOLEAN;
+
+      // Returns the booktype storage
+      // result: storage
       function getStorage():INTEGER;
+
+      // Sets a new book storage
+      // parameter: newStorage
+      // result: TRUE on success, so if newStorage <= (2^63)-1)
       function setStorage(newStorage:INTEGER):BOOLEAN;
   end;
 
 implementation
+
+function TBooktype.getIsbn():CARDINAL;
+begin
+  result:=self.isbn;
+end;
+
+function TBooktype.setIsbn(newIsbn:CARDINAL):BOOLEAN;
+begin
+  result:=false;
+  if (Length(newIsbn) = 13) and (!newIsbn.isNull) then
+  begin
+    self.isbn:=newIsbn;
+    result:=true;
+  end;
+end;
+
+function TBooktype.getTitle():STRING;
+begin
+  result:=self.title;
+end;
+
+function TBooktype.setTitle(newTitle:STRING):BOOLEAN;
+begin
+  result:=false;
+  if(!newTitle.isNull) then
+  begin
+    self.title:=setTitle;
+    result:=true;
+  end;
+end;
+
+function TBooktype.getSubject():STRING;
+begin
+  result:=self.subject;
+end;
+
+function TBooktype.setSubject(newSubject:STRING):BOOLEAN;
+begin
+  result:=false;
+  if(!newSubject.isNull) then
+  begin
+    self.subject:=newSubject;
+    result:=true;
+  end;
+end;
+
+function TBooktype.getStorage():CARDINAL;
+begin
+  result:=self.storage;
+end;
+
+function TBooktype.setStorage(newStorage:CARDINAL):BOOLEAN;
+begin
+  result:=false;
+  if (newStorage<=(2^63)-1) and (!newStorage.isNull) then
+  begin
+    self.storage:=newStorage;
+    result:=true;
+  end;
+end;
 
 end.
 
