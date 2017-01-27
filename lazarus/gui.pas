@@ -23,6 +23,7 @@ type
     BtInfoStudShow: TButton;
     BtInfoStudEdit: TButton;
     BtInfoBookDel: TButton;
+    BtInfoStudExportRel: TButton;
     CBSubject: TComboBox;
     EdBook: TEdit;
     EdBook1: TEdit;
@@ -40,6 +41,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbAddBookError: TLabel;
     LbBookState: TLabel;
     LbInfoBookRent: TLabel;
     LbInfoBookTrack1: TLabel;
@@ -89,6 +91,7 @@ type
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
+    procedure BtAddBookClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -129,6 +132,25 @@ procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
+
+procedure TForm1.BtAddBookClick(Sender: TObject);
+var s:STRING;
+  i,sum: CARDINAL;
+begin
+     i := 1;
+     sum := 0;
+     s := '9780306406157';//EdAddBookISBN.text;
+     while i<14 do begin
+       if (i mod 2=0) then sum := sum + StrToInt(s[i])
+       else sum := sum + StrToInt(s[i])*3;
+       INC(i);
+     end;
+     if not (sum mod 10=0) then
+     begin
+     LbAddBookError.Visible := True;
+     LbAddBookError.Caption := 'Error 1: Die ISBN entspricht nicht der ISBN-13 Berechnung';
+     end;
+     end;
 
 end.
 

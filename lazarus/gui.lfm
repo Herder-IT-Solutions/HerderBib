@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 193
+  Left = 251
   Height = 488
-  Top = 136
+  Top = 549
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -13,8 +13,8 @@ object Form1: TForm1
     Height = 480
     Top = 0
     Width = 688
-    ActivePage = TabInfo
-    TabIndex = 3
+    ActivePage = TabAdd
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
@@ -5819,7 +5819,17 @@ object Form1: TForm1
         Top = 144
         Width = 136
         Caption = 'Zum Drucken übergehen'
+        OnClick = BtAddBookClick
         TabOrder = 4
+      end
+      object LbAddBookError: TLabel
+        Left = 8
+        Height = 13
+        Top = 176
+        Width = 59
+        Caption = 'Keine Fehler'
+        ParentColor = False
+        Visible = False
       end
     end
     object TabInfo: TTabSheet
@@ -5833,9 +5843,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabStud
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -5943,6 +5953,14 @@ object Form1: TForm1
             )
             ScrollBars = ssAutoBoth
             TabOrder = 7
+          end
+          object BtInfoStudExportRel: TButton
+            Left = 456
+            Height = 25
+            Top = 208
+            Width = 200
+            Caption = 'Ausleihbeziehungen in Datei exportieren'
+            TabOrder = 8
           end
         end
         object TabBook: TTabSheet
