@@ -1,26 +1,26 @@
 object Form1: TForm1
-  Left = 364
-  Height = 404
-  Top = 146
-  Width = 529
-  Caption = 'Form1'
-  ClientHeight = 404
-  ClientWidth = 529
+  Left = 193
+  Height = 488
+  Top = 136
+  Width = 691
+  Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
+  ClientHeight = 488
+  ClientWidth = 691
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object PageControl1: TPageControl
     Left = 0
-    Height = 454
+    Height = 480
     Top = 0
-    Width = 529
-    ActivePage = TabRet
-    TabIndex = 1
+    Width = 688
+    ActivePage = TabInfo
+    TabIndex = 3
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
-      ClientHeight = 428
-      ClientWidth = 521
+      ClientHeight = 454
+      ClientWidth = 680
       object EdStud: TEdit
         Left = 8
         Height = 21
@@ -76,9 +76,9 @@ object Form1: TForm1
         ParentColor = False
       end
       object Image1: TImage
-        Left = 152
+        Left = 240
         Height = 136
-        Top = 246
+        Top = 320
         Width = 346
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963FFB2020089504E47
@@ -5615,8 +5615,8 @@ object Form1: TForm1
     end
     object TabRet: TTabSheet
       Caption = 'Zurückgeben'
-      ClientHeight = 428
-      ClientWidth = 521
+      ClientHeight = 454
+      ClientWidth = 680
       OnContextPopup = TabRetContextPopup
       object EdStud1: TEdit
         Left = 8
@@ -5722,20 +5722,21 @@ object Form1: TForm1
     end
     object TabAdd: TTabSheet
       Caption = 'Einpflegen'
-      ClientHeight = 428
-      ClientWidth = 521
+      ClientHeight = 454
+      ClientWidth = 680
       object EdAddBookName: TEdit
         Left = 232
         Height = 21
         Top = 8
-        Width = 208
+        Width = 432
         TabOrder = 0
       end
       object EdAddBookISBN: TEdit
         Left = 232
         Height = 21
         Top = 40
-        Width = 208
+        Width = 432
+        OnKeyPress = confirmNumbers
         TabOrder = 1
       end
       object SEAddBookQuantity: TSpinEdit
@@ -5823,35 +5824,35 @@ object Form1: TForm1
     end
     object TabInfo: TTabSheet
       Caption = 'Informationen betrachten und verändern'
-      ClientHeight = 428
-      ClientWidth = 521
+      ClientHeight = 454
+      ClientWidth = 680
       object PCInfos: TPageControl
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 382
+        Height = 464
         Top = 0
-        Width = 525
-        ActivePage = TabBooktype
+        Width = 687
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 3
+        TabIndex = 0
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
-          ClientHeight = 356
-          ClientWidth = 517
+          ClientHeight = 438
+          ClientWidth = 679
           object EdInfoStudSur: TEdit
             Left = 240
             Height = 21
             Top = 8
-            Width = 264
+            Width = 416
             TabOrder = 0
           end
           object EdInfoStudName: TEdit
             Left = 240
             Height = 21
             Top = 40
-            Width = 264
+            Width = 416
             TabOrder = 1
           end
           object LbInfoStudSur: TLabel
@@ -5874,14 +5875,14 @@ object Form1: TForm1
             Left = 240
             Height = 21
             Top = 72
-            Width = 264
+            Width = 416
             TabOrder = 2
           end
           object EdInfoStudUser: TEdit
             Left = 240
             Height = 21
             Top = 104
-            Width = 264
+            Width = 416
             TabOrder = 3
           end
           object LbInfoStudGrade: TLabel
@@ -5904,7 +5905,7 @@ object Form1: TForm1
             Left = 240
             Height = 21
             Top = 136
-            Width = 264
+            Width = 416
             TabOrder = 4
           end
           object LbInfoStudID: TLabel
@@ -5934,9 +5935,9 @@ object Form1: TForm1
           end
           object MeInfoStudRel: TMemo
             Left = 16
-            Height = 98
+            Height = 184
             Top = 240
-            Width = 488
+            Width = 656
             Lines.Strings = (
               ''
             )
@@ -5946,8 +5947,8 @@ object Form1: TForm1
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
-          ClientHeight = 356
-          ClientWidth = 517
+          ClientHeight = 438
+          ClientWidth = 679
           object EdInfoBookID: TEdit
             Left = 240
             Height = 21
@@ -6041,24 +6042,33 @@ object Form1: TForm1
             Width = 264
             TabOrder = 4
           end
+          object BtInfoBookDel: TButton
+            Left = 16
+            Height = 25
+            Top = 316
+            Width = 139
+            Caption = 'Buch löschen'
+            Color = clRed
+            TabOrder = 5
+          end
         end
         object TabRel: TTabSheet
           Caption = 'Ausleihbeziehungen'
-          ClientHeight = 356
-          ClientWidth = 517
+          ClientHeight = 438
+          ClientWidth = 679
           object StringGrid1: TStringGrid
             Left = 8
-            Height = 344
+            Height = 424
             Top = 8
-            Width = 488
+            Width = 672
             ColCount = 3
             TabOrder = 0
           end
         end
         object TabBooktype: TTabSheet
           Caption = 'Buchtyp'
-          ClientHeight = 356
-          ClientWidth = 517
+          ClientHeight = 438
+          ClientWidth = 679
           object EdInfoBooktypeISBN: TEdit
             Left = 240
             Height = 21
@@ -6108,13 +6118,13 @@ object Form1: TForm1
         end
         object TabCredits: TTabSheet
           Caption = 'Impressum'
-          ClientHeight = 356
-          ClientWidth = 517
+          ClientHeight = 438
+          ClientWidth = 679
           object MeCredits: TMemo
             Left = 8
-            Height = 322
+            Height = 418
             Top = 8
-            Width = 502
+            Width = 654
             Lines.Strings = (
               'Copyright (C) 2017'
               'Informatik-LK am Herder-Gymnasium '
@@ -6146,7 +6156,6 @@ object Form1: TForm1
               'Jan'
             )
             ReadOnly = True
-            ScrollBars = ssAutoVertical
             TabOrder = 0
           end
         end

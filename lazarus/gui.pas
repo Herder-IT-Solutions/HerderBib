@@ -22,6 +22,7 @@ type
     BtAddBook: TButton;
     BtInfoStudShow: TButton;
     BtInfoStudEdit: TButton;
+    BtInfoBookDel: TButton;
     CBSubject: TComboBox;
     EdBook: TEdit;
     EdBook1: TEdit;
@@ -88,6 +89,7 @@ type
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
+    procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
@@ -121,6 +123,11 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
  // LbStudInstruct := 'Hello' + #13#10 + 'world';
+end;
+
+procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
+begin
+if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
 
 end.
