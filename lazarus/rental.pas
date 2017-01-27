@@ -10,28 +10,28 @@ uses
 type
   TRental = class
     private
-      book_id:CARDINAL;
-      student_id:CARDINAL;
+      book_id:int64;
+      student_id:int64;
       return_date:TDateTime;
       rental_date:TDateTime;
     public
       // Returns the book id
       // result: book_id
-      function getBookId():CARDINAL;
+      function getBookId():int64;
 
       // Sets a new book id
       // parameter: newBookId
-      // result: TRUE on success, so if newBookID <= (2^63)-1) and is not NULL
-      function setBookId(newBookId:CARDINAL):BOOLEAN;
+      // result: TRUE on success, so if newBookID is not NULL
+      function setBookId(newBookId:int64):BOOLEAN;
 
       // Returns the student id
       // result: student_id
-      function getStudentId():CARDINAL;
+      function getStudentId():int64;
 
       // Sets a new sudent id
       // parameter: newStudentId
-      // result: TRUE on success, so if new StudentId <= (2^63)-1) and not NULL
-      function setStudentId(newStudentId:CARDINAL):BOOLEAN;
+      // result: TRUE on success, so if new StudentId is not NULL
+      function setStudentId(newStudentId:int64):BOOLEAN;
 
       // Returns the book return date
       // result: return_date
@@ -54,30 +54,30 @@ type
 
 implementation
 
-function TRental.getBookId():CARDINAL;
+function TRental.getBookId():int64;
 begin
   result:=self.book_id;
 end;
 
-function TRental.setBookId(newBookId:CARDINAL):BOOLEAN;
+function TRental.setBookId(newBookId:int64):BOOLEAN;
 begin
   result:=false;
-  if (newBookId<=(2^63)-1) and (!newBookId.isNull) then
+  if (newBookId <> NULL) then
   begin
     self.book_id:=newBookId;
     result:=true;
   end;
 end;
 
-function TRental.getStudentId():CARDINAL;
+function TRental.getStudentId():int64;
 begin
   result:=self.student_id;
 end;
 
-function TRental.setStudentId(newStudentId:CARDINAL):BOOLEAN;
+function TRental.setStudentId(newStudentId:int64):BOOLEAN;
 begin
   result:=false;
-  if (newStudentId<=(2^63)-1) and (!newStudentId.isNull) then
+  if (newStudentId <> NULL) then
   begin
     self.student_id:=newStudentId;
     result:=true;
@@ -92,7 +92,7 @@ end;
 function TRental.setReturnDate(newReturnDate:TDateTime):BOOLEAN;
 begin
   result:=false;
-  if (newReturnDate>=0) and (!newReturnDate.isNull) then
+  if (newReturnDate <> NuLL) and (newReturnDate >= 0) then
   begin
     self.return_date:=newReturnDate;
     result:=true;
@@ -107,7 +107,7 @@ end;
 function TRental.setRentalDate(newRentalDate:TDateTime):BOOLEAN;
 begin
   result:=false;
-  if (newRentalDate>=0) and (!newRentalDate.isNull) then
+  if  (newRentalDate <> NULL) and (newRentalDate>=0) then
   begin
     self.rental_date:=newRentalDate;
     result:=true;

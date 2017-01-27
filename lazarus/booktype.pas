@@ -62,7 +62,7 @@ end;
 function TBooktype.setIsbn(newIsbn:CARDINAL):BOOLEAN;
 begin
   result:=false;
-  if (Length(newIsbn) = 13) and (!newIsbn.isNull) then
+  if (newIsbn <> NULL) and (length(IntToStr(newIsbn)) = 13) then
   begin
     self.isbn:=newIsbn;
     result:=true;
@@ -77,9 +77,9 @@ end;
 function TBooktype.setTitle(newTitle:STRING):BOOLEAN;
 begin
   result:=false;
-  if(!newTitle.isNull) then
+  if(newTitle <> NULL) then
   begin
-    self.title:=setTitle;
+    self.title:=newTitle;
     result:=true;
   end;
 end;
@@ -92,22 +92,22 @@ end;
 function TBooktype.setSubject(newSubject:STRING):BOOLEAN;
 begin
   result:=false;
-  if(!newSubject.isNull) then
+  if(newSubject <> NULL) then
   begin
     self.subject:=newSubject;
     result:=true;
   end;
 end;
 
-function TBooktype.getStorage():CARDINAL;
+function TBooktype.getStorage():INTEGER;
 begin
   result:=self.storage;
 end;
 
-function TBooktype.setStorage(newStorage:CARDINAL):BOOLEAN;
+function TBooktype.setStorage(newStorage:INTEGER):BOOLEAN;
 begin
   result:=false;
-  if (newStorage<=(2^63)-1) and (!newStorage.isNull) then
+  if (newStorage <> NULL) then
   begin
     self.storage:=newStorage;
     result:=true;
