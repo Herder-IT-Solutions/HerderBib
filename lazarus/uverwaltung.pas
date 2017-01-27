@@ -32,7 +32,7 @@ type TVerwaltung = class
     //Erg: Trägt aktuelles Datum als Rückgabedatum in die Datenbank ein
     procedure BuchAusSchueler(BId, SId :Cardinal);
 
-    //Vor: ISBN nur mit Zahlen
+    //Vor: ISBN nur mit Zahlen                          //fertig
     //Eff: Hinzufügen eines neuen Buches
     //Erg: Buch in Tabelle book
     procedure BuchHinzu(isbn : Cardinal);
@@ -42,7 +42,7 @@ type TVerwaltung = class
     procedure BuchQualiAend(BId, quali :Cardinal);
 
     //Vor: isbn nur mit Zahlen, Titel und Fach dews Buches
-    //Eff: Neuer Buchtyp
+    //Eff: Neuer Buchtyp                              //fertig
     procedure BuchTypHinzu(isbn :Cardninal; title, subject :String);
 
     //Vor: Buch Id und Schüler Id
@@ -159,8 +159,8 @@ begin
   query.Close;
   query.SQL.Text:='Insert into booktype Values (:isbn, :title, :sub)';
   query.ParamByName('isbn').AsInteger:=isbn;
-  query.ParamByName('title').As:=isbn;
-  query.ParamByName('con').AsInteger:=1;
+  query.ParamByName('title').AsString:=title;
+  query.ParamByName('sub').AsString:=subject;
   query.ExecSQL;
   tran.Commit;
 end;
