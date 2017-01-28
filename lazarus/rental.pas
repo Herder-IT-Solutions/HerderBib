@@ -12,8 +12,8 @@ type
     private
       book_id:int64;
       student_id:int64;
-      return_date:TDateTime;
-      rental_date:TDateTime;
+      return_date:TDate;
+      rental_date:TDate;
     public
       // Returns the book id
       // result: book_id
@@ -35,21 +35,21 @@ type
 
       // Returns the book return date
       // result: return_date
-      function getReturnDate():TDateTime;
+      function getReturnDate():TDate;
 
       // Sets a new book return datetime in seconds
       // parameter: newReturnDate
       // result: TRUE on success, so if newReturnDate >= 0 and not NULL
-      function setReturnDate(newReturnDate:TDateTime):BOOLEAN;
+      function setReturnDate(newReturnDate:TDate):BOOLEAN;
 
       // Returns the book rental datetime in seconds
       // result: rental_date
-      function getRentalDate():TDateTime;
+      function getRentalDate():TDate;
 
       // Sets a new book rental datetime in seconds
       // parameter: newRentalDate
       // result: TRUE on success, so if newReturnDate >= 0 and not NULL
-      function setRentalDate(newRentalDate:TDateTime):BOOLEAN;
+      function setRentalDate(newRentalDate:TDate):BOOLEAN;
   end;
 
 implementation
