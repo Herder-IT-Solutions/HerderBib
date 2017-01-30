@@ -23,6 +23,7 @@ type
     BtInfoStudShow: TButton;
     BtInfoStudEdit: TButton;
     BtInfoBookDel: TButton;
+    BtInfoStudExportRel: TButton;
     CBSubject: TComboBox;
     EdBook: TEdit;
     EdBook1: TEdit;
@@ -40,6 +41,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbAddBookError: TLabel;
     LbBookState: TLabel;
     LbInfoBookRent: TLabel;
     LbInfoBookTrack1: TLabel;
@@ -89,6 +91,7 @@ type
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
+    procedure BtAddBookClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -129,6 +132,35 @@ procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
+
+procedure TForm1.BtAddBookClick(Sender: TObject);
+var s:STRING;
+  b: BOOLEAN;
+
+  function CheckSumISBN13(isbn:STRING): BOOLEAN;
+  var
+    i,sum,check: CARDINAL;
+  begin
+       check:=0;
+      sum:=0;
+      i:=1;
+      while i<13 do begin
+          if (i mod 2 = 0) then sum := sum + 3*StrToInt(isbn[i])
+          else if (i mod 2 = 1) then sum := sum + StrToInt(isbn[i]);
+          INC(i);
+      end;
+      check := (10-(sum mod 10));
+      result := (check = StrToInt(isbn[13]));
+  end;
+begin
+     s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
+     b := CheckSumISBN13(s);
+
+     if not (b) then begin
+        LbAddBookError.Visible := True;
+        LbAddBookError.Caption := 'Fehler 1: Die ISBN entspricht nicht der ISBN-13 Berechnung';
+     end;
+     end;
 
 end.
 
