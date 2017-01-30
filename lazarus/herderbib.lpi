@@ -40,7 +40,6 @@
       <Unit0>
         <Filename Value="herderbib.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="herderbib"/>
       </Unit0>
       <Unit1>
         <Filename Value="gui.pas"/>
@@ -48,7 +47,6 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="gui"/>
       </Unit1>
     </Units>
   </ProjectOptions>
@@ -69,12 +67,6 @@
         </Win32>
       </Options>
     </Linking>
-    <Other>
-      <CompilerMessages>
-        <MsgFileName Value=""/>
-      </CompilerMessages>
-      <CompilerPath Value="$(CompPath)"/>
-    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

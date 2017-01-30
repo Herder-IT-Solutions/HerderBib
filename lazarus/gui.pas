@@ -135,20 +135,30 @@ end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
-  i,sum: CARDINAL;
+  b: BOOLEAN;
+
+  function CheckSumISBN13(isbn:STRING): BOOLEAN;
+  var
+    i,sum,check: CARDINAL;
+  begin
+       check:=0;
+      sum:=0;
+      i:=1;
+      while i<13 do begin
+          if (i mod 2 = 0) then sum := sum + 3*StrToInt(isbn[i])
+          else if (i mod 2 = 1) then sum := sum + StrToInt(isbn[i]);
+          INC(i);
+      end;
+      check := (10-(sum mod 10));
+      result := (check = StrToInt(isbn[13]));
+  end;
 begin
-     i := 1;
-     sum := 0;
-     s := '9780306406157';//EdAddBookISBN.text;
-     while i<14 do begin
-       if (i mod 2=0) then sum := sum + StrToInt(s[i])
-       else sum := sum + StrToInt(s[i])*3;
-       INC(i);
-     end;
-     if not (sum mod 10=0) then
-     begin
-     LbAddBookError.Visible := True;
-     LbAddBookError.Caption := 'Error 1: Die ISBN entspricht nicht der ISBN-13 Berechnung';
+     s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
+     b := CheckSumISBN13(s);
+
+     if not (b) then begin
+        LbAddBookError.Visible := True;
+        LbAddBookError.Caption := 'Fehler 1: Die ISBN entspricht nicht der ISBN-13 Berechnung';
      end;
      end;
 
