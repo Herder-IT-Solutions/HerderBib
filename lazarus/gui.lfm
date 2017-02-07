@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 292
+  Left = 427
   Height = 488
-  Top = 133
+  Top = 48
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -13,8 +13,8 @@ object Form1: TForm1
     Height = 480
     Top = 0
     Width = 688
-    ActivePage = TabInfo
-    TabIndex = 3
+    ActivePage = TabAdd
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
@@ -5833,10 +5833,10 @@ object Form1: TForm1
       end
       object LbAddBookHint: TLabel
         Left = 8
-        Height = 39
+        Height = 52
         Top = 200
         Width = 513
-        Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10' müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10' bei neuen Büchern weisen Sie bitte auch Name und Fach hinzu.'
+        Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10'müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10'bei neuen Büchern weisen Sie bitte auch Name und Fach hinzu.'#13#10'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
         ParentColor = False
       end
     end
@@ -5851,9 +5851,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabRel
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 2
+        TabIndex = 1
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6258,14 +6258,14 @@ object Form1: TForm1
               'DATABASE TEAM '
               '---------------------------'
               'Michael Brunklaus'
-              'Janne'
+              'Janne Jones'
               'Pablo-André Schlesselmann'
               'Chi Cuong Ngo'
               ''
               'UNIT TEAM'
               '-------------------'
-              'Max'
-              'Jan'
+              'Maximilian Pass'
+              'Jan Friedrich'
             )
             ReadOnly = True
             TabOrder = 0

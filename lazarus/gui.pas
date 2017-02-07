@@ -142,7 +142,7 @@ end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
-  b: BOOLEAN;
+  a,b: BOOLEAN;
 
   function CheckSumISBN13(isbn:STRING): BOOLEAN;
   var
@@ -161,13 +161,19 @@ var s:STRING;
   end;
 begin
      s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
-     b := CheckSumISBN13(s);
-
+     if (length(s) = 13) then b := CheckSumISBN13(s)
+     else a:=TRUE;
+     LbAddBookError.Visible := False;
      if not (b) then begin
         LbAddBookError.Visible := True;
-        LbAddBookError.Caption := 'Fehler 1: Die ISBN entspricht nicht der ISBN-13 Berechnung';
+        LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
+     end;
+     if a then begin
+        LbAddBookError.Visible := True;
+        LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
      end;
      end;
+     //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
 
 end.
 
