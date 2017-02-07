@@ -8,7 +8,7 @@
       <Unit0>
         <Filename Value="herderbib.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="30"/>
       </Unit0>
       <Unit1>
         <Filename Value="gui.pas"/>
@@ -20,9 +20,9 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="159"/>
-        <CursorPos X="88" Y="169"/>
-        <UsageCount Value="29"/>
+        <TopLine Value="173"/>
+        <CursorPos X="68" Y="184"/>
+        <UsageCount Value="30"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -84,7 +84,7 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="8" HistoryIndex="7">
+    <JumpHistory Count="14" HistoryIndex="13">
       <Position1>
         <Filename Value="gui.pas"/>
         <Caret Line="156" Column="11" TopLine="134"/>
@@ -117,6 +117,30 @@
         <Filename Value="gui.pas"/>
         <Caret Line="165" Column="20" TopLine="155"/>
       </Position8>
+      <Position9>
+        <Filename Value="gui.pas"/>
+        <Caret Line="169" Column="90" TopLine="159"/>
+      </Position9>
+      <Position10>
+        <Filename Value="gui.pas"/>
+        <Caret Line="170" Column="90" TopLine="160"/>
+      </Position10>
+      <Position11>
+        <Filename Value="gui.pas"/>
+        <Caret Line="171" Column="90" TopLine="161"/>
+      </Position11>
+      <Position12>
+        <Filename Value="gui.pas"/>
+        <Caret Line="9" Column="78" TopLine="1"/>
+      </Position12>
+      <Position13>
+        <Filename Value="gui.pas"/>
+        <Caret Line="186" Column="31" TopLine="174"/>
+      </Position13>
+      <Position14>
+        <Filename Value="gui.pas"/>
+        <Caret Line="185" Column="32" TopLine="176"/>
+      </Position14>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>

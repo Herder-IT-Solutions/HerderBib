@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn;
+  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf;
 
 type
 
@@ -25,6 +25,7 @@ type
     BtInfoBookDel: TButton;
     BtInfoStudExportRel: TButton;
     BtInfoRelFilter: TButton;
+    BtWiki: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
@@ -44,6 +45,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoSupport: TLabel;
     LbInfoRelSubj: TLabel;
     LbInfoRelGrade: TLabel;
     LbInfoRelFilter: TLabel;
@@ -78,6 +80,7 @@ type
     LbStudInstruct1: TLabel;
     LbBookName: TLabel;
     LbStudName1: TLabel;
+    MainMenu1: TMainMenu;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
     PageControl1: TPageControl;
@@ -95,10 +98,12 @@ type
     TabRel: TTabSheet;
     TabBooktype: TTabSheet;
     TabCredits: TTabSheet;
+    TabSupport: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
+    procedure BtWikiClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
@@ -171,9 +176,15 @@ begin
      if a then begin
         LbAddBookError.Visible := True;
         LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
+     end;   //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
      end;
-     end;
-     //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
+
+procedure TForm1.BtWikiClick(Sender: TObject);
+begin
+     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki');
+end;
+
+
 
 end.
 
