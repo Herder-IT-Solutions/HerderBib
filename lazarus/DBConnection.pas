@@ -10,39 +10,35 @@ uses
 
 type
   ArrayOfStudents = array of TStudent;
-  TIntegerList = TList<int64>;
 
   { TForm1 }
-  DBConnection = class
+  TDBConnection = class
   public
     function getAllStudents: ArrayOfStudents;
-    constructor Create();
+    constructor Create;
   private
     DataSource: TDataSource;
     DBGrid: TDBGrid;
-    Label1: TLabel;
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
   end;
 
-var
-  DBConn: DBConnection;
+{var
+  DBConn: DBConnection;}
 
 implementation
 
-{$R *.lfm}
-
 { TForm1 }
 
-function DBConnection.getAllStudents: ArrayOfStudents;
+function TDBConnection.getAllStudents: ArrayOfStudents;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student';
   SQLQuery.Open;
 
+  Result:=nil;
 
-  rowCount := 0;
   try
     with SQLQuery do
     begin
@@ -52,8 +48,7 @@ begin
         //new row
 
         setLength(Result, length(Result));
-        Result[length(Result) - 1].setId(FieldByName('id'));
-        idList.Add(FieldByName('id'));
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint);
         Next;
       end;
     end;
@@ -64,24 +59,25 @@ begin
 end;
 
 { TForm1 }
-constructor DBConnection.Create();
+constructor TDBConnection.Create;
 begin
-  SQLite3Connection.DatabaseName := 'buchverleih.sqlite';
-  SQLite3Connection.Transaction := SQLTransaction;
+  self.SQLite3Connection := TSQLite3Connection.Create(nil);
+  self.SQLTransaction := TSQLTransaction.Create(nil);
+  self.SQLQuery := TSQLQuery.Create(nil);
 
-  SQLTransaction.Database := SQLite3Connection;
+  self.SQLite3Connection.DatabaseName := '../buchverleih.sqlite';
+  self.SQLite3Connection.Transaction := self.SQLTransaction;
 
-  SQLQuery.Database := SQLite3Connection;
-  SQLQuery.Transaction := SQLTransaction;
+  self.SQLTransaction.Database := self.SQLite3Connection;
 
-  DataSource.dataset := SQLQuery;
-  DBGrid.DataSource := DataSource;
-  SQLite3Connection.Open;
-  if SQLite3Connection.Connected then
+  self.SQLQuery.Database := self.SQLite3Connection;
+  self.SQLQuery.Transaction := self.SQLTransaction;
+
+  self.SQLite3Connection.Open;
+  if self.SQLite3Connection.Connected then
   begin
-    Label1.Caption := 'connected -great';
+    ShowMessage('connected -great');
   end;
-  SQLQuery.Open;
 end;
 
 end.
