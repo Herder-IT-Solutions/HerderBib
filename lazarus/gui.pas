@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, Spin, ExtCtrls, Grids, types, sqldb, sqlite3conn;
+  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn;
 
 type
 
@@ -24,7 +24,10 @@ type
     BtInfoStudEdit: TButton;
     BtInfoBookDel: TButton;
     BtInfoStudExportRel: TButton;
-    CBSubject: TComboBox;
+    BtInfoRelFilter: TButton;
+    CBAddBookSubject: TComboBox;
+    CBInfoRelGrade: TComboBox;
+    CBInfoRelSubject: TComboBox;
     EdBook: TEdit;
     EdBook1: TEdit;
     EdAddBookName: TEdit;
@@ -41,6 +44,10 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoRelSubj: TLabel;
+    LbInfoRelGrade: TLabel;
+    LbInfoRelFilter: TLabel;
+    LbAddBookHint: TLabel;
     LbAddBookError: TLabel;
     LbBookState: TLabel;
     LbInfoBookRent: TLabel;

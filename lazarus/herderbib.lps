@@ -8,7 +8,7 @@
       <Unit0>
         <Filename Value="herderbib.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="28"/>
       </Unit0>
       <Unit1>
         <Filename Value="gui.pas"/>
@@ -16,196 +16,104 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <UnitName Value="gui"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="136"/>
-        <CursorPos X="11" Y="156"/>
-        <ComponentState Value="1"/>
-        <UsageCount Value="27"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="148"/>
+        <CursorPos X="11" Y="163"/>
+        <UsageCount Value="28"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
-        <EditorIndex Value="2"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="2710"/>
-        <CursorPos Y="2720"/>
+        <CursorPos X="1" Y="2720"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\lazarus\lcl\include\wincontrol.inc"/>
-        <EditorIndex Value="3"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="8042"/>
-        <CursorPos Y="8051"/>
+        <CursorPos X="1" Y="8051"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit3>
       <Unit4>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32wsstdctrls.pp"/>
         <UnitName Value="Win32WSStdCtrls"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="1207"/>
-        <CursorPos Y="1222"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="1171"/>
+        <CursorPos X="1" Y="1222"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32proc.pp"/>
-        <EditorIndex Value="4"/>
+        <UnitName Value="win32proc"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="1062"/>
-        <CursorPos Y="1071"/>
+        <CursorPos X="11" Y="1062"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="C:\lazarus\lcl\lclproc.pas"/>
         <UnitName Value="LCLProc"/>
-        <EditorIndex Value="5"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="2931"/>
-        <CursorPos Y="2942"/>
+        <CursorPos X="1" Y="2942"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit6>
       <Unit7>
         <Filename Value="C:\lazarus\components\lazutils\lazutf8.pas"/>
         <UnitName Value="LazUTF8"/>
-        <EditorIndex Value="6"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="3176"/>
-        <CursorPos Y="3185"/>
+        <CursorPos X="1" Y="3185"/>
         <UsageCount Value="11"/>
-        <Loaded Value="True"/>
       </Unit7>
       <Unit8>
         <Filename Value="C:\lazarus\components\codetools\fileprocs.pas"/>
         <UnitName Value="FileProcs"/>
-        <EditorIndex Value="1"/>
+        <WindowIndex Value="1"/>
         <TopLine Value="1600"/>
         <CursorPos X="16" Y="1621"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit8>
     </Units>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <General>
+      <ActiveWindowIndexAtStart Value="0"/>
+    </General>
+    <JumpHistory Count="7" HistoryIndex="6">
       <Position1>
         <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
+        <Caret Line="156" Column="11" TopLine="134"/>
       </Position1>
       <Position2>
         <Filename Value="gui.pas"/>
-        <Caret Line="148" TopLine="135"/>
+        <Caret Line="157" Column="11" TopLine="142"/>
       </Position2>
       <Position3>
         <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
+        <Caret Line="158" Column="11" TopLine="143"/>
       </Position3>
       <Position4>
         <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
+        <Caret Line="159" Column="11" TopLine="144"/>
       </Position4>
       <Position5>
         <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
+        <Caret Line="160" Column="11" TopLine="145"/>
       </Position5>
       <Position6>
         <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
+        <Caret Line="161" Column="11" TopLine="146"/>
       </Position6>
       <Position7>
         <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
+        <Caret Line="162" Column="11" TopLine="147"/>
       </Position7>
-      <Position8>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position8>
-      <Position9>
-        <Filename Value="gui.pas"/>
-        <Caret Line="148" TopLine="135"/>
-      </Position9>
-      <Position10>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position10>
-      <Position11>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position11>
-      <Position12>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position12>
-      <Position13>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position13>
-      <Position14>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position14>
-      <Position15>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position15>
-      <Position16>
-        <Filename Value="gui.pas"/>
-        <Caret Line="148" TopLine="135"/>
-      </Position16>
-      <Position17>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position17>
-      <Position18>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position18>
-      <Position19>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position19>
-      <Position20>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position20>
-      <Position21>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position21>
-      <Position22>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position22>
-      <Position23>
-        <Filename Value="gui.pas"/>
-        <Caret Line="148" TopLine="135"/>
-      </Position23>
-      <Position24>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position24>
-      <Position25>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position25>
-      <Position26>
-        <Filename Value="gui.pas"/>
-        <Caret Line="147" TopLine="135"/>
-      </Position26>
-      <Position27>
-        <Filename Value="gui.pas"/>
-        <Caret Line="149" TopLine="135"/>
-      </Position27>
-      <Position28>
-        <Filename Value="gui.pas"/>
-        <Caret Line="146" TopLine="135"/>
-      </Position28>
-      <Position29>
-        <Filename Value="gui.pas"/>
-        <Caret Line="144" Column="16" TopLine="135"/>
-      </Position29>
-      <Position30>
-        <Filename Value="gui.pas"/>
-        <Caret Line="152" Column="32" TopLine="135"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
+  <EditorMacros Count="0"/>
 </CONFIG>
