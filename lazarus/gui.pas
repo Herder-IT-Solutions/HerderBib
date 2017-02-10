@@ -45,6 +45,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoSupport2: TLabel;
     LbInfoSupport: TLabel;
     LbInfoRelSubj: TLabel;
     LbInfoRelGrade: TLabel;
@@ -80,7 +81,6 @@ type
     LbStudInstruct1: TLabel;
     LbBookName: TLabel;
     LbStudName1: TLabel;
-    MainMenu1: TMainMenu;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
     PageControl1: TPageControl;

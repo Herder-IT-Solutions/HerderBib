@@ -1,12 +1,11 @@
 object Form1: TForm1
-  Left = 427
+  Left = 324
   Height = 488
-  Top = 48
+  Top = 135
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
   ClientWidth = 691
-  Menu = MainMenu1
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object PageControl1: TPageControl
@@ -14,8 +13,8 @@ object Form1: TForm1
     Height = 480
     Top = 0
     Width = 688
-    ActivePage = TabInfo
-    TabIndex = 3
+    ActivePage = TabAdd
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
@@ -25,15 +24,21 @@ object Form1: TForm1
       object EdStud: TEdit
         Left = 8
         Height = 21
+        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 64
         Width = 408
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
       end
       object EdBook: TEdit
         Left = 8
         Height = 21
+        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
         Top = 136
         Width = 408
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
       end
       object LbStudInstruct: TLabel
@@ -5622,15 +5627,21 @@ object Form1: TForm1
       object EdStud1: TEdit
         Left = 8
         Height = 21
+        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 64
         Width = 408
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
       end
       object EdBook1: TEdit
         Left = 8
         Height = 21
+        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Scannen Sie hierfür den Barcode. '
         Top = 136
         Width = 408
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
       end
       object LbStudInstruct2: TLabel
@@ -5676,7 +5687,7 @@ object Form1: TForm1
       object TBBookState: TTrackBar
         Left = 8
         Height = 25
-        Hint = 'Bitte in Schulnoten angeben'
+        Hint = 'Bitte geben Sie den Zustand des Buches in Schulnoten an,'#13#10'wobei 1 sehr gut ist und 5 das Schlechteste.'
         Top = 208
         Width = 272
         Max = 5
@@ -5728,16 +5739,22 @@ object Form1: TForm1
       object EdAddBookName: TEdit
         Left = 232
         Height = 21
+        Hint = 'Bitte geben Sie den Namen des Buches ein.'#13#10'Strukturieren Sie ihn wiefolgt:'#13#10'"Name Klasse, Verlag"'
         Top = 8
         Width = 432
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 0
       end
       object EdAddBookISBN: TEdit
         Left = 232
         Height = 21
+        Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 432
         OnKeyPress = confirmNumbers
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
       end
       object SEAddBookQuantity: TSpinEdit
@@ -5746,10 +5763,12 @@ object Form1: TForm1
         Top = 104
         Width = 50
         TabOrder = 2
+        Value = 30
       end
       object CBAddBookSubject: TComboBox
         Left = 232
         Height = 21
+        Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
         Top = 72
         Width = 100
         ItemHeight = 13
@@ -5779,6 +5798,8 @@ object Form1: TForm1
           'Spanisch'
           'Theater/DS'
         )
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 3
         Text = 'Englisch'
       end
@@ -5817,10 +5838,13 @@ object Form1: TForm1
       object BtAddBook: TButton
         Left = 8
         Height = 25
+        Hint = 'Drücken Sie "Zum Drucken übergehen", wenn Sie alle Daten eingegeben haben. Es öffnet Sich der Druckdialog.'
         Top = 144
         Width = 136
         Caption = 'Zum Drucken übergehen'
         OnClick = BtAddBookClick
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 4
       end
       object LbAddBookError: TLabel
@@ -5852,9 +5876,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabSupport
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 5
+        TabIndex = 0
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6293,6 +6317,14 @@ object Form1: TForm1
             OnClick = BtWikiClick
             TabOrder = 0
           end
+          object LbInfoSupport2: TLabel
+            Left = 8
+            Height = 26
+            Top = 87
+            Width = 625
+            Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
+            ParentColor = False
+          end
         end
       end
     end
@@ -6316,9 +6348,5 @@ object Form1: TForm1
     Options = []
     left = 448
     top = 8
-  end
-  object MainMenu1: TMainMenu
-    left = 351
-    top = 17
   end
 end
