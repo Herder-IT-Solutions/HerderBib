@@ -13,8 +13,8 @@ object Form1: TForm1
     Height = 480
     Top = 0
     Width = 688
-    ActivePage = TabAdd
-    TabIndex = 2
+    ActivePage = TabInfo
+    TabIndex = 3
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
@@ -5882,9 +5882,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabStud
+        ActivePage = Admnistration
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6329,6 +6329,54 @@ object Form1: TForm1
             Top = 87
             Width = 625
             Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
+            ParentColor = False
+          end
+        end
+        object Admnistration: TTabSheet
+          Caption = 'Admnistration'
+          ClientHeight = 438
+          ClientWidth = 679
+          object EdInfoAdminPw: TEdit
+            Left = 8
+            Height = 21
+            Top = 40
+            Width = 312
+            EchoMode = emPassword
+            PasswordChar = '*'
+            TabOrder = 0
+          end
+          object LbInfoAdmin: TLabel
+            Left = 8
+            Height = 13
+            Top = 16
+            Width = 265
+            Caption = 'Bitte geben Sie den Schlüssel für den Administrator ein:'
+            ParentColor = False
+          end
+          object BtInfoAdminLogin: TButton
+            Left = 8
+            Height = 25
+            Top = 72
+            Width = 208
+            Caption = 'Administratorfunktionen  freischalten'
+            OnClick = BtInfoAdminLoginClick
+            TabOrder = 1
+          end
+          object BtInfoAminLogout: TButton
+            Left = 8
+            Height = 25
+            Top = 104
+            Width = 208
+            Caption = 'Administratorfunktion deaktivieren'
+            OnClick = BtInfoAminLogoutClick
+            TabOrder = 2
+          end
+          object LbInfoAdminCheck: TLabel
+            Left = 528
+            Height = 13
+            Top = 16
+            Width = 133
+            Caption = 'Sie sind nicht Administrator.'
             ParentColor = False
           end
         end

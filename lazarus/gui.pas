@@ -26,6 +26,8 @@ type
     BtInfoStudExportRel: TButton;
     BtInfoRelFilter: TButton;
     BtWiki: TButton;
+    BtInfoAdminLogin: TButton;
+    BtInfoAminLogout: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
@@ -42,9 +44,12 @@ type
     EdInfoStudUser: TEdit;
     EdInfoStudID: TEdit;
     EdInfoBookRent: TEdit;
+    EdInfoAdminPw: TEdit;
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoAdminCheck: TLabel;
+    LbInfoAdmin: TLabel;
     LbInfoSupport2: TLabel;
     LbInfoSupport: TLabel;
     LbInfoRelSubj: TLabel;
@@ -98,11 +103,14 @@ type
     TabRel: TTabSheet;
     TabBooktype: TTabSheet;
     TabCredits: TTabSheet;
+    Admnistration: TTabSheet;
     TabSupport: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
+    procedure BtInfoAdminLoginClick(Sender: TObject);
+    procedure BtInfoAminLogoutClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtWikiClick(Sender: TObject);
@@ -123,6 +131,7 @@ type
 
 var
   Form1: TForm1;
+  PermissionLevel:CARDINAL;
 
 implementation
 
@@ -144,6 +153,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
  // LbStudInstruct := 'Hello' + #13#10 + 'world';
+    PermissionLevel :=1;
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -209,6 +219,20 @@ begin
 
      //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
      end;
+
+procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
+begin
+  if EdInfoAdminPw.Text='h3rd3r' then begin
+     PermissionLevel:=0;
+     LbInfoAdminCheck.Caption := 'Sie sind Administrator'
+  end;
+end;
+
+procedure TForm1.BtInfoAminLogoutClick(Sender: TObject);
+begin
+     PermissionLevel:=1;
+     LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator'
+end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
 begin
