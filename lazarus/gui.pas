@@ -103,8 +103,14 @@ type
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
+    procedure BtRentClick(Sender: TObject);
+    procedure BtRetClick(Sender: TObject);
     procedure BtWikiClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
+    procedure EdBook1Change(Sender: TObject);
+    procedure EdBookChange(Sender: TObject);
+    procedure EdStud1Change(Sender: TObject);
+    procedure EdStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
@@ -145,6 +151,27 @@ begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
 
+procedure TForm1.EdBook1Change(Sender: TObject);
+begin
+   //
+   //LbBookName1.Caption:= getBookName(EdBook.Text)
+end;
+
+procedure TForm1.EdBookChange(Sender: TObject);
+begin
+  //LbBookName.Caption:= getBookName(EdBook.Text)
+end;
+
+procedure TForm1.EdStud1Change(Sender: TObject);
+begin
+     //LbStudName1.Caption:= getStudName(EdStud1.Text)
+end;
+
+procedure TForm1.EdStudChange(Sender: TObject);
+begin
+  //LbStudName.Caption:= getStudName(EdStud.Text)
+end;
+
 procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
   a,b: BOOLEAN;
@@ -176,8 +203,22 @@ begin
      if a then begin
         LbAddBookError.Visible := True;
         LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
-     end;   //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
      end;
+
+     //exexute print.exe -s -LbAddBookName.Text -CBAddBookSubject.Text -SeAddBookQuantity.Value
+
+     //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
+     end;
+
+procedure TForm1.BtRentClick(Sender: TObject);
+begin
+  //rentBook(STRTOINT(LbStudName),STRTOINT(LbBookName))
+end;
+
+procedure TForm1.BtRetClick(Sender: TObject);
+begin
+  //returnBook(StrToINT(EdStud1.text),StrToINT(EdBook1.text),TBBookState.Position)
+end;
 
 procedure TForm1.BtWikiClick(Sender: TObject);
 begin

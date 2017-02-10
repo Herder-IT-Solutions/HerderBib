@@ -27,6 +27,7 @@ object Form1: TForm1
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 64
         Width = 408
+        OnChange = EdStudChange
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -37,6 +38,7 @@ object Form1: TForm1
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
         Top = 136
         Width = 408
+        OnChange = EdBookChange
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
@@ -63,6 +65,7 @@ object Form1: TForm1
         Top = 184
         Width = 75
         Caption = 'Ausleihen'
+        OnClick = BtRentClick
         TabOrder = 2
       end
       object LbStudName: TLabel
@@ -5630,6 +5633,7 @@ object Form1: TForm1
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 64
         Width = 408
+        OnChange = EdStud1Change
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
@@ -5640,6 +5644,7 @@ object Form1: TForm1
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Scannen Sie hierfür den Barcode. '
         Top = 136
         Width = 408
+        OnChange = EdBook1Change
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
@@ -5666,6 +5671,7 @@ object Form1: TForm1
         Top = 264
         Width = 75
         Caption = 'Zurückgeben'
+        OnClick = BtRetClick
         TabOrder = 2
       end
       object LbStudName1: TLabel
@@ -5692,7 +5698,7 @@ object Form1: TForm1
         Width = 272
         Max = 5
         Min = 1
-        Position = 1
+        Position = 2
         SelEnd = 1
         SelStart = 6
         ParentShowHint = False
