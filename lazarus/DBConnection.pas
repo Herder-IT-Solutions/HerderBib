@@ -51,9 +51,9 @@ type
     function persistStudent(student: TStudent): boolean;
 
     // Deletes a student
-    // parameter: student id
+    // parameter: student object
     // result: TRUE on success
-    function deleteStudent(id: int64): boolean;
+    function deleteStudent(student: TStudent): boolean;
 
     /////////////////////////////////////////////////////////
     //             RENTAL
@@ -66,28 +66,57 @@ type
     // Persists rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
-    function persistRental(student: TStudent): boolean;
+    function persistRental(rental: TRental): boolean;
 
     // Deletes a student
-    // parameter: book id
+    // parameter: rental object
     // result: TRUE on success
-    function deleteRental(bookId: integer): boolean;
+    function deleteRental(rental: TRental): boolean;
 
     /////////////////////////////////////////////////////////
+    //             BOOK
+    /////////////////////////////////////////////////////////
 
-    // Returns the "DBError" variable
-    function getError:string;
+    // Returns an array of all books
+    // result: array of book objects
+    function getBooks: ArrayOfBooks;
+
+    // Persists book object into database. Either updates an existing one or inserts a new one
+    // parameter: book object
+    // result: TRUE on success
+    function persistBook(book: TBook): boolean;
+
+    // Deletes a book
+    // parameter: book object
+    // result: TRUE on success
+    function deleteBook(book: TBook): boolean;
+
+    /////////////////////////////////////////////////////////
+    //             BOOKTYPE
+    /////////////////////////////////////////////////////////
+
+    // Returns an array of all books
+    // result: array of booktype objects
+    function getBooktypes: ArrayOfBooktypes;
+
+    // Persists booktype object into database. Either updates an existing one or inserts a new one
+    // parameter: booktype object
+    // result: TRUE on success
+    function persistBooktype(booktype: TBooktype): boolean;
+
+    // Deletes a book
+    // parameter: booktype object
+    // result: TRUE on success
+    function deleteBooktype(booktype: TBooktype): boolean;
+
+    /////////////////////////////////////////////////////////
 
     constructor Create;
   private
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
-    DBError: STRING;
   end;
-
-{var
-  DBConn: DBConnection;}
 
 implementation
 
@@ -117,12 +146,8 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //nix? todo
   end;
 end;
 
@@ -153,12 +178,8 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //todo
   end;
 end;
 
@@ -188,12 +209,8 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //todo
   end;
 end;
 
@@ -223,12 +240,8 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //todo
   end;
 end;
 
@@ -256,12 +269,8 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //todo
   end;
 end;
 
@@ -301,42 +310,29 @@ begin
       //ShowMessage('applied');
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         Result := false;
-    end;
+  finally
+    //todo
   end;
 end;
 
-function TDBConnection.deleteStudent(id: int64): boolean;
+function TDBConnection.deleteStudent(student: TStudent): boolean;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = ' + IntToStr(id);
-  SQLQuery.Open;
+  SQLQuery.SQL.Text := 'delete from student where id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := student.getId;
+
 
   try
     with SQLQuery do
     begin
-      First;
-      //new row
-      if not EOF then
-      begin
-        Edit;
-        Delete;
-        Post; //add to change buffer
-        ApplyUpdates; //commit change buffer to db
-        SQLTransaction.commit;
-      end;
+      SQLQuery.ExecSQL;
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := false;
-    end;
+  finally
+    //todo
   end;
 end;
 
@@ -367,18 +363,259 @@ begin
       end;
     end;
 
-  except
-    on E: EDatabaseError do
-    begin
-         DBError := E.Message;
-         result := NIL;
-    end;
+  finally
+    //nix? todo
   end;
 end;
 
-function TDBConnection.getError:string;
+function TDBConnection.persistRental(rental: TRental): boolean;
 begin
-     result := DBError;
+  SQLQuery.Close;
+  //get object from database if exists
+  SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = ' + IntToStr(rental.getId);
+  SQLQuery.Open;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      //new row
+
+      if EOF then
+      begin //object does not exist
+        //ShowMessage('append');
+        Append; //insert mode
+      end
+      else
+      begin
+        //ShowMessage('name ' + FieldByName('last_name').AsString);
+        //ShowMessage('edit');
+        Edit; //update mode
+      end;
+
+      //update object
+      FieldByName('id').AsLongInt := rental.getId;
+      FieldByName('student_id').AsLongInt := rental.getStudentId;
+      FieldByName('book_id').AsLongInt := rental.getBookId;
+      FieldByName('rental_date').AsDateTime := rental.getRentalDate;
+      FieldByName('return_date').AsDateTime := rental.getReturnDate;
+      Post; //add to change buffer
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
+end;
+
+function TDBConnection.deleteRental(rental: TRental): boolean;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'delete from rental where id = (:BId)';
+  SQLQuery.ParamByName('BId').AsInteger := rental.getId;
+
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.ExecSQL;
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
+end;
+
+////////////////////////////////////////////////////////
+
+function TDBConnection.getBooks: ArrayOfBooks;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM book';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      while not EOF do
+      begin
+        //new row
+        setLength(Result, length(Result) + 1);
+        Result[length(Result) - 1] := TBook.Create; //create new book object
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint);
+        Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
+        Result[length(Result) - 1].setCondition(FieldByName('condition').AsInteger);
+        Next;
+      end;
+    end;
+
+  finally
+    //nix? todo
+  end;
+end;
+
+function TDBConnection.persistBook(book: TBook): boolean;
+begin
+  SQLQuery.Close;
+  //get object from database if exists
+  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = ' + IntToStr(book.getId);
+  SQLQuery.Open;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      //new row
+
+      if EOF then
+      begin //object does not exist
+        //ShowMessage('append');
+        Append; //insert mode
+      end
+      else
+      begin
+        //ShowMessage('name ' + FieldByName('last_name').AsString);
+        //ShowMessage('edit');
+        Edit; //update mode
+      end;
+
+      //update object
+      FieldByName('id').AsLongint := book.getId;
+      FieldByName('isbn').AsString := book.getIsbn;
+      FieldByName('condition').AsInteger := book.getCondition;
+      Post; //add to change buffer
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
+end;
+
+function TDBConnection.deleteBook(book: TBook): boolean;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'delete from book where id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := book.getId;
+
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.ExecSQL;
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
+end;
+
+////////////////////////////////////////////////////////
+
+function TDBConnection.getBooktypes: ArrayOfBooktypes;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      while not EOF do
+      begin
+        //new row
+        setLength(Result, length(Result) + 1);
+        Result[length(Result) - 1] := TBooktype.Create; //create new booktype object
+        Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
+        Result[length(Result) - 1].setTitle(FieldByName('title').AsString);
+        Result[length(Result) - 1].setSubject(FieldByName('subject').AsString);
+        Result[length(Result) - 1].setStorage(FieldByName('storage').AsInteger);
+        Next;
+      end;
+    end;
+
+  finally
+    //nix? todo
+  end;
+end;
+
+function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
+begin
+  SQLQuery.Close;
+  //get object from database if exists
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''' +
+    booktype.getIsbn + '''';
+  SQLQuery.Open;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      //new row
+
+      if EOF then
+      begin //object does not exist
+        //ShowMessage('append');
+        Append; //insert mode
+      end
+      else
+      begin
+        //ShowMessage('name ' + FieldByName('last_name').AsString);
+        //ShowMessage('edit');
+        Edit; //update mode
+      end;
+
+      //update object
+      FieldByName('isbn').AsString := booktype.getIsbn;
+      FieldByName('title').AsString := booktype.getTitle;
+      FieldByName('subject').AsString := booktype.getSubject;
+      FieldByName('storage').AsInteger := booktype.getStorage;
+      Post; //add to change buffer
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
+end;
+
+function TDBConnection.deleteBooktype(booktype: TBooktype): boolean;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'delete from booktype where isbn = (:isbn)';
+  SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
+
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.ExecSQL;
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+      //ShowMessage('applied');
+    end;
+
+  finally
+    //todo
+  end;
 end;
 
 ////////////////////////////////////////////////////////

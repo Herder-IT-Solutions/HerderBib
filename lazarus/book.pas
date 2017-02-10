@@ -11,7 +11,7 @@ type
   TBook = class
     private
       id:int64;
-      isbn:CARDINAL;
+      isbn:STRING;
       condition:CARDINAL;
     public
       // Returns the book id
@@ -25,12 +25,12 @@ type
 
       // Returns the book ISBN
       // result: isbn[13]
-      function getIsbn():CARDINAL;
+      function getIsbn():STRING;
 
       // Sets a new book ISBN
       // parameter: newIsbn
       // result: TRUE on success, so if newIsbn has 13 characters and is not NULL
-      function setIsbn(newIsbn:CARDINAL):BOOLEAN;
+      function setIsbn(newIsbn:STRING):BOOLEAN;
 
       // Returns the book condition
       // result: condition[1]
@@ -59,15 +59,15 @@ begin
   end;
 end;
 
-function TBook.getIsbn():CARDINAL;
+function TBook.getIsbn():STRING;
 begin
   result:=self.isbn;
 end;
 
-function TBook.setIsbn(newIsbn:CARDINAL):BOOLEAN;
+function TBook.setIsbn(newIsbn:STRING):BOOLEAN;
 begin
   result:=false;
-  if (newIsbn <> NULL) and (length(IntToStr(newIsbn)) = 13) then
+  if (newIsbn <> NULL) and (length(newIsbn) = 13) then
   begin
     self.isbn:=newIsbn;
     result:=true;
