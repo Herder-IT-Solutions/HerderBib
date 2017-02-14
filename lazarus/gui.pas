@@ -25,9 +25,9 @@ type
     BtInfoBookDel: TButton;
     BtInfoStudExportRel: TButton;
     BtInfoRelFilter: TButton;
-    BtWiki: TButton;
     BtInfoAdminLogin: TButton;
     BtInfoAminLogout: TButton;
+    BtInfoSuportWiki: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
@@ -50,7 +50,6 @@ type
     Image1: TImage;
     LbInfoAdminCheck: TLabel;
     LbInfoAdmin: TLabel;
-    LbInfoSupport2: TLabel;
     LbInfoSupport: TLabel;
     LbInfoRelSubj: TLabel;
     LbInfoRelGrade: TLabel;
@@ -79,6 +78,7 @@ type
     LbAddBookName: TLabel;
     LbAddBookISBN: TLabel;
     LbBookName1: TLabel;
+    LbInfoSupport2: TLabel;
     LbStudInstruct2: TLabel;
     LbStudInstruct3: TLabel;
     LbStudName: TLabel;
@@ -102,9 +102,8 @@ type
     TabBook: TTabSheet;
     TabRel: TTabSheet;
     TabBooktype: TTabSheet;
-    TabCredits: TTabSheet;
+    TabCreditsHelp: TTabSheet;
     Admnistration: TTabSheet;
-    TabSupport: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
@@ -113,7 +112,7 @@ type
     procedure BtInfoAminLogoutClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
-    procedure BtWikiClick(Sender: TObject);
+    procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdBook1Change(Sender: TObject);
     procedure EdBookChange(Sender: TObject);
@@ -224,14 +223,17 @@ procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
 begin
   if EdInfoAdminPw.Text='h3rd3r' then begin
      PermissionLevel:=0;
-     LbInfoAdminCheck.Caption := 'Sie sind Administrator'
+     //EdInfoAdminPw.Text=NONE;
+     LbInfoAdminCheck.Caption := 'Sie sind Administrator';
+     BtInfoStudEdit.Enabled := True;
   end;
 end;
 
 procedure TForm1.BtInfoAminLogoutClick(Sender: TObject);
 begin
      PermissionLevel:=1;
-     LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator'
+     LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator';
+     BtInfoStudEdit.Enabled := False;
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
@@ -244,7 +246,7 @@ begin
   //returnBook(StrToINT(EdStud1.text),StrToINT(EdBook1.text),TBBookState.Position)
 end;
 
-procedure TForm1.BtWikiClick(Sender: TObject);
+procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
 begin
      OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki');
 end;

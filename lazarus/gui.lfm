@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 324
+  Left = 520
   Height = 488
-  Top = 135
+  Top = 110
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -5882,9 +5882,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = Admnistration
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 6
+        TabIndex = 0
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6259,15 +6259,15 @@ object Form1: TForm1
             TabOrder = 3
           end
         end
-        object TabCredits: TTabSheet
-          Caption = 'Impressum'
+        object TabCreditsHelp: TTabSheet
+          Caption = 'Impressum und Hilfe'
           ClientHeight = 438
           ClientWidth = 679
           object MeCredits: TMemo
-            Left = 8
+            Left = 424
             Height = 418
             Top = 8
-            Width = 654
+            Width = 238
             Lines.Strings = (
               'Copyright (C) 2017'
               'Informatik-LK am Herder-Gymnasium '
@@ -6301,34 +6301,29 @@ object Form1: TForm1
             ReadOnly = True
             TabOrder = 0
           end
-        end
-        object TabSupport: TTabSheet
-          Caption = 'Hilfe'
-          ClientHeight = 438
-          ClientWidth = 679
           object LbInfoSupport: TLabel
             Left = 8
             Height = 13
-            Top = 16
+            Top = 8
             Width = 399
             Caption = 'Für generelle Hilfestellungen besuchen Sie bitte die Dokumentation des Programms.'
             ParentColor = False
           end
-          object BtWiki: TButton
+          object BtInfoSuportWiki: TButton
             Left = 8
             Height = 25
-            Top = 48
+            Top = 40
             Width = 227
             Caption = 'Wiki im Internetbrowser öffnen'
-            OnClick = BtWikiClick
-            TabOrder = 0
+            OnClick = BtInfoSuportWikiClick
+            TabOrder = 1
           end
           object LbInfoSupport2: TLabel
             Left = 8
-            Height = 26
+            Height = 39
             Top = 87
-            Width = 625
-            Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
+            Width = 322
+            Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
             ParentColor = False
           end
         end
