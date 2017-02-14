@@ -147,7 +147,7 @@ begin
       end;
     end;
 
-  finally
+  except
     //nix? todo
   end;
 end;
@@ -179,8 +179,12 @@ begin
       end;
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -210,8 +214,12 @@ begin
       end;
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -241,8 +249,12 @@ begin
       end;
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -270,8 +282,12 @@ begin
       end;
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -336,8 +352,12 @@ begin
       //ShowMessage('applied');
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -368,8 +388,12 @@ begin
       end;
     end;
 
-  finally
-    //nix? todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -470,8 +494,12 @@ begin
       end;
     end;
 
-  finally
-    //nix? todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -535,8 +563,12 @@ begin
       //ShowMessage('applied');
     end;
 
-  finally
-    //todo
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
