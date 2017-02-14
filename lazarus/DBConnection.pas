@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, Forms, Controls,
-  Graphics, Dialogs, DBGrids, StdCtrls, book, booktype, rental, student;
+  Graphics, Dialogs, DBGrids, book, booktype, rental, student;
 
 type
   ArrayOfStudents = array of TStudent;
@@ -18,7 +18,7 @@ type
   TDBConnection = class
   public
     /////////////////////////////////////////////////////////
-    //             STUDENT
+    //             STUDENT                                 //
     /////////////////////////////////////////////////////////
 
     // Returns an array of all students
@@ -226,7 +226,7 @@ end;
 function TDBConnection.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''' + ClassName + '''';
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''' + classN + '''';
   SQLQuery.Open;
 
   Result := nil;
@@ -331,7 +331,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -356,7 +356,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -438,7 +438,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -463,7 +463,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -542,7 +542,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -567,7 +567,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -649,7 +649,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
@@ -674,7 +674,7 @@ begin
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      Result := false;
     end;
   end;
 end;
