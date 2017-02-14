@@ -110,15 +110,24 @@ type
     function deleteBooktype(booktype: TBooktype): boolean;
 
     /////////////////////////////////////////////////////////
-    
+
     // Returns the current Error Object
-    // result: Error Object (DBError, Type: EDatabaseError) 
-    function getError:EDatabaseError;
-    
+    // result: Error Object (DBError, Type: EDatabaseError)
+    function getError: EDatabaseError;
+
     /////////////////////////////////////////////////////////
 
-    constructor Create;
+    // Opens database connection
+    // parameter: file path to sqlite file
+    constructor Create(databasePath: string);
+
+    // Closes the database connection
     destructor Destroy;
+
+    // Checks if conncetion to database was successful
+    // result: TRUE on success
+    function isConnected: boolean;
+
   private
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
@@ -166,8 +175,8 @@ end;
 function TDBConnection.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''' +
-    firstName + '''';
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
+  SQLQuery.ParamByName('name').AsString := firstName;
   SQLQuery.Open;
 
   Result := nil;
@@ -202,7 +211,8 @@ end;
 function TDBConnection.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''' + lastName + '''';
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
+  SQLQuery.ParamByName('name').AsString := lastName;
   SQLQuery.Open;
 
   Result := nil;
@@ -237,7 +247,8 @@ end;
 function TDBConnection.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''' + classN + '''';
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
+  SQLQuery.ParamByName('name').AsString := classN;
   SQLQuery.Open;
 
   Result := nil;
@@ -272,7 +283,8 @@ end;
 function TDBConnection.getStudentById(id: int64): TStudent;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = ' + IntToStr(id);
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := id;
   SQLQuery.Open;
 
   Result := nil;
@@ -305,8 +317,8 @@ end;
 function TDBConnection.persistStudent(student: TStudent): boolean;
 begin
   SQLQuery.Close;
-  //get object from database if exists
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = ' + IntToStr(student.getId);
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := student.getId;
   SQLQuery.Open;
 
   try
@@ -316,16 +328,9 @@ begin
       //new row
 
       if EOF then
-      begin //object does not exist
-        //ShowMessage('append');
-        Append; //insert mode
-      end
+        Append //insert mode
       else
-      begin
-        //ShowMessage('name ' + FieldByName('last_name').AsString);
-        //ShowMessage('edit');
         Edit; //update mode
-      end;
 
       //update object
       FieldByName('last_name').AsString := student.getLastName;
@@ -335,14 +340,13 @@ begin
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -360,14 +364,13 @@ begin
       SQLQuery.ExecSQL;
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -412,7 +415,8 @@ function TDBConnection.persistRental(rental: TRental): boolean;
 begin
   SQLQuery.Close;
   //get object from database if exists
-  SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = ' + IntToStr(rental.getId);
+  SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := rental.getId;
   SQLQuery.Open;
 
   try
@@ -422,16 +426,9 @@ begin
       //new row
 
       if EOF then
-      begin //object does not exist
-        //ShowMessage('append');
-        Append; //insert mode
-      end
+        Append //insert mode
       else
-      begin
-        //ShowMessage('name ' + FieldByName('last_name').AsString);
-        //ShowMessage('edit');
         Edit; //update mode
-      end;
 
       //update object
       FieldByName('id').AsLongInt := rental.getId;
@@ -442,14 +439,13 @@ begin
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -457,8 +453,8 @@ end;
 function TDBConnection.deleteRental(rental: TRental): boolean;
 begin
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'delete from rental where id = (:BId)';
-  SQLQuery.ParamByName('BId').AsInteger := rental.getId;
+  SQLQuery.SQL.Text := 'delete from rental where id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := rental.getId;
 
 
   try
@@ -467,14 +463,13 @@ begin
       SQLQuery.ExecSQL;
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -517,8 +512,8 @@ end;
 function TDBConnection.persistBook(book: TBook): boolean;
 begin
   SQLQuery.Close;
-  //get object from database if exists
-  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = ' + IntToStr(book.getId);
+  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := book.getId;
   SQLQuery.Open;
 
   try
@@ -528,16 +523,9 @@ begin
       //new row
 
       if EOF then
-      begin //object does not exist
-        //ShowMessage('append');
-        Append; //insert mode
-      end
+        Append //insert mode
       else
-      begin
-        //ShowMessage('name ' + FieldByName('last_name').AsString);
-        //ShowMessage('edit');
         Edit; //update mode
-      end;
 
       //update object
       FieldByName('id').AsLongint := book.getId;
@@ -546,14 +534,13 @@ begin
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -571,14 +558,13 @@ begin
       SQLQuery.ExecSQL;
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -622,9 +608,8 @@ end;
 function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
   SQLQuery.Close;
-  //get object from database if exists
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''' +
-    booktype.getIsbn + '''';
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
+  SQLQuery.ParamByName('isbn').AsInteger := booktype.getIsbn;
   SQLQuery.Open;
 
   try
@@ -634,16 +619,9 @@ begin
       //new row
 
       if EOF then
-      begin //object does not exist
-        //ShowMessage('append');
-        Append; //insert mode
-      end
+        Append //insert mode
       else
-      begin
-        //ShowMessage('name ' + FieldByName('last_name').AsString);
-        //ShowMessage('edit');
         Edit; //update mode
-      end;
 
       //update object
       FieldByName('isbn').AsString := booktype.getIsbn;
@@ -653,14 +631,13 @@ begin
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
@@ -678,51 +655,59 @@ begin
       SQLQuery.ExecSQL;
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
-      //ShowMessage('applied');
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
     end;
   end;
 end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getError:EDatabaseError;
+function TDBConnection.getError: EDatabaseError;
 begin
-  result := DBError;
+  Result := DBError;
 end;
 
-constructor TDBConnection.Create;
+constructor TDBConnection.Create(databasePath: string);
 begin
-  self.SQLite3Connection := TSQLite3Connection.Create(nil);
-  self.SQLTransaction := TSQLTransaction.Create(nil);
-  self.SQLQuery := TSQLQuery.Create(nil);
+  try
+    self.SQLite3Connection := TSQLite3Connection.Create(nil);
+    self.SQLTransaction := TSQLTransaction.Create(nil);
+    self.SQLQuery := TSQLQuery.Create(nil);
 
-  self.SQLite3Connection.DatabaseName := '../buchverleih.sqlite';
-  self.SQLite3Connection.Transaction := self.SQLTransaction;
+    if not FileExists(databasePath) then
+      exit;
 
-  self.SQLTransaction.Database := self.SQLite3Connection;
+    self.SQLite3Connection.DatabaseName := databasePath;
+    self.SQLite3Connection.Transaction := self.SQLTransaction;
 
-  self.SQLQuery.Database := self.SQLite3Connection;
-  self.SQLQuery.Transaction := self.SQLTransaction;
+    self.SQLTransaction.Database := self.SQLite3Connection;
 
-  self.SQLite3Connection.Open;
-  if self.SQLite3Connection.Connected then
-  begin
-    ShowMessage('connected -great');
+    self.SQLQuery.Database := self.SQLite3Connection;
+    self.SQLQuery.Transaction := self.SQLTransaction;
+
+    self.SQLite3Connection.Open;
+  except
+    on E: EDatabaseError do
+      DBError := E;
   end;
 end;
 
 destructor TDBConnection.Destroy;
 begin
-  SQLQuery.close;
-  SQLTransaction.destroy;
-  SQLite3Connection.destroy;
+  SQLQuery.Close;
+  SQLTransaction.Destroy;
+  SQLite3Connection.Destroy;
+end;
+
+function TDBConnection.isConnected: boolean;
+begin
+  Result := self.SQLite3Connection.Connected;
 end;
 
 end.
