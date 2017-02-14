@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 520
+  Left = 382
   Height = 488
-  Top = 110
+  Top = 129
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -5882,9 +5882,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabStud
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'

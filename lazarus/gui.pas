@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf;
+  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf, uVerwaltung;
 
 type
 
@@ -130,6 +130,7 @@ type
 
 var
   Form1: TForm1;
+  management: TVerwaltung;
   PermissionLevel:CARDINAL;
 
 implementation
@@ -153,6 +154,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
  // LbStudInstruct := 'Hello' + #13#10 + 'world';
     PermissionLevel :=1;
+    management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -184,6 +186,8 @@ end;
 procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
   a,b: BOOLEAN;
+  k: CARDINAL;
+
 
   function CheckSumISBN13(isbn:STRING): BOOLEAN;
   var
@@ -214,9 +218,15 @@ begin
         LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
      end;
 
+      k:=1;
+
+     if not( management.BTypeCheck(s)) then management.BookTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
+     while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
+         management.BookAdd(s);
+         INC(k)
+     end;
      //exexute print.exe -s -LbAddBookName.Text -CBAddBookSubject.Text -SeAddBookQuantity.Value
 
-     //SEND TO DB IF CHECKS ARE SUCCESFULL (TODO)
      end;
 
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
@@ -238,11 +248,18 @@ end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
 begin
-  //rentBook(STRTOINT(LbStudName),STRTOINT(LbBookName))
+  if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
+     //Check if book is already rent
+     management.BookRentStu(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
+  end;
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
 begin
+    if (management.BIdCheck(STRTOINT(EdBook1.text)) and management.SIdCheck(STRTOINT(EdStud1.text))) then begin
+     management.BookQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
+     management.BookBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
+  end;
   //returnBook(StrToINT(EdStud1.text),StrToINT(EdBook1.text),TBBookState.Position)
 end;
 
