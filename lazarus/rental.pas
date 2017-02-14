@@ -10,11 +10,21 @@ uses
 type
   TRental = class
     private
+      id:int64;
       book_id:int64;
       student_id:int64;
       return_date:TDate;
       rental_date:TDate;
     public
+      // Returns the id
+      // result: id
+      function getId():int64;
+
+      // Sets a new id
+      // parameter: newId
+      // result: TRUE on success, so if newID is not NULL
+      function setId(newId:int64):BOOLEAN;
+
       // Returns the book id
       // result: book_id
       function getBookId():int64;
@@ -54,6 +64,21 @@ type
 
 implementation
 
+function TRental.getId():int64;
+begin
+  result:=self.id;
+end;
+
+function TRental.setId(newId:int64):BOOLEAN;
+begin
+  result:=false;
+  if (newId <> NULL) then
+  begin
+    self.id:=newId;
+    result:=true;
+  end;
+end;
+
 function TRental.getBookId():int64;
 begin
   result:=self.book_id;
@@ -84,12 +109,12 @@ begin
   end;
 end;
 
-function TRental.getReturnDate():TDateTime;
+function TRental.getReturnDate():TDate;
 begin
   result:=self.return_date;
 end;
 
-function TRental.setReturnDate(newReturnDate:TDateTime):BOOLEAN;
+function TRental.setReturnDate(newReturnDate:TDate):BOOLEAN;
 begin
   result:=false;
   if (newReturnDate <> NuLL) and (newReturnDate >= 0) then
@@ -99,12 +124,12 @@ begin
   end;
 end;
 
-function TRental.getRentalDate():TDateTime;
+function TRental.getRentalDate():TDate;
 begin
   result:=self.rental_date;
 end;
 
-function TRental.setRentalDate(newRentalDate:TDateTime):BOOLEAN;
+function TRental.setRentalDate(newRentalDate:TDate):BOOLEAN;
 begin
   result:=false;
   if  (newRentalDate <> NULL) and (newRentalDate>=0) then
