@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 382
+  Left = 237
   Height = 488
-  Top = 129
+  Top = 106
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -5882,9 +5882,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabBook
+        ActivePage = Admnistration
         ParentBiDiMode = False
-        TabIndex = 1
+        TabIndex = 5
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6331,6 +6331,15 @@ object Form1: TForm1
           Caption = 'Admnistration'
           ClientHeight = 438
           ClientWidth = 679
+          object BtInfoAminLogout: TButton
+            Left = 8
+            Height = 25
+            Top = 104
+            Width = 208
+            Caption = 'Administratorfunktion deaktivieren'
+            OnClick = BtInfoAminLogoutClick
+            TabOrder = 2
+          end
           object EdInfoAdminPw: TEdit
             Left = 8
             Height = 21
@@ -6357,15 +6366,6 @@ object Form1: TForm1
             OnClick = BtInfoAdminLoginClick
             TabOrder = 1
           end
-          object BtInfoAminLogout: TButton
-            Left = 8
-            Height = 25
-            Top = 104
-            Width = 208
-            Caption = 'Administratorfunktion deaktivieren'
-            OnClick = BtInfoAminLogoutClick
-            TabOrder = 2
-          end
           object LbInfoAdminCheck: TLabel
             Left = 528
             Height = 13
@@ -6374,6 +6374,34 @@ object Form1: TForm1
             Caption = 'Sie sind nicht Administrator.'
             ParentColor = False
           end
+          object LEInfoAdminDBName: TLabeledEdit
+            Left = 8
+            Height = 21
+            Top = 258
+            Width = 312
+            EditLabel.AnchorSideLeft.Control = LEInfoAdminDBName
+            EditLabel.AnchorSideRight.Control = LEInfoAdminDBName
+            EditLabel.AnchorSideRight.Side = asrBottom
+            EditLabel.AnchorSideBottom.Control = LEInfoAdminDBName
+            EditLabel.Left = 8
+            EditLabel.Height = 13
+            EditLabel.Top = 242
+            EditLabel.Width = 312
+            EditLabel.Caption = 'Bitte bennenen Sie den Datenbankpfad'
+            EditLabel.ParentColor = False
+            Enabled = False
+            TabOrder = 3
+            Text = '../buchverleih/sqlite'
+          end
+          object BtInfoAdminSendDBName: TButton
+            Left = 8
+            Height = 25
+            Top = 288
+            Width = 75
+            Caption = 'Absenden'
+            Enabled = False
+            TabOrder = 4
+          end
         end
       end
     end
@@ -6381,12 +6409,12 @@ object Form1: TForm1
   object SQLQuery: TSQLQuery
     FieldDefs = <>
     Params = <>
-    left = 448
+    left = 528
     top = 8
   end
   object SQLTransaction: TSQLTransaction
     Active = False
-    left = 448
+    left = 568
     top = 8
   end
   object SQLite3Connection: TSQLite3Connection
@@ -6395,7 +6423,7 @@ object Form1: TForm1
     KeepConnection = False
     LogEvents = []
     Options = []
-    left = 448
+    left = 480
     top = 8
   end
 end

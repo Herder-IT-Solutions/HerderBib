@@ -28,6 +28,7 @@ type
     BtInfoAdminLogin: TButton;
     BtInfoAminLogout: TButton;
     BtInfoSuportWiki: TButton;
+    BtInfoAdminSendDBName: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
@@ -48,6 +49,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LEInfoAdminDBName: TLabeledEdit;
     LbInfoAdminCheck: TLabel;
     LbInfoAdmin: TLabel;
     LbInfoSupport: TLabel;
