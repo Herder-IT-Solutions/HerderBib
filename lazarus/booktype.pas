@@ -10,19 +10,19 @@ uses
 type
   TBooktype = class
     private
-      isbn:CARDINAL;
+      isbn:STRING;
       title:STRING;
       subject:STRING;
       storage:INTEGER;
     public
       // Returns the booktype ISBN
       // result: isbn[13]
-      function getIsbn():CARDINAL;
+      function getIsbn():STRING;
 
       // Sets a new booktype ISBN
       // parameter: newIsbn
       // result: TRUE on success, so if newIsbn has 13 characters and is not NULL
-      function setIsbn(newIsbn:CARDINAL):BOOLEAN;
+      function setIsbn(newIsbn:STRING):BOOLEAN;
 
       // Returns the booktype title
       // result: title[0..255]
@@ -54,15 +54,15 @@ type
 
 implementation
 
-function TBooktype.getIsbn():CARDINAL;
+function TBooktype.getIsbn():STRING;
 begin
   result:=self.isbn;
 end;
 
-function TBooktype.setIsbn(newIsbn:CARDINAL):BOOLEAN;
+function TBooktype.setIsbn(newIsbn:STRING):BOOLEAN;
 begin
   result:=false;
-  if (newIsbn <> NULL) and (length(IntToStr(newIsbn)) = 13) then
+  if (newIsbn <> NULL) and (length(newIsbn) = 13) then
   begin
     self.isbn:=newIsbn;
     result:=true;
