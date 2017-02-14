@@ -112,6 +112,7 @@ type
     /////////////////////////////////////////////////////////
 
     constructor Create;
+    function getError:EDatabaseError;
   private
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
@@ -148,7 +149,11 @@ begin
     end;
 
   except
-    //nix? todo
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -680,6 +685,11 @@ begin
 end;
 
 ////////////////////////////////////////////////////////
+
+function getError:EDatabaseError;
+begin
+  result := DBError;
+end;
 
 constructor TDBConnection.Create;
 begin
