@@ -110,9 +110,15 @@ type
     function deleteBooktype(booktype: TBooktype): boolean;
 
     /////////////////////////////////////////////////////////
+    
+    // Returns the current Error Object
+    // result: Error Object (DBError, Type: EDatabaseError) 
+    function getError:EDatabaseError;
+    
+    /////////////////////////////////////////////////////////
 
     constructor Create;
-    function getError:EDatabaseError;
+    destructor Destroy;
   private
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
@@ -686,7 +692,7 @@ end;
 
 ////////////////////////////////////////////////////////
 
-function getError:EDatabaseError;
+function TDBConnection.getError:EDatabaseError;
 begin
   result := DBError;
 end;
@@ -710,6 +716,13 @@ begin
   begin
     ShowMessage('connected -great');
   end;
+end;
+
+destructor TDBConnection.Destroy;
+begin
+  SQLQuery.close;
+  SQLTransaction.destroy;
+  SQLite3Connection.destroy;
 end;
 
 end.
