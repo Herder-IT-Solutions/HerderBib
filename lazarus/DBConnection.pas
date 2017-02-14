@@ -117,7 +117,7 @@ type
     
     /////////////////////////////////////////////////////////
 
-    constructor Create;
+    constructor Create(databaseName:string):boolean;
     destructor Destroy;
   private
     SQLite3Connection: TSQLite3Connection;
@@ -697,13 +697,15 @@ begin
   result := DBError;
 end;
 
-constructor TDBConnection.Create;
+constructor TDBConnection.Create(databaseName:string):boolean;
 begin
   self.SQLite3Connection := TSQLite3Connection.Create(nil);
   self.SQLTransaction := TSQLTransaction.Create(nil);
   self.SQLQuery := TSQLQuery.Create(nil);
 
-  self.SQLite3Connection.DatabaseName := '../buchverleih.sqlite';
+  result := false;
+  if not FileExists(databaseName) Then exit;
+  self.SQLite3Connection.DatabaseName := databaseName;
   self.SQLite3Connection.Transaction := self.SQLTransaction;
 
   self.SQLTransaction.Database := self.SQLite3Connection;
@@ -714,7 +716,7 @@ begin
   self.SQLite3Connection.Open;
   if self.SQLite3Connection.Connected then
   begin
-    ShowMessage('connected -great');
+	result := true;
   end;
 end;
 
