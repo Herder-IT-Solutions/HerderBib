@@ -9,110 +9,119 @@ uses
 
 type
   TBooktype = class
-    private
-      isbn:STRING;
-      title:STRING;
-      subject:STRING;
-      storage:INTEGER;
-    public
-      // Returns the booktype ISBN
-      // result: isbn[13]
-      function getIsbn():STRING;
+  private
+    isbn: string;
+    title: string;
+    subject: string;
+    storage: integer;
+  public
+    // Returns the booktype ISBN
+    // result: isbn[13]
+    function getIsbn(): string;
 
-      // Sets a new booktype ISBN
-      // parameter: newIsbn
-      // result: TRUE on success, so if newIsbn has 13 characters and is not NULL
-      function setIsbn(newIsbn:STRING):BOOLEAN;
+    // Sets a new booktype ISBN
+    // parameter: newIsbn
+    // result: TRUE on success, so if newIsbn has 13 characters and is not NULL
+    function setIsbn(newIsbn: string): boolean;
 
-      // Returns the booktype title
-      // result: title[0..255]
-      function getTitle():STRING;
+    // Returns the booktype title
+    // result: title[0..255]
+    function getTitle(): string;
 
-      // Sets a new booktype title
-      // parameter: newTitle
-      // result: TRUE on success, so if newTitle is not NULL
-      function setTitle(newTitle:STRING):BOOLEAN;
+    // Sets a new booktype title
+    // parameter: newTitle
+    // result: TRUE on success, so if newTitle is not NULL
+    function setTitle(newTitle: string): boolean;
 
-      // Returns the booktype subject
-      // result: subject
-      function getSubject():STRING;
+    // Returns the booktype subject
+    // result: subject
+    function getSubject(): string;
 
-      // Sets a new booktype subject
-      // parameter: newSubject
-      // result: TRUE on success, so if newSubject is not NULL
-      function setSubject(newSubject:STRING):BOOLEAN;
+    // Sets a new booktype subject
+    // parameter: newSubject
+    // result: TRUE on success, so if newSubject is not NULL
+    function setSubject(newSubject: string): boolean;
 
-      // Returns the booktype storage
-      // result: storage
-      function getStorage():INTEGER;
+    // Returns the booktype storage
+    // result: storage
+    function getStorage(): integer;
 
-      // Sets a new book storage
-      // parameter: newStorage
-      // result: TRUE on success, so if newStorage <= (2^63)-1)
-      function setStorage(newStorage:INTEGER):BOOLEAN;
+    // Sets a new book storage
+    // parameter: newStorage
+    // result: TRUE on success, so if newStorage <= (2^63)-1)
+    function setStorage(newStorage: integer): boolean;
   end;
 
 implementation
 
-function TBooktype.getIsbn():STRING;
+function TBooktype.getIsbn(): string;
 begin
-  result:=self.isbn;
+  Result := self.isbn;
 end;
 
-function TBooktype.setIsbn(newIsbn:STRING):BOOLEAN;
+function TBooktype.setIsbn(newIsbn: string): boolean;
+var
+  isbn1, isbn2: cardinal;
 begin
-  result:=false;
+  Result := False;
   if (newIsbn <> NULL) and (length(newIsbn) = 13) then
   begin
-    self.isbn:=newIsbn;
-    result:=true;
+    try // is numeric?
+      isbn1 := StrToInt(Copy(newIsbn, 0, 8));
+      isbn2 := StrToInt(Copy(newIsbn, 8, 5));
+    except
+      On E: EConvertError do
+        exit;
+    end;
+
+    self.isbn := newIsbn;
+    Result := True;
   end;
 end;
 
-function TBooktype.getTitle():STRING;
+function TBooktype.getTitle(): string;
 begin
-  result:=self.title;
+  Result := self.title;
 end;
 
-function TBooktype.setTitle(newTitle:STRING):BOOLEAN;
+function TBooktype.setTitle(newTitle: string): boolean;
 begin
-  result:=false;
-  if(newTitle <> NULL) then
+  Result := False;
+  if (newTitle <> NULL) then
   begin
-    self.title:=newTitle;
-    result:=true;
+    self.title := newTitle;
+    Result := True;
   end;
 end;
 
-function TBooktype.getSubject():STRING;
+function TBooktype.getSubject(): string;
 begin
-  result:=self.subject;
+  Result := self.subject;
 end;
 
-function TBooktype.setSubject(newSubject:STRING):BOOLEAN;
+function TBooktype.setSubject(newSubject: string): boolean;
 begin
-  result:=false;
-  if(newSubject <> NULL) then
+  Result := False;
+  if (newSubject <> NULL) then
   begin
-    self.subject:=newSubject;
-    result:=true;
+    self.subject := newSubject;
+    Result := True;
   end;
 end;
 
-function TBooktype.getStorage():INTEGER;
+function TBooktype.getStorage(): integer;
 begin
-  result:=self.storage;
+  Result := self.storage;
 end;
 
-function TBooktype.setStorage(newStorage:INTEGER):BOOLEAN;
+function TBooktype.setStorage(newStorage: integer): boolean;
 begin
-  result:=false;
+  Result := False;
   if (newStorage <> NULL) then
   begin
-    self.storage:=newStorage;
-    result:=true;
+    self.storage := newStorage;
+    Result := True;
   end;
 end;
 
 end.
-
