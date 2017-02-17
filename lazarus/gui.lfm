@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 237
+  Left = 221
   Height = 488
-  Top = 106
+  Top = 103
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -5621,6 +5621,15 @@ object Form1: TForm1
           2D666163746F720031783116AE83DB0000000049454E44AE426082
         }
       end
+      object LbRentError: TLabel
+        Left = 8
+        Height = 13
+        Top = 216
+        Width = 58
+        Caption = 'LbRentError'
+        ParentColor = False
+        Visible = False
+      end
     end
     object TabRet: TTabSheet
       Caption = 'Zurückgeben'
@@ -5736,6 +5745,15 @@ object Form1: TForm1
         Width = 171
         Caption = 'Zustand des Buches (in Schulnoten)'
         ParentColor = False
+      end
+      object LbRetError: TLabel
+        Left = 8
+        Height = 13
+        Top = 296
+        Width = 52
+        Caption = 'LbRetError'
+        ParentColor = False
+        Visible = False
       end
     end
     object TabAdd: TTabSheet
@@ -5882,9 +5900,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = Admnistration
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 5
+        TabIndex = 1
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -5971,6 +5989,7 @@ object Form1: TForm1
             Top = 176
             Width = 147
             Caption = 'Schüler anzeigen'
+            OnClick = BtInfoStudShowClick
             TabOrder = 5
           end
           object BtInfoStudEdit: TButton
@@ -6001,6 +6020,15 @@ object Form1: TForm1
             Caption = 'Ausleihbeziehungen in Datei exportieren'
             TabOrder = 8
           end
+          object LbInfoStudError: TLabel
+            Left = 456
+            Height = 13
+            Top = 176
+            Width = 77
+            Caption = 'LbInfoStudError'
+            ParentColor = False
+            Visible = False
+          end
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
@@ -6027,6 +6055,7 @@ object Form1: TForm1
             Top = 176
             Width = 147
             Caption = 'Buch anzeigen'
+            OnClick = BtInfoBookShow1Click
             TabOrder = 1
           end
           object LbInfoBookID: TLabel
@@ -6107,6 +6136,15 @@ object Form1: TForm1
             Caption = 'Buch löschen'
             Color = clRed
             TabOrder = 5
+          end
+          object LbInfoBookError: TLabel
+            Left = 16
+            Height = 13
+            Top = 240
+            Width = 78
+            Caption = 'LbInfoBookError'
+            ParentColor = False
+            Visible = False
           end
         end
         object TabRel: TTabSheet
@@ -6233,6 +6271,7 @@ object Form1: TForm1
             Top = 176
             Width = 147
             Caption = 'Buch anzeigen'
+            OnClick = BtInfoBooktypeShowClick
             TabOrder = 1
           end
           object LbInfoBooktypeISBN: TLabel
@@ -6257,6 +6296,15 @@ object Form1: TForm1
             Top = 48
             Width = 264
             TabOrder = 3
+          end
+          object LbInfoBooktypeError: TLabel
+            Left = 16
+            Height = 13
+            Top = 240
+            Width = 100
+            Caption = 'LbInfoBooktypeError'
+            ParentColor = False
+            Visible = False
           end
         end
         object TabCreditsHelp: TTabSheet

@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
-  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf, uVerwaltung;
+  StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
+  Buttons, uDBManagement;
 
 type
 
@@ -49,6 +50,11 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoStudError: TLabel;
+    LbInfoBookError: TLabel;
+    LbInfoBooktypeError: TLabel;
+    LbRetError: TLabel;
+    LbRentError: TLabel;
     LEInfoAdminDBName: TLabeledEdit;
     LbInfoAdminCheck: TLabel;
     LbInfoAdmin: TLabel;
@@ -112,6 +118,9 @@ type
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAminLogoutClick(Sender: TObject);
+    procedure BtInfoBookShow1Click(Sender: TObject);
+    procedure BtInfoBooktypeShowClick(Sender: TObject);
+    procedure BtInfoStudShowClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportWikiClick(Sender: TObject);
@@ -208,17 +217,19 @@ var s:STRING;
   end;
 begin
      s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
-     if (length(s) = 13) then b := CheckSumISBN13(s)
-     else a:=TRUE;
-     LbAddBookError.Visible := False;
-     if not (b) then begin
-        LbAddBookError.Visible := True;
-        LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
-     end;
-     if a then begin
-        LbAddBookError.Visible := True;
-        LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
-     end;
+     if not (s = '') then begin
+
+        if (length(s) = 13) then b := CheckSumISBN13(s)
+        else a:=TRUE;
+        LbAddBookError.Visible := False;
+        if not (b) then begin
+           LbAddBookError.Visible := True;
+           LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
+           end;
+        if a then begin
+           LbAddBookError.Visible := True;
+           LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
+           end;
 
       k:=1;
 
@@ -228,8 +239,12 @@ begin
          INC(k)
      end;
      //exexute print.exe -s -LbAddBookName.Text -CBAddBookSubject.Text -SeAddBookQuantity.Value
-
+     end
+     else begin
+         LbAddBookError.Visible := True;
+         LbAddBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
      end;
+end;
 
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
 begin
@@ -248,19 +263,78 @@ begin
      BtInfoStudEdit.Enabled := False;
 end;
 
+procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
+begin
+     LbInfoBookError.Visible := FALSE;
+  try
+
+  except
+    On EConvertError do begin
+        LbInfoBookError.Visible := TRUE;
+        LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+
+end;
+
+procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
+begin
+    LbInfoBooktypeError.Visible := FALSE;
+  try
+
+  except
+    On EConvertError do begin
+        LbInfoBooktypeError.Visible := TRUE;
+        LbInfoBooktypeError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+
+end;
+
+procedure TForm1.BtInfoStudShowClick(Sender: TObject);
+begin
+       LbInfoStudError.Visible := FALSE;
+  try
+
+  except
+    On EConvertError do begin
+        LbInfoStudError.Visible := TRUE;
+        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+
+end;
+
 procedure TForm1.BtRentClick(Sender: TObject);
 begin
+  LbRentError.Visible := FALSE;
+  try
   if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
      //Check if book is already rent
      management.BookRentStu(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
+  end;
+
+  except
+    On EConvertError do begin
+        LbRentError.Visible := TRUE;
+        LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
   end;
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
 begin
+     LbRetError.Visible := FALSE;
+  try
     if (management.BIdCheck(STRTOINT(EdBook1.text)) and management.SIdCheck(STRTOINT(EdStud1.text))) then begin
      management.BookQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
      management.BookBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
+  end;
+      except
+    On EConvertError do begin
+        LbRetError.Visible := TRUE;
+        LbRetError.Caption := 'Error 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
   end;
   //returnBook(StrToINT(EdStud1.text),StrToINT(EdBook1.text),TBBookState.Position)
 end;
