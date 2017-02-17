@@ -69,14 +69,17 @@ var
   isbn1, isbn2: cardinal;
 begin
   Result := False;
-  if (newIsbn <> NULL) and (length(newIsbn) = 13) then
+  if (newIsbn = NULL) or (length(newIsbn) = 13) then
   begin
-    try // is numeric?
-      isbn1 := StrToInt(Copy(newIsbn, 0, 8));
-      isbn2 := StrToInt(Copy(newIsbn, 8, 5));
-    except
-      On E: EConvertError do
-        exit;
+    if (length(newIsbn) = 13) then
+    begin
+      try // is numeric?
+        isbn1 := StrToInt(Copy(newIsbn, 0, 8));
+        isbn2 := StrToInt(Copy(newIsbn, 8, 5));
+      except
+        On E: EConvertError do
+          exit;
+      end;
     end;
 
     self.isbn := newIsbn;
@@ -92,7 +95,7 @@ end;
 function TBook.setCondition(newCondition: cardinal): boolean;
 begin
   Result := False;
-  if (newCondition <> NULL) and (newCondition <= 6) then
+  if (newCondition <= 6) then
   begin
     self.condition := newCondition;
     Result := True;
