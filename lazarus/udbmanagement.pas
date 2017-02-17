@@ -312,7 +312,7 @@ procedure TDBManagement.BookAdd(isbn : String);
 Var id: Cardinal;
 begin
   repeat
-     id:= Random(5000000) + 23000001; //Bereich von 23Mio1 bis 28Mio1
+     id:= Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
   until BIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   query.Close;
@@ -389,7 +389,7 @@ Var id: Cardinal;
     student: TStudent;
 begin
   repeat
-     id:= Random(2000000) + 21000000; //Bereich von 21Mio bis 23 Mio
+     id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
   until SIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   student := TStudent.Create;
