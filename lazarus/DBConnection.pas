@@ -56,7 +56,7 @@ type
     function deleteStudent(student: TStudent): boolean;
 
     /////////////////////////////////////////////////////////
-    //             RENTAL
+    //             RENTAL                                  //
     /////////////////////////////////////////////////////////
 
     // Returns an array of all rentals
@@ -74,12 +74,17 @@ type
     function deleteRental(rental: TRental): boolean;
 
     /////////////////////////////////////////////////////////
-    //             BOOK
+    //             BOOK                                    //
     /////////////////////////////////////////////////////////
 
     // Returns an array of all books
     // result: array of book objects
     function getBooks: ArrayOfBooks;
+
+    // Returns the book object by given book id or NIL if the book does not exist
+    // parameter: book id
+    // result: book object | nil
+    function getBookById(id: int64): TBook;
 
     // Persists book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -92,7 +97,7 @@ type
     function deleteBook(book: TBook): boolean;
 
     /////////////////////////////////////////////////////////
-    //             BOOKTYPE
+    //             BOOKTYPE                                //
     /////////////////////////////////////////////////////////
 
     // Returns an array of all books
@@ -509,6 +514,38 @@ begin
   end;
 end;
 
+function TDBConnection.getBookById(book: int64): TBook;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+  SQLQuery.ParamByName('id').AsInteger := id;
+  SQLQuery.Open;
+
+  Result := nil;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      //new row
+      if not EOF then
+      begin
+        Result := TBook.Create; //create new book object
+        Result.setId(FieldByName('id').AsLongint); //set id
+        Result.setIsbn(FieldByName('isbn').AsString);
+        Result.setCondition(FieldByName('condition').AsInteger);
+      end;
+    end;
+
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
+  end;
+end;
+
 function TDBConnection.persistBook(book: TBook): boolean;
 begin
   SQLQuery.Close;
@@ -609,7 +646,7 @@ function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
-  SQLQuery.ParamByName('isbn').AsInteger := booktype.getIsbn;
+  SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
   SQLQuery.Open;
 
   try
@@ -701,6 +738,7 @@ end;
 destructor TDBConnection.Destroy;
 begin
   SQLQuery.Close;
+  SQLQuery.Destroy;
   SQLTransaction.Destroy;
   SQLite3Connection.Destroy;
 end;
