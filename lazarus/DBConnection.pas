@@ -609,7 +609,7 @@ function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
-  SQLQuery.ParamByName('isbn').AsInteger := booktype.getIsbn;
+  SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
   SQLQuery.Open;
 
   try
@@ -701,6 +701,7 @@ end;
 destructor TDBConnection.Destroy;
 begin
   SQLQuery.Close;
+  SQLQuery.Destroy;
   SQLTransaction.Destroy;
   SQLite3Connection.Destroy;
 end;
