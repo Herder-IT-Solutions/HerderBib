@@ -5,10 +5,9 @@ unit uDBManagement;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, student;
+  Classes, SysUtils, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental;
 
 type
-  ArrayOfStudents = array of TStudent;
 
   TDBManagement = class
 
@@ -22,7 +21,7 @@ type
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
-    //Erg: Wahr, wenn vergeben
+    //Erg: Wahr, wenn Buch Id vergeben
     function BIdCheck(BId :Cardinal):Boolean;
 
     //Vor: Eine Buch Id
@@ -34,8 +33,6 @@ type
     //Eff: Prüft den Buchtyp
     //Erg: Wahr, wenn isbn bereits vorhanden
     function BTypeCheck (isbn:String): Boolean;
-
-    function getRentals: ArrayOfStudent;          //Michael
 
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
@@ -92,7 +89,7 @@ type
 
     //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
     //Eff: Neuer Buchtyp
-    procedure BookTypeNew(isbn :String; title, subject :String);
+    procedure BookTypeNew(isbn, title, subject :String);
 
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
@@ -114,9 +111,7 @@ type
 
   //Atribute
   private
-    query : TSQLQuery;             //Query
-    tran  : TSQLTransaction;       //Transaction
-    conn  : TSQLite3Connection;    //Connection
+    uDBConn : TDBConnection;         //Element für Verbindung zur DBConnection
 
 end;
 
@@ -125,29 +120,14 @@ implementation
 constructor TDBManagement.create();
 begin
   //Initialisierung
-
-  query := Tquery.Create(nil);         //Query
-  tran  := TSQLTransaction.Create(nil);   //Transaction
-  conn  := TSQLite3Connection.Create(nil);//Connection
-
-  conn.DatabaseName:='buchverleih.sqlite';
-  conn.Transaction:=tran;
-
-  tran.Database:=conn;
-
-  query.Transaction:=tran;
-  query.DataBase:=conn;
+  uDBConn := TDBConnection.Create('buchverleih.sqlite');
 
   Randomize;
 end;
 
 destructor TDBManagement.destroy();
 begin
-  query.Close;
-
-  query.Destroy;
-  tran.Destroy;
-  conn.Destroy;
+  uBDConn.Destroy;
 end;
 
 function TDBManagement.BIdCheck(BId :Cardinal):Boolean;
@@ -186,117 +166,39 @@ begin
   result:=ret;
 end;
 
-function studentDBExtract(hQuery : TSQLQuery) : ArrayOfStudents;
-begin
-  Result := nil;
-
-  try
-    with hQuery do
-    begin
-      First;
-      while not EOF do
-      begin
-        //neues TStudent Element
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TStudent.Create;
-        Result[length(Result) - 1].setId(FieldByName('id').AsInteger);
-        Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
-        Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
-        Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
-        Result[length(Result) - 1].setBirth(FieldByName('birth').AsDate);
-        Next;
-      end;
-    end;
-
-  finally
-    //Error Alert
-  end;
-end;
-
 function TDBManagement.getStudents(): ArrayOfStudents;
-begin                                                                    //!
-  query.Close;
-  query.SQL.Text := 'SELECT * FROM student';
-  query.Open;
-
-  Result := studentDBExtract(query);
+begin
+  Result := uDBConn.getStudents;
 end;
 
 function TDBManagement.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 begin
-  query.Close;
-  query.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''' +
-    firstName + '''';
-  query.Open;
-
-  Result := studentDBExtract(query);
+  Result := uDBConn.getStudentsByFirstNamePattern(firstName);
 end;
 
 function TDBManagement.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 begin
-  query.Close;
-  query.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''' + lastName + '''';
-  query.Open;
-
-  Result := studentDBExtract(query);
+  Result := uDBConn.getStudentsByLastNamePattern(lastName);
 end;
 
 function TDBManagement.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
-  query.Close;
-  query.SQL.Text := 'SELECT * FROM student WHERE class_name = ''' + ClassName + '''';
-  query.Open;
-
-  Result := studentDBExtract(query);
+  Result := uDBConn.;getStudentsByClassName(classN)
 end;
 
 
 function TDBManagement.persistStudent(student: TStudent): boolean;
 begin
-  query.Close;
-  //Holt Schüler von der Datenbank, wenn er existiert
-  query.SQL.Text := 'SELECT * FROM student WHERE id = ' + IntToStr(student.getId);
-  query.Open;
-
-  try
-    with query do
-    begin
-      First;
-
-      if EOF then
-      begin //Wenn Schüler nicht existiert
-        Append; //Einfüge Modus der Datenbank
-      end else begin
-        Edit; //Veränderungs Modus
-      end;
-
-      //Übergabe der Daten zur Datenbank
-      FieldByName('last_name').AsString := student.getLastName;
-      FieldByName('first_name').AsString := student.getFirstName;
-      FieldByName('class_name').AsString := student.getClassName;
-      FieldByName('birth').AsDate := student.getBirth;
-      Post;
-      ApplyUpdates;
-      SQLTransaction.commit;
-    end;
-
-  finally
-  end;
+  Result:=uDBConn.persistStudent(student);
 end;
 
 function TDBManagement.SIdCheck(SId :Cardinal):Boolean;
-Var ret : Boolean;
 begin
-  ret:=false;
-  query.Close;
-  query.SQL.text:='Select id from student where id = :Id';
-  query.ParamByName('Id').AsInteger:=SId;
-  query.Open;
-  if not query.EOF then ret:=true;
-  result:=ret;
+  if (uDBConn.getStudentById(SId) = nil) then Result:= false
+  else Result:=true;
 end;
 
-procedure TDBManagement.BookBack(BId, SId :Cardinal);
+procedure TDBManagement.BookBack(BId, SId :Cardinal);                                //!
 begin
   query.Close;
   query.SQL.text:='Update rental Set return_date = :Datum where student_id = :SId and book_id = :BId';
@@ -309,22 +211,23 @@ begin
 end;
 
 procedure TDBManagement.BookAdd(isbn : String);
-Var id: Cardinal;
+Var id   : Cardinal;
+    book :TBook
 begin
   repeat
      id:= Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
   until BIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
-  query.Close;
-  query.SQL.Text:='Insert into book Values (:Id, :isbn, :con)';
-  query.ParamByName('Id').AsInteger:=id;
-  query.ParamByName('isbn').AsString:=isbn;
-  query.ParamByName('con').AsInteger:=1;
-  query.ExecSQL;
-  tran.Commit;
+  book := TBook.Create;
+
+  book.setId(id);
+  book.setIsbn(isbn);
+  book.setCondition(1);
+
+  uDBConn.persistBook(book);
 end;
 
-procedure TDBManagement.BookDel(BId:Cardinal);
+procedure TDBManagement.BookDel(BId:Cardinal);                         //!
 begin
   query.Close;
   query.SQL.Text:='Delete from book where Id = (:BId)';
@@ -333,7 +236,7 @@ begin
   tran.Commit;
 end;
 
-procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);
+procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);         //!
 begin
   query.Close;
   query.SQL.text:='Update book Set condition = :Quali where id = :BId';
@@ -344,25 +247,22 @@ begin
 end;
 
 procedure TDBManagement.BookTypeNew(isbn, title, subject :String);
+Var booktype : TBooktype;
 begin
-  query.Close;
-  query.SQL.Text:='Insert into booktype Values (:isbn, :title, :sub, NULL)';
-  query.ParamByName('isbn').AsString:=isbn;
-  query.ParamByName('title').AsString:=title;
-  query.ParamByName('sub').AsString:=subject;
-  query.ExecSQL;
-  tran.Commit;
+  booktype := TBooktype.Create;
+  booktype.setIsbn(isbn);
+  booktype.setTitle(title);
+  booktype.setSubject(subject);
+  booktype.setStorage(nil);
+
+  uDBConn.persistBooktype(booktype);
 end;
 
-procedure TDBManagement.BookRentStu(BId, SId :Cardinal);
+procedure TDBManagement.BookRentStu(BId, SId :Cardinal);                                //!
+Var rental: TRental;
 begin
-  query.Close;
-  query.SQL.text:='Insert into rental Values(:BId, :SId, NULL, :Datum)';
-  query.ParamByName('Datum').AsDate:=now;         //FormatDateTime('yyyy-mm-dd',
-  query.ParamByName('BId').AsInteger:=BId;
-  query.ParamByName('Sid').AsInteger:=SId;
-  query.ExecSQL;
-  tran.Commit;
+  rental := TRental.Create;
+
 
 end;
 
