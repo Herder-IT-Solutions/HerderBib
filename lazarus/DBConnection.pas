@@ -514,7 +514,7 @@ begin
   end;
 end;
 
-function TDBConnection.getBookById(book: int64): TBook;
+function TDBConnection.getBookById(id: int64): TBook;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
