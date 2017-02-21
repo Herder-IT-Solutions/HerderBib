@@ -164,7 +164,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -200,7 +200,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -236,7 +236,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -272,7 +272,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -307,7 +307,7 @@ begin
       if not EOF then
       begin
         Result := TStudent.Create; //create new student object
-        Result.setId(FieldByName('id').AsLongint); //set id
+        Result.setId(FieldByName('id').AsLargeInt); //set id
         Result.setLastName(FieldByName('last_name').AsString);
         Result.setFirstName(FieldByName('first_name').AsString);
         Result.setClassName(FieldByName('class_name').AsString);
@@ -404,8 +404,8 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TRental.Create; //create new rental object
-        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLongint);
-        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLongint);
+        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
+        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
         Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
         Result[length(Result) - 1].setRentalDate(FieldByName('rental_date').AsDateTime);
         Next;
@@ -441,9 +441,9 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLongInt := rental.getId;
-      FieldByName('student_id').AsLongInt := rental.getStudentId;
-      FieldByName('book_id').AsLongInt := rental.getBookId;
+      FieldByName('id').AsLargeInt := rental.getId;
+      FieldByName('student_id').AsLargeInt := rental.getStudentId;
+      FieldByName('book_id').AsLargeInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
       FieldByName('return_date').AsDateTime := rental.getReturnDate;
       Post; //add to change buffer
@@ -503,7 +503,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TBook.Create; //create new book object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLongint);
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt);
         Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
         Result[length(Result) - 1].setCondition(FieldByName('condition').AsInteger);
         Next;
@@ -536,7 +536,7 @@ begin
       if not EOF then
       begin
         Result := TBook.Create; //create new book object
-        Result.setId(FieldByName('id').AsLongint); //set id
+        Result.setId(FieldByName('id').AsLargeint); //set id
         Result.setIsbn(FieldByName('isbn').AsString);
         Result.setCondition(FieldByName('condition').AsInteger);
       end;
@@ -570,7 +570,7 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLongint := book.getId;
+      FieldByName('id').AsLargeint := book.getId;
       FieldByName('isbn').AsString := book.getIsbn;
       FieldByName('condition').AsInteger := book.getCondition;
       Post; //add to change buffer
