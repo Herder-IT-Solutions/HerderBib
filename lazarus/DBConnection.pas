@@ -63,6 +63,12 @@ type
     // result: array of rental objects
     function getRentals: ArrayOfRentals;
 
+    // Returns an array of all rentals with given student and book
+    // parameter: student, book
+    // result: array of rental objects
+    function getAllRentalsByBookAndStudent(student: TStudent;
+      book: TBook): ArrayOfRentals;
+
     // Persists rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
@@ -112,7 +118,7 @@ type
     // Returns the Booktype of an ISBN Number
     // parameter: Isbn (String type)
     // result: TBooktype on success, NIL on failure
-    function getBooktypeByIsbn(isbn: String): TBooktype;
+    function getBooktypeByIsbn(isbn: string): TBooktype;
 
     // Deletes a book
     // parameter: booktype object
@@ -391,6 +397,44 @@ function TDBConnection.getRentals: ArrayOfRentals;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM rental';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      while not EOF do
+      begin
+        //new row
+        setLength(Result, length(Result) + 1);
+        Result[length(Result) - 1] := TRental.Create; //create new rental object
+        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
+        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
+        Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
+        Result[length(Result) - 1].setRentalDate(FieldByName('rental_date').AsDateTime);
+        Next;
+      end;
+    end;
+
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
+  end;
+end;
+
+function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
+  book: TBook): ArrayOfRentals;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text :=
+    'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
+  SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+  SQLQuery.ParamByName('student').AsLargeInt := student.getId;
   SQLQuery.Open;
 
   Result := nil;
@@ -708,14 +752,14 @@ begin
   end;
 end;
 
-function TDBConnection.getBooktypeByIsbn(isbn: String): TBooktype;
+function TDBConnection.getBooktypeByIsbn(isbn: string): TBooktype;
 begin
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
   SQLQuery.ParamByName('isbn').AsString := isbn;
   SQLQuery.Open;
 
-  result := NIL;
+  Result := nil;
 
   try
     with SQLQuery do
@@ -725,17 +769,18 @@ begin
       if not EOF then
       begin
         Result := TBooktype.Create; //create new student object
-        Result.setIsbn(FieldByName('isbn').AsLargeint); //set id
+        Result.setIsbn(FieldByName('isbn').AsString); //set id
         Result.setTitle(FieldByName('title').AsString);
         Result.setSubject(FieldByName('subject').AsString);
-        Result.setStorage(FieldByName('storage').AsString);
+        Result.setStorage(FieldByName('storage').AsInteger);
       end;
     end;
   except
-        on E: EDatabaseError do
+    on E: EDatabaseError do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
+    end;
   end;
 end;
 
