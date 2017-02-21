@@ -1,0 +1,15 @@
+Voraussetzungen:
+	Python, PIL (Python Image Library), pdflatex (TexLive) sind installiert
+	
+	Ein Standarddrucker ist eingerichtet
+
+Abhängigkeiten von TBarcodePrinter:
+	Lazutils
+
+Benötigte Dateien und Ordner
+	Ordner BarcodePrinter (muss sich im Programmverzeichnis befinden):
+		empty.png (leerer Barcode)
+		ean8.pyc
+		ean8.py
+
+Außerdem muss das Schreiben im Programmverzeichnis möglich sein
