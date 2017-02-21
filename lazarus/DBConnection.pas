@@ -109,6 +109,11 @@ type
     // result: TRUE on success
     function persistBooktype(booktype: TBooktype): boolean;
 
+    // Returns the Booktype of an ISBN Number
+    // parameter: Isbn (String type)
+    // result: TBooktype on success, NIL on failure
+    function getBooktypeByIsbn(isbn: String): TBooktype;
+
     // Deletes a book
     // parameter: booktype object
     // result: TRUE on success
@@ -700,6 +705,37 @@ begin
       DBError := E;
       Result := False;
     end;
+  end;
+end;
+
+function TDBConnection.getBooktypeByIsbn(isbn: String): TBooktype;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
+  SQLQuery.ParamByName('isbn').AsString := isbn;
+  SQLQuery.Open;
+
+  result := NIL;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      //new row
+      if not EOF then
+      begin
+        Result := TBooktype.Create; //create new student object
+        Result.setIsbn(FieldByName('isbn').AsLargeint); //set id
+        Result.setTitle(FieldByName('title').AsString);
+        Result.setSubject(FieldByName('subject').AsString);
+        Result.setStorage(FieldByName('storage').AsString);
+      end;
+    end;
+  except
+        on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := NIL;
   end;
 end;
 
