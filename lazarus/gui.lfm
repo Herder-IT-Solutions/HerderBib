@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 221
+  Left = 168
   Height = 488
-  Top = 103
+  Top = 190
   Width = 691
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 488
@@ -5776,6 +5776,7 @@ object Form1: TForm1
         Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 432
+        MaxLength = 13
         OnKeyPress = confirmNumbers
         ParentShowHint = False
         ShowHint = True
@@ -5900,9 +5901,9 @@ object Form1: TForm1
         Height = 464
         Top = 0
         Width = 687
-        ActivePage = TabBook
+        ActivePage = TabRel
         ParentBiDiMode = False
-        TabIndex = 1
+        TabIndex = 2
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
@@ -6151,14 +6152,6 @@ object Form1: TForm1
           Caption = 'Ausleihbeziehungen'
           ClientHeight = 438
           ClientWidth = 679
-          object StringGrid1: TStringGrid
-            Left = 8
-            Height = 392
-            Top = 40
-            Width = 672
-            ColCount = 3
-            TabOrder = 0
-          end
           object CBInfoRelGrade: TComboBox
             Left = 112
             Height = 21
@@ -6175,7 +6168,7 @@ object Form1: TForm1
               '10'
               '11/12'
             )
-            TabOrder = 1
+            TabOrder = 0
             Text = '5'
           end
           object LbInfoRelFilter: TLabel
@@ -6234,7 +6227,7 @@ object Form1: TForm1
               'Spanisch'
               'Theater/DS'
             )
-            TabOrder = 2
+            TabOrder = 1
             Text = 'Englisch'
           end
           object BtInfoRelFilter: TButton
@@ -6243,6 +6236,17 @@ object Form1: TForm1
             Top = 8
             Width = 115
             Caption = 'Filtern'
+            OnClick = BtInfoRelFilterClick
+            TabOrder = 2
+          end
+          object MeInfoRel: TMemo
+            Left = 8
+            Height = 378
+            Top = 40
+            Width = 659
+            Lines.Strings = (
+              'MeInfoRel'
+            )
             TabOrder = 3
           end
         end

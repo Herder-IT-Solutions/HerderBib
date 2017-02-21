@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, uDBManagement;
+  Buttons, CheckLst, uDBManagement;
 
 type
 
@@ -96,13 +96,13 @@ type
     LbStudName1: TLabel;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
+    MeInfoRel: TMemo;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
-    StringGrid1: TStringGrid;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
     TabAdd: TTabSheet;
@@ -120,6 +120,7 @@ type
     procedure BtInfoAminLogoutClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
+    procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
@@ -291,6 +292,40 @@ begin
 
 end;
 
+procedure TForm1.BtInfoRelFilterClick(Sender: TObject);
+procedure printLine (s: STRING ; li : CARDINAL);
+var len,i : CARDINAL;
+begin
+     len := length(s);
+     i   := 1;
+     while i < (len+1) do
+     begin
+          if s[i]=';' then s[i]:=' ';
+          INC(i);
+     end;
+     MeInfoRel.Lines[li]:=s
+end;
+
+procedure readCSV(dataname: STRING);
+   var f : TextFile;
+    str : String;
+    cur: CARDINAL;
+   begin
+     AssignFile (f,dataname);
+     reset (f);
+     cur:=0;
+     while not EOF (f) do
+     begin
+       cur:=cur+1;
+       readln (f,str);
+       printLine(str,cur)
+     end;
+     CloseFile (f);
+end;
+begin;
+readCSV('rental_relations.csv');
+end;
+
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
 begin
        LbInfoStudError.Visible := FALSE;
@@ -302,7 +337,6 @@ begin
         LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
-
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
