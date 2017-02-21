@@ -63,6 +63,12 @@ type
     // result: array of rental objects
     function getRentals: ArrayOfRentals;
 
+    // Returns an array of all rentals with given student id and book id
+    // parameter: student id, book id
+    // result: array of rental objects
+    function getAllRentalsByBookAndStudent(student: TStudent;
+      book: TBook): ArrayOfRentals;
+
     // Persists rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
@@ -108,11 +114,6 @@ type
     // parameter: booktype object
     // result: TRUE on success
     function persistBooktype(booktype: TBooktype): boolean;
-
-    // Returns the Booktype of an ISBN Number
-    // parameter: Isbn (String type)
-    // result: TBooktype on success, NIL on failure
-    function getBooktypeByIsbn(isbn: String): TBooktype;
 
     // Deletes a book
     // parameter: booktype object
@@ -164,7 +165,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -200,7 +201,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -236,7 +237,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -272,7 +273,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint); //set id
         Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
         Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
         Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
@@ -307,7 +308,7 @@ begin
       if not EOF then
       begin
         Result := TStudent.Create; //create new student object
-        Result.setId(FieldByName('id').AsLargeInt); //set id
+        Result.setId(FieldByName('id').AsLongint); //set id
         Result.setLastName(FieldByName('last_name').AsString);
         Result.setFirstName(FieldByName('first_name').AsString);
         Result.setClassName(FieldByName('class_name').AsString);
@@ -404,6 +405,44 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TRental.Create; //create new rental object
+        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLongint);
+        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLongint);
+        Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
+        Result[length(Result) - 1].setRentalDate(FieldByName('rental_date').AsDateTime);
+        Next;
+      end;
+    end;
+
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
+  end;
+end;
+
+function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
+  book: TBook): ArrayOfRentals;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text :=
+    'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
+  SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+  SQLQuery.ParamByName('student').AsLargeInt := student.getId;
+  SQLQuery.Open;
+
+  Result := nil;
+
+  try
+    with SQLQuery do
+    begin
+      First;
+      while not EOF do
+      begin
+        //new row
+        setLength(Result, length(Result) + 1);
+        Result[length(Result) - 1] := TRental.Create; //create new rental object
         Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
         Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
         Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
@@ -441,9 +480,9 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLargeInt := rental.getId;
-      FieldByName('student_id').AsLargeInt := rental.getStudentId;
-      FieldByName('book_id').AsLargeInt := rental.getBookId;
+      FieldByName('id').AsLongInt := rental.getId;
+      FieldByName('student_id').AsLongInt := rental.getStudentId;
+      FieldByName('book_id').AsLongInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
       FieldByName('return_date').AsDateTime := rental.getReturnDate;
       Post; //add to change buffer
@@ -503,7 +542,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TBook.Create; //create new book object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt);
+        Result[length(Result) - 1].setId(FieldByName('id').AsLongint);
         Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
         Result[length(Result) - 1].setCondition(FieldByName('condition').AsInteger);
         Next;
@@ -536,7 +575,7 @@ begin
       if not EOF then
       begin
         Result := TBook.Create; //create new book object
-        Result.setId(FieldByName('id').AsLargeint); //set id
+        Result.setId(FieldByName('id').AsLongint); //set id
         Result.setIsbn(FieldByName('isbn').AsString);
         Result.setCondition(FieldByName('condition').AsInteger);
       end;
@@ -570,7 +609,7 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLargeint := book.getId;
+      FieldByName('id').AsLongint := book.getId;
       FieldByName('isbn').AsString := book.getIsbn;
       FieldByName('condition').AsInteger := book.getCondition;
       Post; //add to change buffer
@@ -708,37 +747,6 @@ begin
   end;
 end;
 
-function TDBConnection.getBooktypeByIsbn(isbn: String): TBooktype;
-begin
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
-  SQLQuery.ParamByName('isbn').AsString := isbn;
-  SQLQuery.Open;
-
-  result := NIL;
-
-  try
-    with SQLQuery do
-    begin
-      First;
-      //new row
-      if not EOF then
-      begin
-        Result := TBooktype.Create; //create new student object
-        Result.setIsbn(FieldByName('isbn').AsLargeint); //set id
-        Result.setTitle(FieldByName('title').AsString);
-        Result.setSubject(FieldByName('subject').AsString);
-        Result.setStorage(FieldByName('storage').AsString);
-      end;
-    end;
-  except
-        on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := NIL;
-  end;
-end;
-
 ////////////////////////////////////////////////////////
 
 function TDBConnection.getError: EDatabaseError;
@@ -753,18 +761,19 @@ begin
     self.SQLTransaction := TSQLTransaction.Create(nil);
     self.SQLQuery := TSQLQuery.Create(nil);
 
-    if not FileExists(databasePath) then
-      exit;
+    if FileExists(databasePath) then
+    begin
 
-    self.SQLite3Connection.DatabaseName := databasePath;
-    self.SQLite3Connection.Transaction := self.SQLTransaction;
+      self.SQLite3Connection.DatabaseName := databasePath;
+      self.SQLite3Connection.Transaction := self.SQLTransaction;
 
-    self.SQLTransaction.Database := self.SQLite3Connection;
+      self.SQLTransaction.Database := self.SQLite3Connection;
 
-    self.SQLQuery.Database := self.SQLite3Connection;
-    self.SQLQuery.Transaction := self.SQLTransaction;
+      self.SQLQuery.Database := self.SQLite3Connection;
+      self.SQLQuery.Transaction := self.SQLTransaction;
 
-    self.SQLite3Connection.Open;
+      self.SQLite3Connection.Open;
+    end;
   except
     on E: EDatabaseError do
       DBError := E;
