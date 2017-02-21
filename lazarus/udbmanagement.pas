@@ -131,39 +131,26 @@ begin
 end;
 
 function TDBManagement.BIdCheck(BId :Cardinal):Boolean;
-Var ret : Boolean;
+Var book : TBook;
 begin
-  ret:=false;
-  query.Close;
-  query.SQL.text:='Select id from book where id = :Id';
-  query.ParamByName(persistStudent'Id').AsInteger:=BId;
-  query.Open;
-  if not query.EOF then ret:=true;
-  result:=ret;
+  book:=uDBConn.getBookById(BId);
+  if book = nil then result:=False
+  else result :=true;
 end;
 
 function TDBManagement.BQualiCheck(BId: Cardinal): Cardinal;
-Var ret : Cardinal;
+Var book : TBook;
 begin
-  ret:=9;
-  query.Close;
-  query.SQL.text:='Select condition from book where id = :Id';
-  query.ParamByName('Id').AsInteger:=BId;
-  query.Open;
-  if not query.EOF then ret:=query.Fields[0].AsInteger;
-  result:=ret;
+  book := uDBConn.getBookById(BId);
+  result:=book.getCondition();
 end;
 
 function TDBManagement.BTypeCheck (isbn:String): Boolean;
-Var ret : Boolean;
+Var bt : TBooktype;
 begin
-  ret:=false;
-  query.Close;
-  query.SQL.text:='Select isbn from booktype where isbn = :ISBN';
-  query.ParamByName('ISBN').AsString:=isbn;
-  query.Open;
-  if not query.EOF then ret:=true;
-  result:=ret;
+  bt:=uDBConn.getBooktypeByIsbn(isbn);
+  if bt = nil then result:=false
+  else reult:=true;
 end;
 
 function TDBManagement.getStudents(): ArrayOfStudents;
@@ -186,7 +173,6 @@ begin
   Result := uDBConn.;getStudentsByClassName(classN)
 end;
 
-
 function TDBManagement.persistStudent(student: TStudent): boolean;
 begin
   Result:=uDBConn.persistStudent(student);
@@ -198,24 +184,27 @@ begin
   else Result:=true;
 end;
 
-procedure TDBManagement.BookBack(BId, SId :Cardinal);                                //!
+procedure TDBManagement.BookBack(BId, SId :Cardinal);
+Var aoR :ArrayOfRentals;
+    rental : TRental;
 begin
-  query.Close;
-  query.SQL.text:='Update rental Set return_date = :Datum where student_id = :SId and book_id = :BId';
-  query.ParamByName('Datum').AsDate:= now;                 //Vorher: FormatDateTime(..)
-  query.ParamByName('BId').AsInteger:=BId;
-  query.ParamByName('Sid').AsInteger:=SId;
-  query.ExecSQL;
-  tran.Commit;
-
+  aoR := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
+  rental := aoR[1];
+  rental.setReturnDate(now);
 end;
 
 procedure TDBManagement.BookAdd(isbn : String);
-Var id   : Cardinal;
+Var id, pz: Cardinal;
+    hid :String;
     book :TBook
 begin
   repeat
      id:= Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
+
+     hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
+     pz:= (((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
+     if pz = 10 then pz := 0;
+     id:=(id*10)+ (10-pz));
   until BIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -227,23 +216,16 @@ begin
   uDBConn.persistBook(book);
 end;
 
-procedure TDBManagement.BookDel(BId:Cardinal);                         //!
+procedure TDBManagement.BookDel(BId:Cardinal);
 begin
-  query.Close;
-  query.SQL.Text:='Delete from book where Id = (:BId)';
-  query.ParamByName('BId').AsInteger:=BId;
-  query.ExecSQL;
-  tran.Commit;
+  uDBConn.deleteBook(uDBConn.getBookById(BId));
 end;
 
-procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);         //!
+procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);
+Var book:TBook;
 begin
-  query.Close;
-  query.SQL.text:='Update book Set condition = :Quali where id = :BId';
-  query.ParamByName('Quali').AsInteger:=quali;
-  query.ParamByName('BId').AsInteger:=BId;
-  query.ExecSQL;
-  tran.Commit;
+  book:=uDBConn.getBookById(BId);
+  book.setCondition(quali);
 end;
 
 procedure TDBManagement.BookTypeNew(isbn, title, subject :String);
@@ -264,18 +246,15 @@ begin
   rental := TRental.Create;
 
 
+
 end;
 
 procedure TDBManagement.DelStudent(SId : Cardinal);
 begin
-  query.Close;
-  query.SQL.Text:='Delete from student where Id = (:SId)';
-  query.ParamByName('SId').AsInteger:=SId;
-  query.ExecSQL;
-  tran.Commit;
+  uDBConn.deleteStudent(uDBConn.getStudentById(SID));
 end;
 
-procedure TDBManagement.DelRental(datum: TDate);
+procedure TDBManagement.DelRental(datum: TDate);                                  //!
 begin
   query.Close;
   query.SQL.Text:='Delete from rental where return_date <= (:date)';
@@ -285,11 +264,17 @@ begin
 end;
 
 procedure TDBManagement.NewStudent (lastN, firstN, classN : String; birth: TDate);
-Var id: Cardinal;
+Var id, pz: Cardinal;
+    hid: String;
     student: TStudent;
 begin
   repeat
      id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
+
+     hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
+     pz:= (((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
+     if pz = 10 then pz := 0;
+     id:=(id*10)+ (10-pz));
   until SIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   student := TStudent.Create;
