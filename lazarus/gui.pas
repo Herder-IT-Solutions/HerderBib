@@ -30,6 +30,9 @@ type
     BtInfoAdminLogout: TButton;
     BtInfoSuportWiki: TButton;
     BtInfoAdminSendDBName: TButton;
+    BtInfoStudPrintQ: TButton;
+    BtInfoBookPrintQ: TButton;
+    BtPrint: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
@@ -50,6 +53,8 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbPrintQueue: TLabel;
+    LbPrintInfo: TLabel;
     LbInfoStudBD: TLabel;
     LbInfoStudError: TLabel;
     LbInfoBookError: TLabel;
@@ -95,18 +100,17 @@ type
     LbStudInstruct1: TLabel;
     LbBookName: TLabel;
     LbStudName1: TLabel;
+    LiPrintQueue: TListBox;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
     MeInfoRel: TMemo;
     PageControl1: TPageControl;
+    Panel1: TPanel;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
     SEInfoStudDay: TSpinEdit;
     SEInfoStudMonth: TSpinEdit;
     SEInfoStudYear: TSpinEdit;
-    SQLite3Connection: TSQLite3Connection;
-    SQLQuery: TSQLQuery;
-    SQLTransaction: TSQLTransaction;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
     TabAdd: TTabSheet;
@@ -116,6 +120,7 @@ type
     TabBooktype: TTabSheet;
     TabCreditsHelp: TTabSheet;
     Admnistration: TTabSheet;
+    TabPrint: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBBookState: TTrackBar;
@@ -170,7 +175,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
  // LbStudInstruct := 'Hello' + #13#10 + 'world';
     PermissionLevel :=1;
-    management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
+    //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
