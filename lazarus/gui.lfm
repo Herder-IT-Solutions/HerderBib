@@ -1,18 +1,18 @@
 object Form1: TForm1
-  Left = 168
-  Height = 488
-  Top = 190
-  Width = 691
+  Left = 199
+  Height = 572
+  Top = 184
+  Width = 765
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
-  ClientHeight = 488
-  ClientWidth = 691
+  ClientHeight = 572
+  ClientWidth = 765
   OnCreate = FormCreate
   LCLVersion = '1.2.6.0'
   object PageControl1: TPageControl
     Left = 0
-    Height = 480
+    Height = 572
     Top = 0
-    Width = 688
+    Width = 765
     ActivePage = TabInfo
     TabIndex = 3
     TabOrder = 0
@@ -5892,35 +5892,35 @@ object Form1: TForm1
     end
     object TabInfo: TTabSheet
       Caption = 'Informationen betrachten und verändern'
-      ClientHeight = 454
-      ClientWidth = 680
+      ClientHeight = 546
+      ClientWidth = 757
       object PCInfos: TPageControl
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 464
+        Height = 544
         Top = 0
-        Width = 687
-        ActivePage = TabRel
+        Width = 752
+        ActivePage = Admnistration
         ParentBiDiMode = False
-        TabIndex = 2
+        TabIndex = 5
         TabOrder = 0
         object TabStud: TTabSheet
           Caption = 'Schüler'
-          ClientHeight = 438
-          ClientWidth = 679
+          ClientHeight = 518
+          ClientWidth = 744
           object EdInfoStudSur: TEdit
             Left = 240
             Height = 21
             Top = 8
-            Width = 416
+            Width = 488
             TabOrder = 0
           end
           object EdInfoStudName: TEdit
             Left = 240
             Height = 21
             Top = 40
-            Width = 416
+            Width = 488
             TabOrder = 1
           end
           object LbInfoStudSur: TLabel
@@ -5943,14 +5943,14 @@ object Form1: TForm1
             Left = 240
             Height = 21
             Top = 72
-            Width = 416
+            Width = 488
             TabOrder = 2
           end
           object EdInfoStudUser: TEdit
             Left = 240
             Height = 21
             Top = 104
-            Width = 416
+            Width = 488
             TabOrder = 3
           end
           object LbInfoStudGrade: TLabel
@@ -5973,7 +5973,7 @@ object Form1: TForm1
             Left = 240
             Height = 21
             Top = 136
-            Width = 416
+            Width = 488
             TabOrder = 4
           end
           object LbInfoStudID: TLabel
@@ -5987,7 +5987,7 @@ object Form1: TForm1
           object BtInfoStudShow: TButton
             Left = 16
             Height = 25
-            Top = 176
+            Top = 248
             Width = 147
             Caption = 'Schüler anzeigen'
             OnClick = BtInfoStudShowClick
@@ -5996,7 +5996,7 @@ object Form1: TForm1
           object BtInfoStudEdit: TButton
             Left = 16
             Height = 25
-            Top = 208
+            Top = 288
             Width = 147
             Caption = 'Daten verändern'
             Enabled = False
@@ -6004,9 +6004,9 @@ object Form1: TForm1
           end
           object MeInfoStudRel: TMemo
             Left = 16
-            Height = 184
-            Top = 240
-            Width = 656
+            Height = 176
+            Top = 328
+            Width = 712
             Lines.Strings = (
               ''
             )
@@ -6014,21 +6014,69 @@ object Form1: TForm1
             TabOrder = 7
           end
           object BtInfoStudExportRel: TButton
-            Left = 456
+            Left = 472
             Height = 25
-            Top = 208
+            Top = 288
             Width = 200
             Caption = 'Ausleihbeziehungen in Datei exportieren'
             TabOrder = 8
           end
           object LbInfoStudError: TLabel
-            Left = 456
+            Left = 595
             Height = 13
-            Top = 176
+            Top = 256
             Width = 77
             Caption = 'LbInfoStudError'
             ParentColor = False
             Visible = False
+          end
+          object LbInfoStudBD: TLabel
+            Left = 16
+            Height = 13
+            Hint = 'Tag,Monat,Jahr'
+            Top = 176
+            Width = 68
+            Caption = 'Geburtsdatum'
+            ParentColor = False
+          end
+          object SEInfoStudDay: TSpinEdit
+            Left = 240
+            Height = 21
+            Hint = 'Tag'
+            Top = 168
+            Width = 50
+            MaxValue = 31
+            MinValue = 1
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 9
+            Value = 1
+          end
+          object SEInfoStudMonth: TSpinEdit
+            Left = 304
+            Height = 21
+            Hint = 'Monat'
+            Top = 168
+            Width = 50
+            MaxValue = 12
+            MinValue = 1
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 10
+            Value = 1
+          end
+          object SEInfoStudYear: TSpinEdit
+            Left = 368
+            Height = 21
+            Hint = 'Jahr'
+            Top = 168
+            Width = 88
+            MaxValue = 2020
+            MinValue = 1990
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 11
+            Value = 2000
           end
         end
         object TabBook: TTabSheet
@@ -6381,15 +6429,16 @@ object Form1: TForm1
         end
         object Admnistration: TTabSheet
           Caption = 'Admnistration'
-          ClientHeight = 438
-          ClientWidth = 679
-          object BtInfoAminLogout: TButton
+          ClientHeight = 518
+          ClientWidth = 744
+          object BtInfoAdminLogout: TButton
             Left = 8
             Height = 25
             Top = 104
             Width = 208
             Caption = 'Administratorfunktion deaktivieren'
-            OnClick = BtInfoAminLogoutClick
+            Enabled = False
+            OnClick = BtInfoAdminLogoutClick
             TabOrder = 2
           end
           object EdInfoAdminPw: TEdit

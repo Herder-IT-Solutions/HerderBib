@@ -27,7 +27,7 @@ type
     BtInfoStudExportRel: TButton;
     BtInfoRelFilter: TButton;
     BtInfoAdminLogin: TButton;
-    BtInfoAminLogout: TButton;
+    BtInfoAdminLogout: TButton;
     BtInfoSuportWiki: TButton;
     BtInfoAdminSendDBName: TButton;
     CBAddBookSubject: TComboBox;
@@ -50,6 +50,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoStudBD: TLabel;
     LbInfoStudError: TLabel;
     LbInfoBookError: TLabel;
     LbInfoBooktypeError: TLabel;
@@ -100,6 +101,9 @@ type
     PageControl1: TPageControl;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
+    SEInfoStudDay: TSpinEdit;
+    SEInfoStudMonth: TSpinEdit;
+    SEInfoStudYear: TSpinEdit;
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
@@ -117,7 +121,7 @@ type
     TBBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
-    procedure BtInfoAminLogoutClick(Sender: TObject);
+    procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
@@ -254,14 +258,20 @@ begin
      //EdInfoAdminPw.Text=NONE;
      LbInfoAdminCheck.Caption := 'Sie sind Administrator';
      BtInfoStudEdit.Enabled := True;
+     BtInfoAdminLogin.Enabled:= False;
+     BtInfoAdminLogout.Enabled:= True;
+
   end;
+  EdInfoAdminPw.Text := '';
 end;
 
-procedure TForm1.BtInfoAminLogoutClick(Sender: TObject);
+procedure TForm1.BtInfoAdminLogoutClick(Sender: TObject);
 begin
      PermissionLevel:=1;
      LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator';
      BtInfoStudEdit.Enabled := False;
+     BtInfoAdminLogin.Enabled:= True;
+     BtInfoAdminLogout.Enabled:= False;
 end;
 
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
@@ -327,10 +337,26 @@ readCSV('rental_relations.csv');
 end;
 
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
+function checkBD:STRING;
+var mo :CARDINAL;
+    s :STRING;
+begin
+   mo :=  SeInfoStudDay.Value;
+   if mo < 10 then s := '0';
+   s := s + IntToStr(mo);
+   mo :=  SeInfoStudMonth.Value;
+   if mo < 10 then s := '0';
+   s := s + IntToStr(mo);
+   mo :=  SeInfoStudYear.Value;
+   s := s + IntToStr(mo);
+   result := s;
+end;
+var
+    birthdate: String;
 begin
        LbInfoStudError.Visible := FALSE;
   try
-
+       birthdate:=checkBD;
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;
