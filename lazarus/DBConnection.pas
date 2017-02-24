@@ -79,6 +79,11 @@ type
     // result: TRUE on success
     function deleteRental(rental: TRental): boolean;
 
+    // Deletes all returned rentals older than a certain date
+    // parameter: Date
+    // result: Amount of deleted rentals on success, -1 on error
+    function deleteReturnedRentalOlderThan(date: TDate): integer;
+
     /////////////////////////////////////////////////////////
     //             BOOK                                    //
     /////////////////////////////////////////////////////////
@@ -527,6 +532,40 @@ begin
       Result := False;
     end;
   end;
+end;
+
+function TDBConnection.deleteReturnedRentalOlderThan(date: TDate): integer;
+begin
+  SQLQuery.Close;
+  SQLQuery.SQL.Text :=
+    'delete from rental where return_date not null and date(date()) <= (:date)';
+  SQLQuery.ParamByName('date').AsDate := date;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.ExecSQL;
+      ApplyUpdates; //commit change buffer to db
+      SQLTransaction.commit;
+
+      Close;
+      SQL.Text := 'SELECT @@ROWCOUNT as deleted';
+      Open;
+
+      First;
+      while not EOF do
+      begin
+        Result := FieldByName('deleted').AsInteger;
+      end;
+    end;
+  except
+    on E: EDatabaseError do
+    begin
+      DBError := E;
+      Result := -1;
+    end;
+  end;
+
 end;
 
 ////////////////////////////////////////////////////////
