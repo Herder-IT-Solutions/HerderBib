@@ -50,6 +50,8 @@ type
     // parameter: newStorage
     // result: TRUE on success, so if newStorage <= (2^63)-1)
     function setStorage(newStorage: integer): boolean;
+
+    constructor Create;
   end;
 
 implementation
@@ -122,6 +124,14 @@ begin
     self.storage := newStorage;
     Result := True;
   end;
+end;
+
+constructor TBooktype.Create;
+begin
+  self.isbn := '';
+  self.title := '';
+  self.subject := '';
+  self.storage := 0;
 end;
 
 end.
