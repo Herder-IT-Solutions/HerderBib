@@ -19,24 +19,66 @@ type
     //Erg: Säubert Überreste des Programms
     destructor Destroy;
 
+
+
+
+    //BOOK
+
+    //Vor: ISBN nur mit Zahlen
+    //Eff: Hinzufügen eines neuen Buches
+    //Erg: Buch in Tabelle book
+    procedure BookAdd(isbn : String);
+
+    //Vor: Buch Id und Schüler Id
+    //Eff: Rückgabe eines Buches mit Schüler
+    //Erg: Trägt aktuelles Datum (als Double (nicht lesbar)) als Rückgabedatum in die Datenbank ein
+    procedure BookBack(BId, SId :int64);
+
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
     //Erg: Wahr, wenn Buch Id vergeben
-    function BIdCheck(BId :Cardinal):Boolean;
+    function BIdCheck(BId :int64):Boolean;
+
+    //Vor: Die Buch Id
+    //Eff: Löscht ein Buch aus dem Bestand
+    procedure BookDel(BId:int64);
+
+    //Vor: Buch Id und seine Qualität
+    //Eff: Ändert die Buchqualität
+    //Erg: Trägt übergebene Qualität in die Datenbank ein
+    procedure BookQualiNew(BId, quali :int64);
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
     //Erg: Die ehemalige Quaität
-    function BQualiCheck(BId: Cardinal): Cardinal;
+    function BQualiCheck(BId: int64): int64;
+
+
+
+
+    //BOOKTYPE
+
+    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
+    //Eff: Neuer Buchtyp
+    procedure BookTypeNew(isbn, title, subject :String);
 
     //Vor: Die ISBN
     //Eff: Prüft den Buchtyp
     //Erg: Wahr, wenn isbn bereits vorhanden
     function BTypeCheck (isbn:String): Boolean;
 
+
+
+    //STUDENTS
+
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
     function getStudents: ArrayOfStudents;
+
+    //Vor: Den Klassennamen
+    //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
+    //     welches alle Schüler in der Klasse beinhaltet
+    function getStudentsByClassName(classN: string): ArrayOfStudents;
 
     //Vor: Den Vornamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
@@ -48,15 +90,11 @@ type
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
-    //Vor: Den Klassennamen
-    //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
-    //     welches alle Schüler in der Klasse beinhaltet
-    function getStudentsByClassName(classN: string): ArrayOfStudents;
 
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
-    //function getStudentById(id: Cardinal): TStudent;
+    function getStudentById(id: int64): TStudent;
 
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
@@ -66,35 +104,7 @@ type
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
     //Erg: Wahr, wenn vergeben
-    function SIdCheck(SId :Cardinal):Boolean;
-
-    //Vor: Buch Id und Schüler Id
-    //Eff: Rückgabe eines Buches mit Schüler
-    //Erg: Trägt aktuelles Datum (als Double (nicht lesbar)) als Rückgabedatum in die Datenbank ein
-    procedure BookBack(BId, SId :Cardinal);
-
-    //Vor: ISBN nur mit Zahlen
-    //Eff: Hinzufügen eines neuen Buches
-    //Erg: Buch in Tabelle book
-    procedure BookAdd(isbn : String);
-
-    //Vor: Die Buch Id
-    //Eff: Löscht ein Buch aus dem Bestand
-    procedure BookDel(BId:Cardinal);
-
-    //Vor: Buch Id und seine Qualität
-    //Eff: Ändert die Buchqualität
-    //Erg: Trägt übergebene Qualität in die Datenbank ein
-    procedure BookQualiNew(BId, quali :Cardinal);
-
-    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
-    //Eff: Neuer Buchtyp
-    procedure BookTypeNew(isbn, title, subject :String);
-
-    //Vor: Buch Id und Schüler Id
-    //Eff: Neue Vergabe eines Buches
-    //Erg: Trägt in der Datenbank in Tabelle rental das ausgeliehene Buch zu dem Schüler ein
-    procedure BookRentStu(BId, SId :Cardinal);
+    function SIdCheck(SId :in64):Boolean;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //Eff: Neuen Schüler erstellen
@@ -103,11 +113,22 @@ type
 
     //Vor: Eine Schüler Id
     //Eff: Löscht einen Schüler
-    procedure DelStudent(SId : Cardinal);
+    procedure DelStudent(SId : int64);
+
+
+
+    //RENTAL
+
+    //Vor: Buch Id und Schüler Id
+    //Eff: Neue Vergabe eines Buches
+    //Erg: Trägt in der Datenbank in Tabelle rental das ausgeliehene Buch zu dem Schüler ein
+    procedure StuRentBook(BId, SId :int64);
 
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
     //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
     procedure DelRental(datum: TDate);  //bzw TDateTime
+
+
 
   //Atribute
   private
@@ -122,6 +143,7 @@ begin
   //Initialisierung
   uDBConn := TDBConnection.Create('buchverleih.sqlite');
 
+
   Randomize;
 end;
 
@@ -130,7 +152,7 @@ begin
   uDBConn.Destroy;
 end;
 
-function TDBManagement.BIdCheck(BId :Cardinal):Boolean;
+function TDBManagement.BIdCheck(BId :int64):Boolean;
 Var book : TBook;
 begin
   book:=uDBConn.getBookById(BId);
@@ -138,7 +160,7 @@ begin
   else result :=true;
 end;
 
-function TDBManagement.BQualiCheck(BId: Cardinal): Cardinal;
+function TDBManagement.BQualiCheck(BId: int64): Cardinal;
 Var book : TBook;
 begin
   book := uDBConn.getBookById(BId);
@@ -173,18 +195,23 @@ begin
   Result := uDBConn.getStudentsByClassName(classN);
 end;
 
+function TDBManagement.getStudentById(id: int64): TStudent;
+begin
+  Result:=uDBConn.getStudentById(id);
+end;
+
 function TDBManagement.persistStudent(student: TStudent): boolean;
 begin
   Result:=uDBConn.persistStudent(student);
 end;
 
-function TDBManagement.SIdCheck(SId :Cardinal):Boolean;
+function TDBManagement.SIdCheck(SId :int64):Boolean;
 begin
   if (uDBConn.getStudentById(SId) = nil) then Result:= false
   else Result:=true;
 end;
 
-procedure TDBManagement.BookBack(BId, SId :Cardinal);
+procedure TDBManagement.BookBack(BId, SId :int64);
 Var aoR :ArrayOfRentals;
     rental : TRental;
 begin
@@ -194,7 +221,7 @@ begin
 end;
 
 procedure TDBManagement.BookAdd(isbn : String);
-Var id, pz: Cardinal;
+Var id, pz: int64;
     hid :String;
     book :TBook;
 begin
@@ -216,12 +243,12 @@ begin
   uDBConn.persistBook(book);
 end;
 
-procedure TDBManagement.BookDel(BId:Cardinal);
+procedure TDBManagement.BookDel(BId:int64);
 begin
   uDBConn.deleteBook(uDBConn.getBookById(BId));
 end;
 
-procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);
+procedure TDBManagement.BookQualiNew(BId, quali :int64);
 Var book:TBook;
 begin
   book:=uDBConn.getBookById(BId);
@@ -239,7 +266,7 @@ begin
   uDBConn.persistBooktype(booktype);
 end;
 
-procedure TDBManagement.BookRentStu(BId, SId :Cardinal);                                //!
+procedure TDBManagement.StuRentBook(BId, SId :int64);        //functioniert nicht !                        //!
 Var rental: TRental;
 begin
   rental := TRental.Create;
@@ -247,24 +274,22 @@ begin
   rental.setBookId(BId);
   rental.setStudentId(SId);
   rental.setRentalDate(now);
+
+  uDBConn.persistRental(rental);
 end;
 
-procedure TDBManagement.DelStudent(SId : Cardinal);
+procedure TDBManagement.DelStudent(SId : int64);
 begin
   uDBConn.deleteStudent(uDBConn.getStudentById(SID));
 end;
 
-procedure TDBManagement.DelRental(datum: TDate);                                  //!
+procedure TDBManagement.DelRental(datum: TDate);
 begin
-  {query.Close;
-  query.SQL.Text:='Delete from rental where return_date <= (:date)';
-  query.ParamByName('date').AsDate:=datum;
-  query.ExecSQL;
-  tran.Commit;   }
+  uDBConn.deleteReturnedRentalOlderThan(datum);
 end;
 
 procedure TDBManagement.NewStudent (lastN, firstN, classN : String; birth: TDate);
-Var id, pz: Cardinal;
+Var id, pz: int64;
     hid: String;
     student: TStudent;
 begin
