@@ -9,134 +9,145 @@ uses
 
 type
   TRental = class
-    private
-      id:int64;
-      book_id:int64;
-      student_id:int64;
-      return_date:TDate;
-      rental_date:TDate;
-    public
-      // Returns the id
-      // result: id
-      function getId():int64;
+  private
+    id: int64;
+    book_id: int64;
+    student_id: int64;
+    return_date: TDate;
+    rental_date: TDate;
+  public
+    // Returns the id
+    // result: id
+    function getId(): int64;
 
-      // Sets a new id
-      // parameter: newId
-      // result: TRUE on success, so if newID is not NULL
-      function setId(newId:int64):BOOLEAN;
+    // Sets a new id
+    // parameter: newId
+    // result: TRUE on success, so if newID is not NULL
+    function setId(newId: int64): boolean;
 
-      // Returns the book id
-      // result: book_id
-      function getBookId():int64;
+    // Returns the book id
+    // result: book_id
+    function getBookId(): int64;
 
-      // Sets a new book id
-      // parameter: newBookId
-      // result: TRUE on success, so if newBookID is not NULL
-      function setBookId(newBookId:int64):BOOLEAN;
+    // Sets a new book id
+    // parameter: newBookId
+    // result: TRUE on success, so if newBookID is not NULL
+    function setBookId(newBookId: int64): boolean;
 
-      // Returns the student id
-      // result: student_id
-      function getStudentId():int64;
+    // Returns the student id
+    // result: student_id
+    function getStudentId(): int64;
 
-      // Sets a new sudent id
-      // parameter: newStudentId
-      // result: TRUE on success, so if new StudentId is not NULL
-      function setStudentId(newStudentId:int64):BOOLEAN;
+    // Sets a new sudent id
+    // parameter: newStudentId
+    // result: TRUE on success, so if new StudentId is not NULL
+    function setStudentId(newStudentId: int64): boolean;
 
-      // Returns the book return date
-      // result: return_date
-      function getReturnDate():TDate;
+    // Returns the book return date
+    // result: return_date
+    function getReturnDate(): TDate;
 
-      // Sets a new book return datetime in seconds
-      // parameter: newReturnDate
-      // result: TRUE on success, so if newReturnDate >= 0 and not NULL
-      function setReturnDate(newReturnDate:TDate):BOOLEAN;
+    // Sets a new book return datetime in seconds
+    // parameter: newReturnDate
+    // result: TRUE on success, so if newReturnDate >= 0 and not NULL
+    function setReturnDate(newReturnDate: TDate): boolean;
 
-      // Returns the book rental datetime in seconds
-      // result: rental_date
-      function getRentalDate():TDate;
+    // Returns the book rental datetime in seconds
+    // result: rental_date
+    function getRentalDate(): TDate;
 
-      // Sets a new book rental datetime in seconds
-      // parameter: newRentalDate
-      // result: TRUE on success, so if newReturnDate >= 0 and not NULL
-      function setRentalDate(newRentalDate:TDate):BOOLEAN;
+    // Sets a new book rental datetime in seconds
+    // parameter: newRentalDate
+    // result: TRUE on success, so if newReturnDate >= 0 and not NULL
+    function setRentalDate(newRentalDate: TDate): boolean;
+
+    constructor Create;
   end;
 
 implementation
 
-function TRental.getId():int64;
+function TRental.getId(): int64;
 begin
-  result:=self.id;
+  Result := self.id;
 end;
 
-function TRental.setId(newId:int64):BOOLEAN;
+function TRental.setId(newId: int64): boolean;
 begin
-  result:=false;
+  Result := False;
   if (newId <> NULL) then
   begin
-    self.id:=newId;
-    result:=true;
+    self.id := newId;
+    Result := True;
   end;
 end;
 
-function TRental.getBookId():int64;
+function TRental.getBookId(): int64;
 begin
-  result:=self.book_id;
+  Result := self.book_id;
 end;
 
-function TRental.setBookId(newBookId:int64):BOOLEAN;
+function TRental.setBookId(newBookId: int64): boolean;
 begin
-  result:=false;
+  Result := False;
   if (newBookId <> NULL) then
   begin
-    self.book_id:=newBookId;
-    result:=true;
+    self.book_id := newBookId;
+    Result := True;
   end;
 end;
 
-function TRental.getStudentId():int64;
+function TRental.getStudentId(): int64;
 begin
-  result:=self.student_id;
+  Result := self.student_id;
 end;
 
-function TRental.setStudentId(newStudentId:int64):BOOLEAN;
+function TRental.setStudentId(newStudentId: int64): boolean;
 begin
-  result:=false;
+  Result := False;
   if (newStudentId <> NULL) then
   begin
-    self.student_id:=newStudentId;
-    result:=true;
+    self.student_id := newStudentId;
+    Result := True;
   end;
 end;
 
-function TRental.getReturnDate():TDate;
+function TRental.getReturnDate(): TDate;
 begin
-  result:=self.return_date;
+  Result := self.return_date;
 end;
 
-function TRental.setReturnDate(newReturnDate:TDate):BOOLEAN;
+function TRental.setReturnDate(newReturnDate: TDate): boolean;
 begin
-  result:=false;
+  Result := False;
   if (newReturnDate <> NuLL) and (newReturnDate >= 0) then
   begin
-    self.return_date:=newReturnDate;
-    result:=true;
+    self.return_date := newReturnDate;
+    Result := True;
   end;
 end;
 
-function TRental.getRentalDate():TDate;
+function TRental.getRentalDate(): TDate;
 begin
-  result:=self.rental_date;
+  Result := self.rental_date;
 end;
 
-function TRental.setRentalDate(newRentalDate:TDate):BOOLEAN;
+function TRental.setRentalDate(newRentalDate: TDate): boolean;
 begin
-  result:=false;
-  if  (newRentalDate <> NULL) and (newRentalDate>=0) then
+  Result := False;
+  if (newRentalDate <> NULL) and (newRentalDate >= 0) then
   begin
-    self.rental_date:=newRentalDate;
-    result:=true;
+    self.rental_date := newRentalDate;
+    Result := True;
   end;
+end;
+
+constructor TRental.Create;
+begin
+  self.id := -1;
+  self.book_id := -1;
+  self.student_id := -1;
+  self.return_date := -1;
+  self.rental_date := -1;
 end;
 
 end.

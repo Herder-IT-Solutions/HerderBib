@@ -40,6 +40,8 @@ type
     // parameter: newCondition
     // result: TRUE on success, so if newIsbn has 1 character, is <=5 and not NULL
     function setCondition(newCondition: cardinal): boolean;
+
+    constructor Create;
   end;
 
 implementation
@@ -100,6 +102,13 @@ begin
     self.condition := newCondition;
     Result := True;
   end;
+end;
+
+constructor TBook.Create;
+begin
+  self.id := -1;
+  self.isbn := '';
+  self.condition := 0;
 end;
 
 end.

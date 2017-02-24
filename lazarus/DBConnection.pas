@@ -348,7 +348,7 @@ begin
       First;
       //new row
 
-      if EOF then
+      if EOF or (student.getId = -1) then
         Append //insert mode
       else
         Edit; //update mode
@@ -485,7 +485,7 @@ begin
       First;
       //new row
 
-      if EOF then
+      if EOF or (rental.getId = -1) then
         Append //insert mode
       else
         Edit; //update mode
@@ -648,7 +648,7 @@ begin
       First;
       //new row
 
-      if EOF then
+      if EOF or (book.getId = -1) then
         Append //insert mode
       else
         Edit; //update mode
@@ -744,7 +744,7 @@ begin
       First;
       //new row
 
-      if EOF then
+      if EOF or (booktype.getIsbn = '') then
         Append //insert mode
       else
         Edit; //update mode
