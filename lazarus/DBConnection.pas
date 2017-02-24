@@ -448,6 +448,7 @@ begin
         //new row
         setLength(Result, length(Result) + 1);
         Result[length(Result) - 1] := TRental.Create; //create new rental object
+        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt);
         Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
         Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
         Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
