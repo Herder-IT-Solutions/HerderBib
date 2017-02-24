@@ -17,7 +17,7 @@ type
     constructor create();
 
     //Erg: Säubert Überreste des Programms
-    destructor destroy();
+    destructor Destroy;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
@@ -56,7 +56,7 @@ type
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
-    function getStudentById(id: Cardinal): TStudent;
+    //function getStudentById(id: Cardinal): TStudent;
 
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
@@ -125,9 +125,9 @@ begin
   Randomize;
 end;
 
-destructor TDBManagement.destroy();
+destructor TDBManagement.Destroy;
 begin
-  uBDConn.Destroy;
+  uDBConn.Destroy;
 end;
 
 function TDBManagement.BIdCheck(BId :Cardinal):Boolean;
@@ -150,7 +150,7 @@ Var bt : TBooktype;
 begin
   bt:=uDBConn.getBooktypeByIsbn(isbn);
   if bt = nil then result:=false
-  else reult:=true;
+  else result:=true;
 end;
 
 function TDBManagement.getStudents(): ArrayOfStudents;
@@ -170,7 +170,7 @@ end;
 
 function TDBManagement.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
-  Result := uDBConn.;getStudentsByClassName(classN)
+  Result := uDBConn.getStudentsByClassName(classN);
 end;
 
 function TDBManagement.persistStudent(student: TStudent): boolean;
@@ -196,15 +196,15 @@ end;
 procedure TDBManagement.BookAdd(isbn : String);
 Var id, pz: Cardinal;
     hid :String;
-    book :TBook
+    book :TBook;
 begin
   repeat
      id:= Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
 
      hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
-     pz:= (((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
+     pz:= ((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
      if pz = 10 then pz := 0;
-     id:=(id*10)+ (10-pz));
+     id:=(id*10)+ (10-pz);
   until BIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -235,7 +235,6 @@ begin
   booktype.setIsbn(isbn);
   booktype.setTitle(title);
   booktype.setSubject(subject);
-  booktype.setStorage(nil);
 
   uDBConn.persistBooktype(booktype);
 end;
@@ -245,8 +244,9 @@ Var rental: TRental;
 begin
   rental := TRental.Create;
 
-
-
+  rental.setBookId(BId);
+  rental.setStudentId(SId);
+  rental.setRentalDate(now);
 end;
 
 procedure TDBManagement.DelStudent(SId : Cardinal);
@@ -256,11 +256,11 @@ end;
 
 procedure TDBManagement.DelRental(datum: TDate);                                  //!
 begin
-  query.Close;
+  {query.Close;
   query.SQL.Text:='Delete from rental where return_date <= (:date)';
   query.ParamByName('date').AsDate:=datum;
   query.ExecSQL;
-  tran.Commit;
+  tran.Commit;   }
 end;
 
 procedure TDBManagement.NewStudent (lastN, firstN, classN : String; birth: TDate);
@@ -272,9 +272,9 @@ begin
      id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
 
      hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
-     pz:= (((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
+     pz:= ((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
      if pz = 10 then pz := 0;
-     id:=(id*10)+ (10-pz));
+     id:=(id*10)+ (10-pz);
   until SIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   student := TStudent.Create;
