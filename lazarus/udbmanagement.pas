@@ -104,7 +104,7 @@ type
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
     //Erg: Wahr, wenn vergeben
-    function SIdCheck(SId :in64):Boolean;
+    function SIdCheck(SId :int64):Boolean;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //Eff: Neuen Schüler erstellen
@@ -160,7 +160,7 @@ begin
   else result :=true;
 end;
 
-function TDBManagement.BQualiCheck(BId: int64): Cardinal;
+function TDBManagement.BQualiCheck(BId: int64): int64;
 Var book : TBook;
 begin
   book := uDBConn.getBookById(BId);
