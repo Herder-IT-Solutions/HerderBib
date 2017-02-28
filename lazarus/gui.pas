@@ -151,7 +151,7 @@ type
 
 var
   Form1: TForm1;
-  management: TVerwaltung;
+  management: TDBManagement;
   PermissionLevel:CARDINAL;
 
 implementation
