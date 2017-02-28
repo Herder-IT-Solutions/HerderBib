@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: int64): TStudent;
+    function getStudentById(id: LargeInt): TStudent;
 
     // Persists student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -95,7 +95,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: int64): TBook;
+    function getBookById(id: LargeInt): TBook;
 
     // Persists book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -252,7 +252,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: int64): TStudent;
+function TDBConnection.getStudentById(id: LargeInt): TStudent;
 var
   arr: ArrayOfStudents;
 begin
@@ -539,7 +539,7 @@ begin
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: int64): TBook;
+function TDBConnection.getBookById(id: LargeInt): TBook;
 var
   arr: ArrayOfBooks;
 begin
