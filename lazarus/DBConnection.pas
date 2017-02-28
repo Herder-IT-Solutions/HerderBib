@@ -150,6 +150,12 @@ type
     function isConnected: boolean;
 
   private
+    procedure setStudentFields(resultVar: ArrayOfStudents);
+    procedure setRentalFields(resultVar: ArrayOfRentals);
+    procedure setBookFields(resultVar: ArrayOfBooks);
+    procedure setBooktypeFields(resultVar: ArrayOfBooktypes);
+
+  private
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
@@ -158,43 +164,50 @@ type
 
 implementation
 
-function TDBConnection.getStudents: ArrayOfStudents;
+procedure TDBConnection.setStudentFields(resultVar: ArrayOfStudents);
 begin
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student';
-  SQLQuery.Open;
-
-  Result := nil;
-
   try
     with SQLQuery do
     begin
-      First;
       while not EOF do
       begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
-        Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
-        Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
-        Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
-        Result[length(Result) - 1].setBirth(FieldByName('birth').AsDateTime);
         Next;
+        //new row
+        setLength(resultVar, length(resultVar) + 1);
+
       end;
+      resultVar[length(resultVar) - 1] := TStudent.Create; //create new student object
+      resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt); //set id
+      resultVar[length(resultVar) - 1].setLastName(FieldByName('last_name').AsString);
+      resultVar[length(resultVar) - 1].setFirstName(FieldByName('first_name').AsString);
+      resultVar[length(resultVar) - 1].setClassName(FieldByName('class_name').AsString);
+      resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      resultVar := nil;
     end;
   end;
 end;
 
+function TDBConnection.getStudents: ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM student';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  setStudentFields(Result);
+end;
+
 function TDBConnection.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
   SQLQuery.ParamByName('name').AsString := firstName;
@@ -202,35 +215,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      while not EOF do
-      begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
-        Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
-        Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
-        Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
-        Result[length(Result) - 1].setBirth(FieldByName('birth').AsDateTime);
-        Next;
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setStudentFields(Result);
 end;
 
 function TDBConnection.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
   SQLQuery.ParamByName('name').AsString := lastName;
@@ -238,35 +228,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      while not EOF do
-      begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
-        Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
-        Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
-        Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
-        Result[length(Result) - 1].setBirth(FieldByName('birth').AsDateTime);
-        Next;
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setStudentFields(Result);
 end;
 
 function TDBConnection.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
   SQLQuery.ParamByName('name').AsString := classN;
@@ -274,35 +241,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      while not EOF do
-      begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TStudent.Create; //create new student object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt); //set id
-        Result[length(Result) - 1].setLastName(FieldByName('last_name').AsString);
-        Result[length(Result) - 1].setFirstName(FieldByName('first_name').AsString);
-        Result[length(Result) - 1].setClassName(FieldByName('class_name').AsString);
-        Result[length(Result) - 1].setBirth(FieldByName('birth').AsDateTime);
-        Next;
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setStudentFields(Result);
 end;
 
 function TDBConnection.getStudentById(id: int64): TStudent;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := id;
@@ -310,33 +254,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      //new row
-      if not EOF then
-      begin
-        Result := TStudent.Create; //create new student object
-        Result.setId(FieldByName('id').AsLargeInt); //set id
-        Result.setLastName(FieldByName('last_name').AsString);
-        Result.setFirstName(FieldByName('first_name').AsString);
-        Result.setClassName(FieldByName('class_name').AsString);
-        Result.setBirth(FieldByName('birth').AsDateTime);
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setStudentFields(Result);
 end;
 
 function TDBConnection.persistStudent(student: TStudent): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := student.getId;
@@ -374,6 +297,7 @@ end;
 
 function TDBConnection.deleteStudent(student: TStudent): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from student where id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := student.getId;
@@ -398,43 +322,53 @@ end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getRentals: ArrayOfRentals;
+procedure TDBConnection.setRetalFields(resultVar: ArrayOfRentals);
 begin
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM rental';
-  SQLQuery.Open;
-
-  Result := nil;
-
   try
     with SQLQuery do
     begin
-      First;
       while not EOF do
       begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TRental.Create; //create new rental object
-        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
-        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
-        Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
-        Result[length(Result) - 1].setRentalDate(FieldByName('rental_date').AsDateTime);
         Next;
+        //new row
+        setLength(resultVar, length(resultVar) + 1);
+
       end;
+      resultVar[length(resultVar) - 1] := TRental.Create; //create new rental object
+      resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
+      resultVar[length(resultVar) - 1].setStudentId(
+        FieldByName('student_id').AsLargeInt);
+      resultVar[length(resultVar) - 1].setReturnDate(
+        FieldByName('return_date').AsDateTime);
+      resultVar[length(resultVar) - 1].setRentalDate(
+        FieldByName('rental_date').AsDateTime);
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      resultVar := nil;
     end;
   end;
+end;
+
+function TDBConnection.getRentals: ArrayOfRentals;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM rental';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  setRentalFields(Result);
 end;
 
 function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
   book: TBook): ArrayOfRentals;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text :=
     'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
@@ -444,35 +378,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      while not EOF do
-      begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TRental.Create; //create new rental object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt);
-        Result[length(Result) - 1].setBookId(FieldByName('book_id').AsLargeInt);
-        Result[length(Result) - 1].setStudentId(FieldByName('student_id').AsLargeInt);
-        Result[length(Result) - 1].setReturnDate(FieldByName('return_date').AsDateTime);
-        Result[length(Result) - 1].setRentalDate(FieldByName('rental_date').AsDateTime);
-        Next;
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setRentalFields(Result);
 end;
 
 function TDBConnection.persistRental(rental: TRental): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   //get object from database if exists
   SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = (:id)';
@@ -512,6 +423,7 @@ end;
 
 function TDBConnection.deleteRental(rental: TRental): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from rental where id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := rental.getId;
@@ -536,6 +448,7 @@ end;
 
 function TDBConnection.deleteReturnedRentalOlderThan(date: TDate): integer;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text :=
     'delete from rental where return_date not null and date(date()) <= (:date)';
@@ -570,41 +483,49 @@ end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getBooks: ArrayOfBooks;
+procedure TDBConnection.setBookFields(resultVar: ArrayOfBooks);
 begin
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM book';
-  SQLQuery.Open;
-
-  Result := nil;
-
   try
     with SQLQuery do
     begin
-      First;
       while not EOF do
       begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TBook.Create; //create new book object
-        Result[length(Result) - 1].setId(FieldByName('id').AsLargeInt);
-        Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
-        Result[length(Result) - 1].setCondition(FieldByName('condition').AsInteger);
         Next;
+        //new row
+        setLength(resultVar, length(resultVar) + 1);
+
       end;
+      resultVar[length(resultVar) - 1] := TBook.Create; //create new book object
+      resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
+      resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
+      resultVar[length(resultVar) - 1].setCondition(
+        FieldByName('condition').AsInteger);
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      resultVar := nil;
     end;
   end;
 end;
 
+function TDBConnection.getBooks: ArrayOfBooks;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM book';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  setBookFields(Result);
+end;
+
 function TDBConnection.getBookById(id: int64): TBook;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := id;
@@ -612,31 +533,12 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      //new row
-      if not EOF then
-      begin
-        Result := TBook.Create; //create new book object
-        Result.setId(FieldByName('id').AsLargeint); //set id
-        Result.setIsbn(FieldByName('isbn').AsString);
-        Result.setCondition(FieldByName('condition').AsInteger);
-      end;
-    end;
-
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setBookFields(Result);
 end;
 
 function TDBConnection.persistBook(book: TBook): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := book.getId;
@@ -673,6 +575,7 @@ end;
 
 function TDBConnection.deleteBook(book: TBook): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from book where id = (:id)';
   SQLQuery.ParamByName('id').AsInteger := book.getId;
@@ -697,42 +600,49 @@ end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getBooktypes: ArrayOfBooktypes;
+procedure TDBConnection.setBooktypeFields(resultVar: ArrayOfBookTypes);
 begin
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype';
-  SQLQuery.Open;
-
-  Result := nil;
-
   try
     with SQLQuery do
     begin
-      First;
       while not EOF do
       begin
-        //new row
-        setLength(Result, length(Result) + 1);
-        Result[length(Result) - 1] := TBooktype.Create; //create new booktype object
-        Result[length(Result) - 1].setIsbn(FieldByName('isbn').AsString);
-        Result[length(Result) - 1].setTitle(FieldByName('title').AsString);
-        Result[length(Result) - 1].setSubject(FieldByName('subject').AsString);
-        Result[length(Result) - 1].setStorage(FieldByName('storage').AsInteger);
         Next;
+        //new row
+        setLength(resultVar, length(resultVar) + 1);
+
       end;
+      resultVar[length(resultVar) - 1] := TBooktype.Create; //create new booktype object
+      resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
+      resultVar[length(resultVar) - 1].setTitle(FieldByName('title').AsString);
+      resultVar[length(resultVar) - 1].setSubject(FieldByName('subject').AsString);
+      resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
     end;
 
   except
     on E: EDatabaseError do
     begin
       DBError := E;
-      Result := nil;
+      resultVar := nil;
     end;
   end;
 end;
 
+function TDBConnection.getBooktypes: ArrayOfBooktypes;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype';
+  SQLQuery.Open;
+
+  Result := nil;
+
+  setBooktypeFields(Result);
+end;
+
 function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
   SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
@@ -770,6 +680,7 @@ end;
 
 function TDBConnection.deleteBooktype(booktype: TBooktype): boolean;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from booktype where isbn = (:isbn)';
   SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
@@ -794,6 +705,7 @@ end;
 
 function TDBConnection.getBooktypeByIsbn(isbn: string): TBooktype;
 begin
+  DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
   SQLQuery.ParamByName('isbn').AsString := isbn;
@@ -801,27 +713,7 @@ begin
 
   Result := nil;
 
-  try
-    with SQLQuery do
-    begin
-      First;
-      //new row
-      if not EOF then
-      begin
-        Result := TBooktype.Create; //create new student object
-        Result.setIsbn(FieldByName('isbn').AsString); //set id
-        Result.setTitle(FieldByName('title').AsString);
-        Result.setSubject(FieldByName('subject').AsString);
-        Result.setStorage(FieldByName('storage').AsInteger);
-      end;
-    end;
-  except
-    on E: EDatabaseError do
-    begin
-      DBError := E;
-      Result := nil;
-    end;
-  end;
+  setBooktypeFields(Result);
 end;
 
 ////////////////////////////////////////////////////////
@@ -833,13 +725,17 @@ end;
 
 constructor TDBConnection.Create(databasePath: string);
 begin
+  DBError := nil;
   try
     self.SQLite3Connection := TSQLite3Connection.Create(nil);
     self.SQLTransaction := TSQLTransaction.Create(nil);
     self.SQLQuery := TSQLQuery.Create(nil);
 
     if not FileExists(databasePath) then
+    begin
+      DBError := EDatabaseError.Create('Unable to open file.');
       exit;
+    end;
 
     self.SQLite3Connection.DatabaseName := databasePath;
     self.SQLite3Connection.Transaction := self.SQLTransaction;
@@ -858,6 +754,8 @@ end;
 
 destructor TDBConnection.Destroy;
 begin
+  DBError := nil;
+
   SQLQuery.Close;
   SQLQuery.Destroy;
   SQLTransaction.Destroy;
