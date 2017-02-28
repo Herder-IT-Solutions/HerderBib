@@ -150,10 +150,10 @@ type
     function isConnected: boolean;
 
   private
-    procedure setStudentFields(resultVar: ArrayOfStudents);
-    procedure setRentalFields(resultVar: ArrayOfRentals);
-    procedure setBookFields(resultVar: ArrayOfBooks);
-    procedure setBooktypeFields(resultVar: ArrayOfBooktypes);
+    procedure setStudentFields(var resultVar: ArrayOfStudents; returnOne: boolean);
+    procedure setRentalFields(var resultVar: ArrayOfRentals; returnOne: boolean);
+    procedure setBookFields(var resultVar: ArrayOfBooks; returnOne: boolean);
+    procedure setBooktypeFields(var resultVar: ArrayOfBooktypes; returnOne: boolean);
 
   private
     SQLite3Connection: TSQLite3Connection;
@@ -164,24 +164,32 @@ type
 
 implementation
 
-procedure TDBConnection.setStudentFields(resultVar: ArrayOfStudents);
+procedure TDBConnection.setStudentFields(var resultVar: ArrayOfStudents;
+  returnOne: boolean);
 begin
   try
     with SQLQuery do
     begin
+      setLength(resultVar, 0);
+      First;
       while not EOF do
       begin
-        Next;
         //new row
         setLength(resultVar, length(resultVar) + 1);
-
+        resultVar[length(resultVar) - 1] := TStudent.Create;
+        //create new student object
+        resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt); //set id
+        resultVar[length(resultVar) - 1].setLastName(FieldByName('last_name').AsString);
+        resultVar[length(resultVar) - 1].setFirstName(
+          FieldByName('first_name').AsString);
+        resultVar[length(resultVar) - 1].setClassName(
+          FieldByName('class_name').AsString);
+        resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+        if returnOne then
+          exit;
+        Next;
       end;
-      resultVar[length(resultVar) - 1] := TStudent.Create; //create new student object
-      resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt); //set id
-      resultVar[length(resultVar) - 1].setLastName(FieldByName('last_name').AsString);
-      resultVar[length(resultVar) - 1].setFirstName(FieldByName('first_name').AsString);
-      resultVar[length(resultVar) - 1].setClassName(FieldByName('class_name').AsString);
-      resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+
     end;
 
   except
@@ -202,7 +210,7 @@ begin
 
   Result := nil;
 
-  setStudentFields(Result);
+  setStudentFields(Result, False);
 end;
 
 function TDBConnection.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
@@ -215,7 +223,7 @@ begin
 
   Result := nil;
 
-  setStudentFields(Result);
+  setStudentFields(Result, False);
 end;
 
 function TDBConnection.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
@@ -228,7 +236,7 @@ begin
 
   Result := nil;
 
-  setStudentFields(Result);
+  setStudentFields(Result, False);
 end;
 
 function TDBConnection.getStudentsByClassName(classN: string): ArrayOfStudents;
@@ -241,10 +249,12 @@ begin
 
   Result := nil;
 
-  setStudentFields(Result);
+  setStudentFields(Result, False);
 end;
 
 function TDBConnection.getStudentById(id: int64): TStudent;
+var
+  arr: ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -252,9 +262,8 @@ begin
   SQLQuery.ParamByName('id').AsInteger := id;
   SQLQuery.Open;
 
-  Result := nil;
-
-  setStudentFields(Result);
+  setStudentFields(arr, True);
+  Result := arr[0];
 end;
 
 function TDBConnection.updateinsertStudent(student: TStudent): boolean;
@@ -286,6 +295,7 @@ begin
       SQLTransaction.commit;
     end;
 
+    Result := True;
   except
     on E: EDatabaseError do
     begin
@@ -322,26 +332,31 @@ end;
 
 ////////////////////////////////////////////////////////
 
-procedure TDBConnection.setRetalFields(resultVar: ArrayOfRentals);
+procedure TDBConnection.setRentalFields(var resultVar: ArrayOfRentals;
+  returnOne: boolean);
 begin
   try
     with SQLQuery do
     begin
+      setLength(resultVar, 0);
+      First;
       while not EOF do
       begin
-        Next;
         //new row
         setLength(resultVar, length(resultVar) + 1);
 
+        resultVar[length(resultVar) - 1] := TRental.Create; //create new rental object
+        resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
+        resultVar[length(resultVar) - 1].setStudentId(
+          FieldByName('student_id').AsLargeInt);
+        resultVar[length(resultVar) - 1].setReturnDate(
+          FieldByName('return_date').AsDateTime);
+        resultVar[length(resultVar) - 1].setRentalDate(
+          FieldByName('rental_date').AsDateTime);
+        if returnOne then
+          exit;
+        Next;
       end;
-      resultVar[length(resultVar) - 1] := TRental.Create; //create new rental object
-      resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
-      resultVar[length(resultVar) - 1].setStudentId(
-        FieldByName('student_id').AsLargeInt);
-      resultVar[length(resultVar) - 1].setReturnDate(
-        FieldByName('return_date').AsDateTime);
-      resultVar[length(resultVar) - 1].setRentalDate(
-        FieldByName('rental_date').AsDateTime);
     end;
 
   except
@@ -362,7 +377,7 @@ begin
 
   Result := nil;
 
-  setRentalFields(Result);
+  setRentalFields(Result, False);
 end;
 
 function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
@@ -378,7 +393,7 @@ begin
 
   Result := nil;
 
-  setRentalFields(Result);
+  setRentalFields(Result, False);
 end;
 
 function TDBConnection.updateinsertRental(rental: TRental): boolean;
@@ -412,6 +427,7 @@ begin
       SQLTransaction.commit;
     end;
 
+    Result := True;
   except
     on E: EDatabaseError do
     begin
@@ -483,23 +499,27 @@ end;
 
 ////////////////////////////////////////////////////////
 
-procedure TDBConnection.setBookFields(resultVar: ArrayOfBooks);
+procedure TDBConnection.setBookFields(var resultVar: ArrayOfBooks; returnOne: boolean);
 begin
   try
     with SQLQuery do
     begin
+      setLength(resultVar, 0);
+      First;
       while not EOF do
       begin
-        Next;
         //new row
         setLength(resultVar, length(resultVar) + 1);
 
+        resultVar[length(resultVar) - 1] := TBook.Create; //create new book object
+        resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
+        resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
+        resultVar[length(resultVar) - 1].setCondition(
+          FieldByName('condition').AsInteger);
+        if returnOne then
+          exit;
+        Next;
       end;
-      resultVar[length(resultVar) - 1] := TBook.Create; //create new book object
-      resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
-      resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
-      resultVar[length(resultVar) - 1].setCondition(
-        FieldByName('condition').AsInteger);
     end;
 
   except
@@ -520,10 +540,12 @@ begin
 
   Result := nil;
 
-  setBookFields(Result);
+  setBookFields(Result, False);
 end;
 
 function TDBConnection.getBookById(id: int64): TBook;
+var
+  arr: ArrayOfBooks;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -531,9 +553,8 @@ begin
   SQLQuery.ParamByName('id').AsInteger := id;
   SQLQuery.Open;
 
-  Result := nil;
-
-  setBookFields(Result);
+  setBookFields(arr, True);
+  Result := arr[0];
 end;
 
 function TDBConnection.updateinsertBook(book: TBook): boolean;
@@ -564,6 +585,7 @@ begin
       SQLTransaction.commit;
     end;
 
+    Result := True;
   except
     on E: EDatabaseError do
     begin
@@ -600,23 +622,29 @@ end;
 
 ////////////////////////////////////////////////////////
 
-procedure TDBConnection.setBooktypeFields(resultVar: ArrayOfBookTypes);
+procedure TDBConnection.setBooktypeFields(var resultVar: ArrayOfBookTypes;
+  returnOne: boolean);
 begin
   try
     with SQLQuery do
     begin
+      setLength(resultVar, 0);
+      First;
       while not EOF do
       begin
-        Next;
         //new row
         setLength(resultVar, length(resultVar) + 1);
 
+        resultVar[length(resultVar) - 1] := TBooktype.Create;
+        //create new booktype object
+        resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
+        resultVar[length(resultVar) - 1].setTitle(FieldByName('title').AsString);
+        resultVar[length(resultVar) - 1].setSubject(FieldByName('subject').AsString);
+        resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
+        if returnOne then
+          exit;
+        Next;
       end;
-      resultVar[length(resultVar) - 1] := TBooktype.Create; //create new booktype object
-      resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
-      resultVar[length(resultVar) - 1].setTitle(FieldByName('title').AsString);
-      resultVar[length(resultVar) - 1].setSubject(FieldByName('subject').AsString);
-      resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
     end;
 
   except
@@ -637,7 +665,7 @@ begin
 
   Result := nil;
 
-  setBooktypeFields(Result);
+  setBooktypeFields(Result, False);
 end;
 
 function TDBConnection.updateinsertBooktype(booktype: TBooktype): boolean;
@@ -669,6 +697,7 @@ begin
       SQLTransaction.commit;
     end;
 
+    Result := True;
   except
     on E: EDatabaseError do
     begin
@@ -704,6 +733,8 @@ begin
 end;
 
 function TDBConnection.getBooktypeByIsbn(isbn: string): TBooktype;
+var
+  arr: ArrayOfBooktypes;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -711,9 +742,8 @@ begin
   SQLQuery.ParamByName('isbn').AsString := isbn;
   SQLQuery.Open;
 
-  Result := nil;
-
-  setBooktypeFields(Result);
+  setBooktypeFields(arr, True);
+  Result := arr[0];
 end;
 
 ////////////////////////////////////////////////////////
