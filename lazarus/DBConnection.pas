@@ -310,14 +310,13 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from student where id = (:id)';
-  SQLQuery.ParamByName('id').AsInteger := student.getId;
+  SQLQuery.ParamByName('id').AsLargeInt := student.getId;
 
 
   try
     with SQLQuery do
     begin
       SQLQuery.ExecSQL;
-      ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
     end;
 
@@ -346,6 +345,7 @@ begin
         setLength(resultVar, length(resultVar) + 1);
 
         resultVar[length(resultVar) - 1] := TRental.Create; //create new rental object
+        resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
         resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
         resultVar[length(resultVar) - 1].setStudentId(
           FieldByName('student_id').AsLargeInt);
@@ -442,14 +442,12 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from rental where id = (:id)';
-  SQLQuery.ParamByName('id').AsInteger := rental.getId;
-
+  SQLQuery.ParamByName('id').AsLargeInt := rental.getId;
 
   try
     with SQLQuery do
     begin
       SQLQuery.ExecSQL;
-      ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
     end;
 
@@ -474,7 +472,6 @@ begin
     with SQLQuery do
     begin
       SQLQuery.ExecSQL;
-      ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
 
       Close;
@@ -600,14 +597,13 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'delete from book where id = (:id)';
-  SQLQuery.ParamByName('id').AsInteger := book.getId;
+  SQLQuery.ParamByName('id').AsLargeInt := book.getId;
 
 
   try
     with SQLQuery do
     begin
       SQLQuery.ExecSQL;
-      ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
     end;
 
@@ -672,7 +668,7 @@ function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
   SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
   SQLQuery.Open;
 
@@ -719,7 +715,6 @@ begin
     with SQLQuery do
     begin
       SQLQuery.ExecSQL;
-      ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
     end;
 
@@ -738,7 +733,7 @@ var
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = ''(:isbn)''';
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
   SQLQuery.ParamByName('isbn').AsString := isbn;
   SQLQuery.Open;
 
