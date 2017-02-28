@@ -5,7 +5,7 @@ unit uDBManagement;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental;
+  Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental, dateutils;
 
 type
 
@@ -26,8 +26,8 @@ type
 
     //Vor: ISBN nur mit Zahlen
     //Eff: Hinzufügen eines neuen Buches
-    //Erg: Buch in Tabelle book
-    procedure BookAdd(isbn : String);
+    //Erg: Id des neu hinzugefügten Buches
+    function BookAdd(isbn : String) : int64;
 
     //Vor: Buch Id und Schüler Id
     //Eff: Rückgabe eines Buches mit Schüler
@@ -53,6 +53,10 @@ type
     //Erg: Die ehemalige Quaität
     function BQualiCheck(BId: int64): int64;
 
+    //Vor: Buch Id
+    //Erg: Das Buch-Object mit der Id
+    function getBookByID(BID: int64): TBook;
+
 
 
 
@@ -70,6 +74,11 @@ type
 
 
     //STUDENTS
+
+    // Importiert die Schüler Liste als CSV Datei
+    // Klasse; Name; Vorname; Geburtsdatum
+    // Datei mit dem Namen name muss im UNterverzeichnis liegen
+    function importCSVSchueler(name:String):Boolean;
 
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
@@ -109,7 +118,7 @@ type
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //Eff: Neuen Schüler erstellen
     //Erg: Neuer Schüler
-    procedure NewStudent (lastN, firstN, classN : String; birth: TDate);
+    procedure NewStudent (lastN, firstN, classN, birth : String);
 
     //Vor: Eine Schüler Id
     //Eff: Löscht einen Schüler
@@ -220,7 +229,7 @@ begin
   rental.setReturnDate(now);
 end;
 
-procedure TDBManagement.BookAdd(isbn : String);
+function TDBManagement.BookAdd(isbn : String):int64;
 Var id, pz: int64;
     hid :String;
     book :TBook;
@@ -241,6 +250,8 @@ begin
   book.setCondition(1);
 
   uDBConn.persistBook(book);
+
+  Result:=id;
 end;
 
 procedure TDBManagement.BookDel(BId:int64);
@@ -288,11 +299,14 @@ begin
   uDBConn.deleteReturnedRentalOlderThan(datum);
 end;
 
-procedure TDBManagement.NewStudent (lastN, firstN, classN : String; birth: TDate);
+procedure TDBManagement.NewStudent (lastN, firstN, classN, birth : String);
 Var id, pz: int64;
     hid: String;
+    birthDate : TDateTime;
     student: TStudent;
 begin
+  //birthDate := ScanDateTime(birth);
+
   repeat
      id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
 
@@ -307,9 +321,92 @@ begin
   student.setFirstName(firstN);
   student.setLastName(lastN);
   student.setClassName(classN);
-  student.setBirth(birth);
+  student.setBirth(birthDate);
 
   self.persistStudent(student);
+end;
+
+function TDBManagement.getBookByID(BID: int64): TBook;
+begin
+  result:= uDBConn.getBookById(bid);
+end;
+
+function TDBManagement.importCSVSchueler(name:String): Boolean;
+Var text: TextFile;
+    str, fname, lname, cname, birth : String;
+    i, j, k, id, indexS3 : Integer;
+    students, students2, students3: Array of TStudent;
+begin
+  str:='';
+  fname:='';
+  lname:='';
+  cname:='';
+  birth:='';
+  indexS3:=0;
+
+  AssignFile(text, name);
+
+  while not eof (text) do
+  begin
+    readln(text, str);
+
+    i:=0;
+    while not (str[i] = ';') do
+    begin
+      cname:=cname+str[i];
+      i:=i+1;
+    end;
+
+    i:=i+1;
+    while not (str[i] = ';') do
+    begin
+      lname:=lname+str[i];
+      i:=i+1;
+    end;
+
+    i:=i+1;
+    while not (str[i] = ';') do
+    begin
+      fname:=fname+str[i];
+      i:=i+1;
+    end;
+
+    i:=i+1;
+    while ( not (str[i] = ';') or (length(str) = i+1)) do
+    begin
+      birth:=birth+str[i];
+      i:=i+1;
+    end;
+
+    students:=uDBConn.getStudentsByFirstNamePattern(fname);
+
+    students2:=uDBConn.getStudentsByLastNamePattern(lname);
+
+    j:=0;
+    while length(students) > j+1 do
+    begin
+      id := students[j].getId;
+
+      k:=0;
+      while length(students2) > k+1 do
+      begin
+        if id = students2[k].getId then
+        begin
+          students3[indexS3] := students2[k];
+          indexS3:=indexS3+1;
+        end;
+
+        k:=k+1;
+      end;
+      j:=j+1;
+    end;
+
+
+    //NOCH ETWAS
+
+  end;
+
+  Result:=true;
 end;
 
 end.
