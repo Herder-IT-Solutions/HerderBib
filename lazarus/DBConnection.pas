@@ -417,7 +417,6 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLargeInt := rental.getId;
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
@@ -678,7 +677,7 @@ begin
       First;
       //new row
 
-      if EOF or (booktype.getIsbn = '') then
+      if EOF or (length(booktype.getIsbn) = 0) then
         Append //insert mode
       else
         Edit; //update mode
