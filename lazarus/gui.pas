@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, CheckLst, uDBManagement;
+  Buttons, CheckLst, uDBManagement, uStudent, uBook, uRental, uBooktype;
 
 type
 
