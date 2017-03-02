@@ -105,7 +105,6 @@ type
     MeInfoStudRel: TMemo;
     MeInfoRel: TMemo;
     PageControl1: TPageControl;
-    Panel1: TPanel;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
     SEInfoStudDay: TSpinEdit;
@@ -141,6 +140,7 @@ type
     procedure EdStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
   private
@@ -167,6 +167,11 @@ begin
 end;
 
 procedure TForm1.PageControl1Change(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.Panel1Click(Sender: TObject);
 begin
 
 end;
@@ -406,7 +411,7 @@ end;
 
 procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
 begin
-     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki');
+     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Bedienungsanleitung');
 end;
 
 
