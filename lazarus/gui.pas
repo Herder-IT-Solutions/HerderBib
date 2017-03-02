@@ -376,7 +376,7 @@ begin
   try
   if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
      //Check if book is already rent
-     management.BookRentStu(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
+     management.StuRentBook(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
   end;
 
   except
