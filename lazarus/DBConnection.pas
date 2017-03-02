@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: LargeInt): TStudent;
+    function getStudentById(id: LongInt): TStudent;
 
     // Persists student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -95,7 +95,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: LargeInt): TBook;
+    function getBookById(id: LongInt): TBook;
 
     // Persists book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -252,7 +252,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: LargeInt): TStudent;
+function TDBConnection.getStudentById(id: LongInt): TStudent;
 var
   arr: ArrayOfStudents;
 begin
@@ -539,7 +539,7 @@ begin
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: LargeInt): TBook;
+function TDBConnection.getBookById(id: LongInt): TBook;
 var
   arr: ArrayOfBooks;
 begin
@@ -573,7 +573,7 @@ begin
         Edit; //update mode
 
       //update object
-      FieldByName('id').AsLargeint := book.getId;
+      FieldByName('id').AsLargeInt := book.getId;
       FieldByName('isbn').AsString := book.getIsbn;
       FieldByName('condition').AsInteger := book.getCondition;
       Post; //add to change buffer
