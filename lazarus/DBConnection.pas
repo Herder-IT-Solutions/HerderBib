@@ -55,6 +55,11 @@ type
     // result: TRUE on success
     function deleteStudent(student: TStudent): boolean;
 
+    // Returns TStudent object with given birthdate
+    // parameter: TDate object (birthdate)
+    // result: TStudent object
+    function getStudentByBirthdate(birthdate: TDate): TStudent;
+
     /////////////////////////////////////////////////////////
     //             RENTAL                                  //
     /////////////////////////////////////////////////////////
@@ -327,6 +332,26 @@ begin
       Result := False;
     end;
   end;
+end;
+
+function TDBConnection.getStudentByBirthdate(birthdate: TDate): TStudent;
+begin
+	DBError := NIL;
+	SQLQuery.Close;
+	SQLQuery.SQL.Text := "SELECT FROM student WHERE birth = (:birthdate)"
+	SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+
+  try 
+	with SQLQuery do
+		begin
+			SQLQuery.Open;
+		end;
+  except
+	on E: EDatabaseError do
+	begin
+	  DBError := E;
+	  Result := NIL;
+	end;
 end;
 
 ////////////////////////////////////////////////////////
