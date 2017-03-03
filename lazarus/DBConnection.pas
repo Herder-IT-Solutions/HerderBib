@@ -226,7 +226,6 @@ begin
     end;
     
   Result := nil;
-
   setStudentFields(Result, False);
 end;
 
@@ -326,8 +325,10 @@ begin
       exit;
     end;
   setStudentFields(arr, True);
-  Result := arr[0];
 
+  Result:=NIL;
+  if(arr[0] <> NIL) then
+  Result := arr[0];
 end;
 
 function TDBConnection.persistStudent(student: TStudent): boolean;
@@ -683,6 +684,9 @@ begin
     end;
 
   setBookFields(arr, True);
+
+  Result:=NIL;
+  if(arr[0] <> NIL) then
   Result := arr[0];
 end;
 
@@ -895,6 +899,9 @@ begin
     end;
 
   setBooktypeFields(arr, True);
+
+  Result:=NIL;
+  if(arr[0] <> NIL) then
   Result := arr[0];
 end;
 
