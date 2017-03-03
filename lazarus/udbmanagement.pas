@@ -253,13 +253,8 @@ begin
   book.setIsbn(isbn);
   book.setCondition(1);
 
-<<<<<<< HEAD
-  uDBConn.persistBook(book);
-
   Result:=id;
-=======
   uDBConn.updateinsertBook(book);
->>>>>>> parent of 8adeb62... Revert "Change "persist" functions to "updateinsert""
 end;
 
 procedure TDBManagement.BookDel(BId:int64);
@@ -428,7 +423,7 @@ begin
     begin                 //Fall Klasse überschreiben
 
       students2[0].setClassName(cname);
-      Result:=uDBConn.persistStudent(students2[0]);;
+      Result:=uDBConn.updateinsertStudent(students2[0]);;
 
     end else begin        //Fall Ein Fehler liegt vor
       Result:=False;
