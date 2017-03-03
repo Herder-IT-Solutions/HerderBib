@@ -19,6 +19,9 @@ type
     //Erg: Säubert Überreste des Programms
     destructor Destroy;
 
+    // Überprüft die Verbindung zur Datenbank
+    // Wahr wenn verbunden
+    function isConnected: boolean;
 
 
 
@@ -77,8 +80,9 @@ type
 
     // Importiert die Schüler Liste als CSV Datei
     // Klasse; Name; Vorname; Geburtsdatum
-    // Datei mit dem Namen name muss im UNterverzeichnis liegen
-    function importCSVSchueler(name:String):Boolean;
+    // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
+    // False, wenn ein Fehler vorliegt
+    function importCSVSchueler(Dateiname:String):Boolean;
 
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
@@ -331,7 +335,7 @@ begin
   result:= uDBConn.getBookById(bid);
 end;
 
-function TDBManagement.importCSVSchueler(name:String): Boolean;
+function TDBManagement.importCSVSchueler(Dateiname:String): Boolean;
 Var text: TextFile;
     str, fname, lname, cname, birth : String;
     i, j, k, id, indexS3 : Integer;
@@ -344,13 +348,17 @@ begin
   birth:='';
   indexS3:=0;
 
-  AssignFile(text, name);
+  AssignFile(text, Dateiname);
 
-  while not eof (text) do
+  try
+  reset(text);
+
+
+  while not EoF (text) do
   begin
     readln(text, str);
 
-    i:=0;
+    i:=1;
     while not (str[i] = ';') do
     begin
       cname:=cname+str[i];
@@ -372,7 +380,7 @@ begin
     end;
 
     i:=i+1;
-    while ( not (str[i] = ';') or (length(str) = i+1)) do
+    while ( not (str[i] = ';') and (length(str) >= i+1)) do
     begin
       birth:=birth+str[i];
       i:=i+1;
@@ -402,11 +410,41 @@ begin
     end;
 
 
-    //NOCH ETWAS
+
+    //students:=uDBConn.
+
+
+    if (length(students2) = 0) then
+    begin                 //Fall Einfügen eines neuen Schülers
+
+      self.NewStudent(lname, fname, cname, birth);
+      Result:=true;
+
+    end else if (length(students2) = 1) then
+    begin                 //Fall Klasse überschreiben
+
+      students2[0].setClassName(cname);
+      Result:=uDBConn.persistStudent(students2[0]);;
+
+    end else begin        //Fall Ein Fehler liegt vor
+      Result:=False;
+      //break;
+    end;
 
   end;
+  except
+    on E: Exception do
+      Result:=False;
 
-  Result:=true;
+  end;
+  CloseFile(text);
+
+
+end;
+
+function TDBManagement.isConnected():Boolean;
+Begin
+  Result:=uDBConn.isConnected;
 end;
 
 end.
