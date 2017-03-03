@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: LongInt): TStudent;
+    function getStudentById(id: longint): TStudent;
 
     // Updates or inserts a student object. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -54,6 +54,11 @@ type
     // parameter: student object
     // result: TRUE on success
     function deleteStudent(student: TStudent): boolean;
+
+    // Returns TStudent object with given birthdate
+    // parameter: TDate object (birthdate)
+    // result: TStudent object
+    function getStudentByBirthdate(birthdate: TDate): TStudent;
 
     /////////////////////////////////////////////////////////
     //             RENTAL                                  //
@@ -95,7 +100,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: LongInt): TBook;
+    function getBookById(id: longint): TBook;
 
     // Updates or inserts book object. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -133,8 +138,8 @@ type
     /////////////////////////////////////////////////////////
 
     // Returns the current Error Object
-    // result: Error Object (DBError, Type: EDatabaseError)
-    function getError: EDatabaseError;
+    // result: Error Object (DBError, Type: Exception)
+    function getError: Exception;
 
     /////////////////////////////////////////////////////////
 
@@ -159,7 +164,7 @@ type
     SQLite3Connection: TSQLite3Connection;
     SQLQuery: TSQLQuery;
     SQLTransaction: TSQLTransaction;
-    DBError: EDatabaseError;
+    DBError: Exception;
   end;
 
 implementation
@@ -193,7 +198,7 @@ begin
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       resultVar := nil;
@@ -204,22 +209,46 @@ end;
 function TDBConnection.getStudents: ArrayOfStudents;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student';
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student';
+      SQLQuery.Open;
+    end;
 
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
   Result := nil;
-
   setStudentFields(Result, False);
 end;
 
 function TDBConnection.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
-  SQLQuery.ParamByName('name').AsString := firstName;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := firstName;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   Result := nil;
 
@@ -229,11 +258,23 @@ end;
 function TDBConnection.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
-  SQLQuery.ParamByName('name').AsString := lastName;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := lastName;
+      SQLQuery.Open;
+    end;
 
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
   Result := nil;
 
   setStudentFields(Result, False);
@@ -242,28 +283,55 @@ end;
 function TDBConnection.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
-  SQLQuery.ParamByName('name').AsString := classN;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := classN;
+      SQLQuery.Open;
+    end;
 
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
   Result := nil;
 
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: LongInt): TStudent;
+function TDBConnection.getStudentById(id: longint): TStudent;
 var
   arr: ArrayOfStudents;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
-  SQLQuery.ParamByName('id').AsInteger := id;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+      SQLQuery.ParamByName('id').AsInteger := id;
+      SQLQuery.Open;
+    end;
 
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
   setStudentFields(arr, True);
-  Result := arr[0];
+
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 function TDBConnection.updateinsertStudent(student: TStudent): boolean;
@@ -297,7 +365,7 @@ begin
 
     Result := True;
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -321,10 +389,31 @@ begin
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
+    end;
+  end;
+end;
+
+function TDBConnection.getStudentByBirthdate(birthdate: TDate): TStudent;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
+  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
     end;
   end;
 end;
@@ -360,7 +449,7 @@ begin
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       resultVar := nil;
@@ -371,9 +460,22 @@ end;
 function TDBConnection.getRentals: ArrayOfRentals;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM rental';
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM rental';
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   Result := nil;
 
@@ -385,11 +487,24 @@ function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text :=
-    'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
-  SQLQuery.ParamByName('book').AsLargeInt := book.getId;
-  SQLQuery.ParamByName('student').AsLargeInt := student.getId;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
+      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+      SQLQuery.ParamByName('student').AsLargeInt := student.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   Result := nil;
 
@@ -428,7 +543,7 @@ begin
 
     Result := True;
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -446,12 +561,12 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
       SQLTransaction.commit;
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -484,7 +599,7 @@ begin
       end;
     end;
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := -1;
@@ -519,7 +634,7 @@ begin
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       resultVar := nil;
@@ -530,27 +645,56 @@ end;
 function TDBConnection.getBooks: ArrayOfBooks;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM book';
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM book';
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   Result := nil;
 
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: LongInt): TBook;
+function TDBConnection.getBookById(id: longint): TBook;
 var
   arr: ArrayOfBooks;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
-  SQLQuery.ParamByName('id').AsInteger := id;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+      SQLQuery.ParamByName('id').AsInteger := id;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   setBookFields(arr, True);
-  Result := arr[0];
+
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 function TDBConnection.updateinsertBook(book: TBook): boolean;
@@ -583,7 +727,7 @@ begin
 
     Result := True;
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -602,12 +746,13 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
+      ApplyUpdates; //test
       SQLTransaction.commit;
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -643,7 +788,7 @@ begin
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       resultVar := nil;
@@ -654,9 +799,22 @@ end;
 function TDBConnection.getBooktypes: ArrayOfBooktypes;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype';
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM booktype';
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   Result := nil;
 
@@ -694,7 +852,7 @@ begin
 
     Result := True;
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -713,12 +871,12 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
       SQLTransaction.commit;
     end;
 
   except
-    on E: EDatabaseError do
+    on E: Exception do
     begin
       DBError := E;
       Result := False;
@@ -731,18 +889,34 @@ var
   arr: ArrayOfBooktypes;
 begin
   DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
-  SQLQuery.ParamByName('isbn').AsString := isbn;
-  SQLQuery.Open;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
+      SQLQuery.ParamByName('isbn').AsString := isbn;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
 
   setBooktypeFields(arr, True);
-  Result := arr[0];
+
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getError: EDatabaseError;
+function TDBConnection.getError: Exception;
 begin
   Result := DBError;
 end;
@@ -757,7 +931,7 @@ begin
 
     if not FileExists(databasePath) then
     begin
-      DBError := EDatabaseError.Create('Unable to open file.');
+      DBError := Exception.Create('Unable to open file.');
       exit;
     end;
 
@@ -771,7 +945,7 @@ begin
 
     self.SQLite3Connection.Open;
   except
-    on E: EDatabaseError do
+    on E: Exception do
       DBError := E;
   end;
 end;
@@ -788,7 +962,17 @@ end;
 
 function TDBConnection.isConnected: boolean;
 begin
-  Result := self.SQLite3Connection.Connected;
+  try
+    begin
+      Result := self.SQLite3Connection.Connected;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := False;
+    end;
+  end;
 end;
 
 end.
