@@ -109,10 +109,10 @@ type
     //     welches den Schüler mit der übergebnen Id beinhaltet
     function getStudentById(id: int64): TStudent;
 
-    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id oder erstellt einen neuen Schüler in der
-    //     Datenbank mit der gegebenen id
-    //Erg: Bei Erfolg -> True
-    function updateinsertStudent(student: TStudent): boolean;
+    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
+    //     Datenbank mit dem Übergebenen Schüler
+    //Erg: Wenn Schüler nicht vorhanden wahr -> False
+    function persistStudent(student: TStudent): boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -213,9 +213,9 @@ begin
   Result:=uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.updateinsertStudent(student: TStudent): boolean;
+function TDBManagement.persistStudent(student: TStudent): boolean;
 begin
-  Result:=uDBConn.updateinsertStudent(student);
+  Result:=uDBConn.persistStudent(student);
 end;
 
 function TDBManagement.SIdCheck(SId :int64):Boolean;
@@ -253,8 +253,9 @@ begin
   book.setIsbn(isbn);
   book.setCondition(1);
 
+  uDBConn.persistBook(book);
+
   Result:=id;
-  uDBConn.updateinsertBook(book);
 end;
 
 procedure TDBManagement.BookDel(BId:int64);
@@ -277,7 +278,7 @@ begin
   booktype.setTitle(title);
   booktype.setSubject(subject);
 
-  uDBConn.updateinsertBooktype(booktype);
+  uDBConn.persistBooktype(booktype);
 end;
 
 procedure TDBManagement.StuRentBook(BId, SId :int64);        //functioniert nicht !                        //!
@@ -289,7 +290,7 @@ begin
   rental.setStudentId(SId);
   rental.setRentalDate(now);
 
-  uDBConn.updateinsertRental(rental);
+  uDBConn.persistRental(rental);
 end;
 
 procedure TDBManagement.DelStudent(SId : int64);
@@ -303,18 +304,38 @@ begin
 end;
 
 procedure TDBManagement.NewStudent (lastN, firstN, classN, birth : String);
-Var id, pz: int64;
+Var id, pz, i: int64;
+    h : Array [1..100] of int64;
     hid: String;
     birthDate : TDateTime;
     student: TStudent;
 begin
   //birthDate := ScanDateTime(birth);
+  pz:=0;
+  i:=1;
+
+  for (i<=100) do
+  begin
+    h[i]:=0;
+    i:=i+1;
+  end;
 
   repeat
      id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
 
-     hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
-     pz:= ((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
+     hid:=inttostr(id); //hid ist eine Hilfsvariable zur Prüfnummererstellung
+     h[1]:= (strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3);
+     //h2:= strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]);
+
+     h[49]:=
+     h[50]:= (h[49]) + (h[39]) + (h[29]) + (h[19]);
+     h[95]:=hid[2];
+     h[96]:=hid[4];
+     h[97]:= hid[6];
+     h[98]:= strtoint(h[95]) + strtoint(h[96]) + strtoint(h[97]);
+     h[99]:= h[50] + h[98];
+     h[100]:= (h[99])Mod 10;
+     pz:= h[100]; //Die Prüfziffer Teil 1
      if pz = 10 then pz := 0;
      id:=(id*10)+ (10-pz);
   until SIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
@@ -326,7 +347,7 @@ begin
   student.setClassName(classN);
   student.setBirth(birthDate);
 
-  self.updateinsertStudent(student);
+  self.persistStudent(student);
 end;
 
 function TDBManagement.getBookByID(BID: int64): TBook;
@@ -350,87 +371,90 @@ begin
   AssignFile(text, Dateiname);
 
   try
-  reset(text);
+    reset(text);
 
 
-  while not EoF (text) do
-  begin
-    readln(text, str);
-
-    i:=1;
-    while not (str[i] = ';') do
+    while not EoF (text) do
     begin
-      cname:=cname+str[i];
-      i:=i+1;
-    end;
+      readln(text, str);
 
-    i:=i+1;
-    while not (str[i] = ';') do
-    begin
-      lname:=lname+str[i];
-      i:=i+1;
-    end;
-
-    i:=i+1;
-    while not (str[i] = ';') do
-    begin
-      fname:=fname+str[i];
-      i:=i+1;
-    end;
-
-    i:=i+1;
-    while ( not (str[i] = ';') and (length(str) >= i+1)) do
-    begin
-      birth:=birth+str[i];
-      i:=i+1;
-    end;
-
-    students:=uDBConn.getStudentsByFirstNamePattern(fname);
-
-    students2:=uDBConn.getStudentsByLastNamePattern(lname);
-
-    j:=0;
-    while length(students) > j+1 do
-    begin
-      id := students[j].getId;
-
-      k:=0;
-      while length(students2) > k+1 do
+      i:=1;
+      while not (str[i] = ';') do
       begin
-        if id = students2[k].getId then
-        begin
-          students3[indexS3] := students2[k];
-          indexS3:=indexS3+1;
-        end;
-
-        k:=k+1;
+        cname:=cname+str[i];
+        i:=i+1;
       end;
-      j:=j+1;
+
+      i:=i+1;
+      while not (str[i] = ';') do
+      begin
+        lname:=lname+str[i];
+        i:=i+1;
+      end;
+
+      i:=i+1;
+      while not (str[i] = ';') do
+      begin
+        fname:=fname+str[i];
+        i:=i+1;
+      end;
+
+      i:=i+1;
+      while ( not (str[i] = ';') and (length(str) >= i+1)) do
+      begin
+        birth:=birth+str[i];
+        i:=i+1;
+      end;
+
+      students:=uDBConn.getStudentsByFirstNamePattern(fname);
+
+      students2:=uDBConn.getStudentsByLastNamePattern(lname);
+
+      if not (length(students) = 0) then
+      begin
+        j:=0;
+        while length(students) > j+1 do
+        begin
+          id := students[j].getId;
+
+          k:=0;
+          while length(students2) > k+1 do
+          begin
+            if id = students2[k].getId then
+            begin
+              students3[indexS3] := students2[k];
+              indexS3:=indexS3+1;
+            end;
+
+            k:=k+1;
+          end;
+          j:=j+1;
+        end;
+      end else students3 := students2;
+
+
+
+      //students:=uDBConn.
+
+
+      if (length(students2) = 0) then
+      begin                 //Fall Einfügen eines neuen Schülers
+
+        self.NewStudent(lname, fname, cname, birth);
+        Result:=true;
+
+      end else if (length(students2) = 1) then
+      begin                 //Fall Klasse überschreiben
+
+        students2[0].setClassName(cname);
+        Result:=uDBConn.persistStudent(students2[0]);;
+
+      end else begin        //Fall Ein Fehler liegt vor
+        Result:=False;
+        break;
+      end;
+
     end;
-
-
-
-    //students:=uDBConn.
-
-
-    if (length(students2) = 0) then
-    begin                 //Fall Einfügen eines neuen Schülers
-
-      self.NewStudent(lname, fname, cname, birth);
-      Result:=true;
-
-    end else if (length(students2) = 1) then
-    begin                 //Fall Klasse überschreiben
-
-      students2[0].setClassName(cname);
-      Result:=uDBConn.updateinsertStudent(students2[0]);;
-
-    end else begin        //Fall Ein Fehler liegt vor
-      Result:=False;
-      //break;
-    end;
-
-  end;
   except
     on E: Exception do
       Result:=False;
