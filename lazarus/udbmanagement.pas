@@ -109,10 +109,10 @@ type
     //     welches den Schüler mit der übergebnen Id beinhaltet
     function getStudentById(id: int64): TStudent;
 
-    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
-    //     Datenbank mit dem Übergebenen Schüler
-    //Erg: Wenn Schüler nicht vorhanden wahr -> False
-    function persistStudent(student: TStudent): boolean;
+    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id oder erstellt einen neuen Schüler in der
+    //     Datenbank mit der gegebenen id
+    //Erg: Bei Erfolg -> True
+    function updateinsertStudent(student: TStudent): boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -213,9 +213,9 @@ begin
   Result:=uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.persistStudent(student: TStudent): boolean;
+function TDBManagement.updateinsertStudent(student: TStudent): boolean;
 begin
-  Result:=uDBConn.persistStudent(student);
+  Result:=uDBConn.updateinsertStudent(student);
 end;
 
 function TDBManagement.SIdCheck(SId :int64):Boolean;
@@ -253,9 +253,13 @@ begin
   book.setIsbn(isbn);
   book.setCondition(1);
 
+<<<<<<< HEAD
   uDBConn.persistBook(book);
 
   Result:=id;
+=======
+  uDBConn.updateinsertBook(book);
+>>>>>>> parent of 8adeb62... Revert "Change "persist" functions to "updateinsert""
 end;
 
 procedure TDBManagement.BookDel(BId:int64);
@@ -278,7 +282,7 @@ begin
   booktype.setTitle(title);
   booktype.setSubject(subject);
 
-  uDBConn.persistBooktype(booktype);
+  uDBConn.updateinsertBooktype(booktype);
 end;
 
 procedure TDBManagement.StuRentBook(BId, SId :int64);        //functioniert nicht !                        //!
@@ -290,7 +294,7 @@ begin
   rental.setStudentId(SId);
   rental.setRentalDate(now);
 
-  uDBConn.persistRental(rental);
+  uDBConn.updateinsertRental(rental);
 end;
 
 procedure TDBManagement.DelStudent(SId : int64);
@@ -327,7 +331,7 @@ begin
   student.setClassName(classN);
   student.setBirth(birthDate);
 
-  self.persistStudent(student);
+  self.updateinsertStudent(student);
 end;
 
 function TDBManagement.getBookByID(BID: int64): TBook;
