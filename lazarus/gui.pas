@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, CheckLst, uDBManagement, uStudent, uBook, uRental, uBooktype;
+  Buttons, CheckLst, uDBManagement, Student, Book, Rental, Booktype,LConvEncoding,uBarcodePrint ;
 
 type
 
@@ -53,6 +53,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoAdminConnection: TLabel;
     LbPrintQueue: TLabel;
     LbPrintInfo: TLabel;
     LbInfoStudBD: TLabel;
@@ -130,6 +131,7 @@ type
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
+    procedure BtPrintClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportWikiClick(Sender: TObject);
@@ -141,6 +143,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
+    procedure PCInfosChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
   private
@@ -176,10 +179,17 @@ begin
 
 end;
 
+procedure TForm1.PCInfosChange(Sender: TObject);
+begin
+   if management.isConnected then LbInfoAdminConnection.Caption := 'Datenbankverbindung hergestellt'
+   else if not (management.isConnected) then LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt'
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
  // LbStudInstruct := 'Hello' + #13#10 + 'world';
     PermissionLevel :=1;
+    management := tdbmanagement.create();
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
@@ -251,9 +261,9 @@ begin
      if not( management.BTypeCheck(s)) then management.BookTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
          management.BookAdd(s);
-         INC(k)
+         INC(k);
+         TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
      end;
-     //exexute print.exe -s -LbAddBookName.Text -CBAddBookSubject.Text -SeAddBookQuantity.Value
      end
      else begin
          LbAddBookError.Visible := True;
@@ -338,12 +348,14 @@ procedure readCSV(dataname: STRING);
      begin
        cur:=cur+1;
        readln (f,str);
-       printLine(str,cur)
+       //SomeRTLRoutine(UTF8ToAnsi(str));
+       printLine(AnsiToUTF8(str),cur)
      end;
      CloseFile (f);
 end;
 begin;
 readCSV('rental_relations.csv');
+//MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
 
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
@@ -373,6 +385,11 @@ begin
         LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+end;
+
+procedure TForm1.BtPrintClick(Sender: TObject);
+begin
+  TBarcodePrinter.instance.print;
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);

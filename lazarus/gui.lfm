@@ -1,17 +1,17 @@
 object Form1: TForm1
-  Left = 247
+  Left = 176
   Height = 571
-  Top = 113
+  Top = 284
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
   ClientWidth = 763
   OnCreate = FormCreate
-  LCLVersion = '1.6.2.0'
+  LCLVersion = '1.2.6.0'
   object PageControl1: TPageControl
-    Left = 1
+    Left = 0
     Height = 600
-    Top = 1
+    Top = 0
     Width = 765
     ActivePage = TabInfo
     TabIndex = 4
@@ -5792,11 +5792,11 @@ object Form1: TForm1
       end
       object CBAddBookSubject: TComboBox
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
         Top = 72
         Width = 100
-        ItemHeight = 15
+        ItemHeight = 13
         ItemIndex = 5
         Items.Strings = (
           'Arbeitsgemeinschaft'
@@ -5866,7 +5866,7 @@ object Form1: TForm1
         Hint = 'Drücken Sie "In Druckwarteschlange einfügen" und wecheseln Sie den in den "Druckauftrag" Tab um den Druckvorgang fortzusetzen'
         Top = 144
         Width = 274
-        Caption = 'In Druckwarteschalnge einfügen'
+        Caption = 'In Druckwarteschlange einfügen'
         OnClick = BtAddBookClick
         ParentShowHint = False
         ShowHint = True
@@ -5892,13 +5892,13 @@ object Form1: TForm1
     end
     object TabPrint: TTabSheet
       Caption = 'Druckauftrag'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object LbPrintInfo: TLabel
         Left = 8
-        Height = 30
+        Height = 26
         Top = 8
-        Width = 561
+        Width = 510
         Caption = 'Hier können Sie alle Strichcodes (Schüler/Bücher) drucken, die sich zur Zeit in der Warteschlange befinden.'#13#10'Dadurch werden alle Elemente aus der Warteschlnge entfernt.'
         ParentColor = False
       end
@@ -5908,6 +5908,7 @@ object Form1: TForm1
         Top = 40
         Width = 272
         Caption = 'Gesamte Warteschlange drucken'
+        OnClick = BtPrintClick
         TabOrder = 0
       end
       object LiPrintQueue: TListBox
@@ -5921,21 +5922,21 @@ object Form1: TForm1
           '345235353245, ghdgfsdjf'
           '72384793824, sdfdjsf'
         )
-        ItemHeight = 15
+        ItemHeight = 13
         TabOrder = 1
       end
       object LbPrintQueue: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 192
-        Width = 170
+        Width = 157
         Caption = 'Gesamte Warteschlange (TODO)'
         ParentColor = False
       end
     end
     object TabInfo: TTabSheet
       Caption = 'Informationen betrachten und verändern'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object PCInfos: TPageControl
         AnchorSideLeft.Side = asrBottom
@@ -5944,10 +5945,11 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabCreditsHelp
+        ActivePage = TabRel
         ParentBiDiMode = False
-        TabIndex = 4
+        TabIndex = 2
         TabOrder = 0
+        OnChange = PCInfosChange
         object TabStud: TTabSheet
           Caption = 'Schüler'
           ClientHeight = 518
@@ -6062,6 +6064,7 @@ object Form1: TForm1
             Top = 288
             Width = 216
             Caption = 'Ausleihbeziehungen in Datei exportieren'
+            Enabled = False
             TabOrder = 8
           end
           object LbInfoStudError: TLabel
@@ -6261,10 +6264,10 @@ object Form1: TForm1
           ClientWidth = 744
           object CBInfoRelGrade: TComboBox
             Left = 112
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               '5'
@@ -6304,10 +6307,10 @@ object Form1: TForm1
           end
           object CBInfoRelSubject: TComboBox
             Left = 256
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'
@@ -6420,7 +6423,7 @@ object Form1: TForm1
         end
         object TabCreditsHelp: TTabSheet
           Caption = 'Impressum und Hilfe'
-          ClientHeight = 516
+          ClientHeight = 518
           ClientWidth = 744
           object MeCredits: TMemo
             Left = 424
@@ -6471,9 +6474,9 @@ object Form1: TForm1
           end
           object LbInfoSupport: TLabel
             Left = 8
-            Height = 15
+            Height = 13
             Top = 8
-            Width = 444
+            Width = 399
             Caption = 'Für generelle Hilfestellungen besuchen Sie bitte die Dokumentation des Programms.'
             ParentColor = False
           end
@@ -6488,16 +6491,16 @@ object Form1: TForm1
           end
           object LbInfoSupport2: TLabel
             Left = 8
-            Height = 45
+            Height = 39
             Top = 87
-            Width = 359
+            Width = 322
             Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
             ParentColor = False
           end
         end
         object Admnistration: TTabSheet
           Caption = 'Admnistration'
-          ClientHeight = 516
+          ClientHeight = 518
           ClientWidth = 744
           object BtInfoAdminLogout: TButton
             Left = 8
@@ -6511,7 +6514,7 @@ object Form1: TForm1
           end
           object EdInfoAdminPw: TEdit
             Left = 8
-            Height = 23
+            Height = 21
             Top = 40
             Width = 312
             EchoMode = emPassword
@@ -6520,9 +6523,9 @@ object Form1: TForm1
           end
           object LbInfoAdmin: TLabel
             Left = 8
-            Height = 15
+            Height = 13
             Top = 16
-            Width = 291
+            Width = 265
             Caption = 'Bitte geben Sie den Schlüssel für den Administrator ein:'
             ParentColor = False
           end
@@ -6537,15 +6540,15 @@ object Form1: TForm1
           end
           object LbInfoAdminCheck: TLabel
             Left = 544
-            Height = 15
+            Height = 13
             Top = 40
-            Width = 149
+            Width = 133
             Caption = 'Sie sind nicht Administrator.'
             ParentColor = False
           end
           object LEInfoAdminDBName: TLabeledEdit
             Left = 8
-            Height = 23
+            Height = 21
             Top = 258
             Width = 312
             EditLabel.AnchorSideLeft.Control = LEInfoAdminDBName
@@ -6553,8 +6556,8 @@ object Form1: TForm1
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = LEInfoAdminDBName
             EditLabel.Left = 8
-            EditLabel.Height = 15
-            EditLabel.Top = 240
+            EditLabel.Height = 13
+            EditLabel.Top = 242
             EditLabel.Width = 312
             EditLabel.Caption = 'Bitte bennenen Sie den Datenbankpfad'
             EditLabel.ParentColor = False
@@ -6570,6 +6573,14 @@ object Form1: TForm1
             Caption = 'Absenden'
             Enabled = False
             TabOrder = 4
+          end
+          object LbInfoAdminConnection: TLabel
+            Left = 8
+            Height = 13
+            Top = 216
+            Width = 114
+            Caption = 'LbInfoAdminConnection'
+            ParentColor = False
           end
         end
       end

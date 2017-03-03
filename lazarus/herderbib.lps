@@ -4,11 +4,11 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="11">
+    <Units Count="13">
       <Unit0>
         <Filename Value="herderbib.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="45"/>
       </Unit0>
       <Unit1>
         <Filename Value="gui.pas"/>
@@ -20,9 +20,9 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="166"/>
-        <CursorPos X="21" Y="172"/>
-        <UsageCount Value="43"/>
+        <TopLine Value="177"/>
+        <CursorPos X="67" Y="185"/>
+        <UsageCount Value="45"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -89,140 +89,144 @@
         <UsageCount Value="12"/>
       </Unit9>
       <Unit10>
-        <Filename Value="uDBManagement.pas"/>
-        <UnitName Value="uDBmanagement"/>
-        <EditorIndex Value="1"/>
+        <Filename Value="udbmanagement.pas"/>
+        <UnitName Value="uDBManagement"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="1"/>
-        <CursorPos X="19" Y="1"/>
+        <TopLine Value="166"/>
+        <CursorPos X="13" Y="172"/>
         <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="..\ubarcodeprint.pas"/>
+        <UnitName Value="uBarcodePrint"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="1"/>
+        <CursorPos X="65" Y="23"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="DBConnection.pas"/>
+        <UnitName Value="DBConnection"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="315"/>
+        <CursorPos X="23" Y="321"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit12>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="30" HistoryIndex="29">
+    <JumpHistory Count="26" HistoryIndex="25">
       <Position1>
         <Filename Value="gui.pas"/>
-        <Caret Line="315" Column="14" TopLine="305"/>
+        <Caret Line="266" Column="29" TopLine="254"/>
       </Position1>
       <Position2>
         <Filename Value="gui.pas"/>
-        <Caret Line="314" Column="27" TopLine="303"/>
+        <Caret Line="168" Column="21" TopLine="162"/>
       </Position2>
       <Position3>
         <Filename Value="gui.pas"/>
-        <Caret Line="384" Column="1" TopLine="362"/>
+        <Caret Line="169" Column="21" TopLine="163"/>
       </Position3>
       <Position4>
         <Filename Value="gui.pas"/>
-        <Caret Line="303" Column="36" TopLine="292"/>
+        <Caret Line="170" Column="21" TopLine="164"/>
       </Position4>
       <Position5>
         <Filename Value="gui.pas"/>
-        <Caret Line="314" Column="24" TopLine="193"/>
+        <Caret Line="171" Column="21" TopLine="165"/>
       </Position5>
       <Position6>
         <Filename Value="gui.pas"/>
-        <Caret Line="315" Column="24" TopLine="300"/>
+        <Caret Line="172" Column="21" TopLine="166"/>
       </Position6>
       <Position7>
         <Filename Value="gui.pas"/>
-        <Caret Line="316" Column="24" TopLine="301"/>
+        <Caret Line="336" Column="20" TopLine="329"/>
       </Position7>
       <Position8>
         <Filename Value="gui.pas"/>
-        <Caret Line="315" Column="24" TopLine="300"/>
+        <Caret Line="347" Column="50" TopLine="340"/>
       </Position8>
       <Position9>
         <Filename Value="gui.pas"/>
-        <Caret Line="316" Column="24" TopLine="301"/>
+        <Caret Line="348" Column="3" TopLine="346"/>
       </Position9>
       <Position10>
         <Filename Value="gui.pas"/>
-        <Caret Line="317" Column="24" TopLine="302"/>
+        <Caret Line="256" Column="62" TopLine="243"/>
       </Position10>
       <Position11>
         <Filename Value="gui.pas"/>
-        <Caret Line="316" Column="24" TopLine="301"/>
+        <Caret Line="384" Column="23" TopLine="381"/>
       </Position11>
       <Position12>
         <Filename Value="gui.pas"/>
-        <Caret Line="317" Column="24" TopLine="302"/>
+        <Caret Line="256" Column="52" TopLine="248"/>
       </Position12>
       <Position13>
         <Filename Value="gui.pas"/>
-        <Caret Line="318" Column="24" TopLine="303"/>
+        <Caret Line="384" Column="27" TopLine="376"/>
       </Position13>
       <Position14>
         <Filename Value="gui.pas"/>
-        <Caret Line="353" Column="27" TopLine="332"/>
+        <Caret Line="184" Column="22" TopLine="178"/>
       </Position14>
       <Position15>
-        <Filename Value="gui.pas"/>
-        <Caret Line="270" Column="37" TopLine="254"/>
+        <Filename Value="udbmanagement.pas"/>
+        <Caret Line="182" Column="1" TopLine="174"/>
       </Position15>
       <Position16>
         <Filename Value="gui.pas"/>
-        <Caret Line="347" Column="21" TopLine="330"/>
+        <Caret Line="184" Column="22" TopLine="256"/>
       </Position16>
       <Position17>
         <Filename Value="gui.pas"/>
-        <Caret Line="336" Column="13" TopLine="334"/>
+        <Caret Line="258" Column="10" TopLine="220"/>
       </Position17>
       <Position18>
-        <Filename Value="gui.pas"/>
-        <Caret Line="272" Column="39" TopLine="254"/>
+        <Filename Value="udbmanagement.pas"/>
+        <Caret Line="156" Column="12" TopLine="73"/>
       </Position18>
       <Position19>
         <Filename Value="gui.pas"/>
-        <Caret Line="265" Column="29" TopLine="253"/>
+        <Caret Line="389" Column="3" TopLine="386"/>
       </Position19>
       <Position20>
-        <Filename Value="gui.pas"/>
-        <Caret Line="266" Column="29" TopLine="254"/>
+        <Filename Value="udbmanagement.pas"/>
+        <Caret Line="116" Column="18" TopLine="129"/>
       </Position20>
       <Position21>
         <Filename Value="gui.pas"/>
-        <Caret Line="267" Column="29" TopLine="255"/>
+        <Caret Line="398" Column="68" TopLine="398"/>
       </Position21>
       <Position22>
-        <Filename Value="gui.pas"/>
-        <Caret Line="268" Column="29" TopLine="256"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="323" Column="3" TopLine="316"/>
       </Position22>
       <Position23>
         <Filename Value="gui.pas"/>
-        <Caret Line="269" Column="29" TopLine="257"/>
+        <Caret Line="185" Column="105" TopLine="175"/>
       </Position23>
       <Position24>
         <Filename Value="gui.pas"/>
-        <Caret Line="268" Column="29" TopLine="256"/>
+        <Caret Line="244" Column="6" TopLine="257"/>
       </Position24>
       <Position25>
-        <Filename Value="gui.pas"/>
-        <Caret Line="267" Column="29" TopLine="255"/>
+        <Filename Value="udbmanagement.pas"/>
+        <Caret Line="174" Column="34" TopLine="161"/>
       </Position25>
       <Position26>
         <Filename Value="gui.pas"/>
-        <Caret Line="266" Column="29" TopLine="254"/>
+        <Caret Line="346" Column="45" TopLine="345"/>
       </Position26>
-      <Position27>
-        <Filename Value="gui.pas"/>
-        <Caret Line="168" Column="21" TopLine="162"/>
-      </Position27>
-      <Position28>
-        <Filename Value="gui.pas"/>
-        <Caret Line="169" Column="21" TopLine="163"/>
-      </Position28>
-      <Position29>
-        <Filename Value="gui.pas"/>
-        <Caret Line="170" Column="21" TopLine="164"/>
-      </Position29>
-      <Position30>
-        <Filename Value="gui.pas"/>
-        <Caret Line="171" Column="21" TopLine="165"/>
-      </Position30>
     </JumpHistory>
   </ProjectSession>
   <EditorMacros Count="0"/>
