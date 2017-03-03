@@ -34,6 +34,7 @@ type
     BtInfoBookPrintQ: TButton;
     BtPrint: TButton;
     CBAddBookSubject: TComboBox;
+    CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
     EdBook: TEdit;
@@ -53,6 +54,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
     LbPrintQueue: TLabel;
     LbPrintInfo: TLabel;
@@ -88,7 +90,7 @@ type
     LbInfoStudName: TLabel;
     LbInfoStudGrade: TLabel;
     LbInfoStudUser: TLabel;
-    LbAddBookISBN1: TLabel;
+    LbAddBookSubject: TLabel;
     LbAddBookQuantity: TLabel;
     LbAddBookName: TLabel;
     LbAddBookISBN: TLabel;
@@ -312,7 +314,16 @@ procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
 begin
     LbInfoBooktypeError.Visible := FALSE;
   try
-
+     if not(management.BTypeCheck(EdInfoBooktypeISBN.text)) then
+     begin
+     LbInfoBooktypeError.Visible := TRUE;
+     LbInfoBooktypeError.Caption := 'Fehler 4: Die ISBN ist keinem Buchtyp zugeordnet';
+     end
+     else if  management.BTypeCheck(EdInfoBooktypeISBN.text) then
+     begin
+     LbInfoBooktypeError.Visible := FALSE;
+     //Anfrage an uDBManagement stellen
+     end;
   except
     On EConvertError do begin
         LbInfoBooktypeError.Visible := TRUE;

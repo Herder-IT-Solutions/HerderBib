@@ -1,13 +1,13 @@
 object Form1: TForm1
-  Left = 176
+  Left = 254
   Height = 571
-  Top = 284
+  Top = 191
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
   ClientWidth = 763
   OnCreate = FormCreate
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 600
@@ -5777,6 +5777,7 @@ object Form1: TForm1
         Top = 40
         Width = 512
         MaxLength = 13
+        NumbersOnly = True
         OnKeyPress = confirmNumbers
         ParentShowHint = False
         ShowHint = True
@@ -5852,7 +5853,7 @@ object Form1: TForm1
         Caption = 'Bitte geben Sie die Anzahl ein'
         ParentColor = False
       end
-      object LbAddBookISBN1: TLabel
+      object LbAddBookSubject: TLabel
         Left = 8
         Height = 13
         Top = 80
@@ -5945,9 +5946,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabRel
+        ActivePage = TabBooktype
         ParentBiDiMode = False
-        TabIndex = 2
+        TabIndex = 3
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -6019,6 +6020,7 @@ object Form1: TForm1
             Height = 21
             Top = 136
             Width = 488
+            NumbersOnly = True
             TabOrder = 4
           end
           object LbInfoStudID: TLabel
@@ -6419,6 +6421,52 @@ object Form1: TForm1
             Caption = 'LbInfoBooktypeError'
             ParentColor = False
             Visible = False
+          end
+          object CBInfoBooktypeSubject: TComboBox
+            Left = 240
+            Height = 21
+            Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
+            Top = 80
+            Width = 100
+            ItemHeight = 13
+            ItemIndex = 5
+            Items.Strings = (
+              'Arbeitsgemeinschaft'
+              'Biologie'
+              'Chemie'
+              'Chinesisch'
+              'Deutsch'
+              'Englisch'
+              'Ethik'
+              'Französisch'
+              'Geographie'
+              'Geschichte'
+              'Informatik'
+              'Kunst'
+              'Latein'
+              'Mathe'
+              'Musik'
+              'NaWi'
+              'Philosophie'
+              'Physik'
+              'Politikwissenschaften'
+              'Religion'
+              'Sozialkunde'
+              'Spanisch'
+              'Theater/DS'
+            )
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 4
+            Text = 'Englisch'
+          end
+          object LbInfoBooktypeSubject: TLabel
+            Left = 16
+            Height = 13
+            Top = 88
+            Width = 23
+            Caption = 'Fach'
+            ParentColor = False
           end
         end
         object TabCreditsHelp: TTabSheet
