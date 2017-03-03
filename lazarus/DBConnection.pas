@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: LongInt): TStudent;
+    function getStudentById(id: longint): TStudent;
 
     // Persists student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -100,7 +100,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: LongInt): TBook;
+    function getBookById(id: longint): TBook;
 
     // Persists book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -212,19 +212,19 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM student';
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student';
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
-    
+  end;
   Result := nil;
   setStudentFields(Result, False);
 end;
@@ -235,19 +235,20 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
-	  SQLQuery.ParamByName('name').AsString := firstName;
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := firstName;
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   Result := nil;
 
@@ -260,20 +261,20 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
-	  SQLQuery.ParamByName('name').AsString := lastName;
-	  SQLQuery.Open;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := lastName;
+      SQLQuery.Open;
     end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
-
+  end;
   Result := nil;
 
   setStudentFields(Result, False);
@@ -284,51 +285,53 @@ begin
   DBError := nil;
   try
     with SQLQuery do
-      begin
-		SQLQuery.Close;
-		SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
-		SQLQuery.ParamByName('name').AsString := classN;
-		SQLQuery.Open;
-	  end;
-  
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
+      SQLQuery.ParamByName('name').AsString := classN;
+      SQLQuery.Open;
+    end;
+
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
-  Result := nil;			//Sure that this is correct??
+  end;
+  Result := nil;
 
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: LongInt): TStudent;
+function TDBConnection.getStudentById(id: longint): TStudent;
 var
   arr: ArrayOfStudents;
 begin
   DBError := nil;
   try
-  	with SQLQuery do
-  	begin
-  	  SQLQuery.Close;
-  	  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
-	  SQLQuery.ParamByName('id').AsInteger := id;
-  	  SQLQuery.Open;
-	end;
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+      SQLQuery.ParamByName('id').AsInteger := id;
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
   setStudentFields(arr, True);
 
-  Result:=NIL;
-  if(arr[0] <> NIL) then
-  Result := arr[0];
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 function TDBConnection.persistStudent(student: TStudent): boolean;
@@ -396,22 +399,22 @@ end;
 
 function TDBConnection.getStudentByBirthdate(birthdate: TDate): TStudent;
 begin
-	DBError := NIL;
-	SQLQuery.Close;
-	SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-	SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
+  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
 
-  try 
-	with SQLQuery do
-		begin
-			SQLQuery.Open;
-		end;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
   except
-	on E: Exception do
-	begin
-	  DBError := E;
-	  Result := NIL;
-	end;
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+    end;
   end;
 end;
 
@@ -460,18 +463,19 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM rental';
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM rental';
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   Result := nil;
 
@@ -486,20 +490,21 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.SQL.Text :=
-	    'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
-	  SQLQuery.ParamByName('book').AsLargeInt := book.getId;
-	  SQLQuery.ParamByName('student').AsLargeInt := student.getId;
-	  SQLQuery.Open;
-	end;
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
+      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+      SQLQuery.ParamByName('student').AsLargeInt := student.getId;
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   Result := nil;
 
@@ -643,25 +648,26 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM book';
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM book';
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   Result := nil;
 
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: LongInt): TBook;
+function TDBConnection.getBookById(id: longint): TBook;
 var
   arr: ArrayOfBooks;
 begin
@@ -669,25 +675,26 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
-	  SQLQuery.ParamByName('id').AsInteger := id;
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+      SQLQuery.ParamByName('id').AsInteger := id;
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   setBookFields(arr, True);
 
-  Result:=NIL;
-  if(arr[0] <> NIL) then
-  Result := arr[0];
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 function TDBConnection.persistBook(book: TBook): boolean;
@@ -795,19 +802,20 @@ begin
   try
     with SQLQuery do
     begin
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM booktype';
-	  SQLQuery.Open;
-	end;
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM booktype';
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
-    
+  end;
+
   Result := nil;
 
   setBooktypeFields(Result, False);
@@ -883,26 +891,27 @@ begin
   DBError := nil;
   try
     with SQLQuery do
-    begin    
-	  SQLQuery.Close;
-	  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
-	  SQLQuery.ParamByName('isbn').AsString := isbn;
-	  SQLQuery.Open;
-	end;
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
+      SQLQuery.ParamByName('isbn').AsString := isbn;
+      SQLQuery.Open;
+    end;
 
   except
     on E: Exception do
     begin
       DBError := E;
-      Result := NIL;
+      Result := nil;
       exit;
     end;
+  end;
 
   setBooktypeFields(arr, True);
 
-  Result:=NIL;
-  if(arr[0] <> NIL) then
-  Result := arr[0];
+  Result := nil;
+  if (arr[0] <> nil) then
+    Result := arr[0];
 end;
 
 ////////////////////////////////////////////////////////
@@ -954,15 +963,16 @@ end;
 function TDBConnection.isConnected: boolean;
 begin
   try
-  begin
-  	Result := self.SQLite3Connection.Connected;
-  end;
+    begin
+      Result := self.SQLite3Connection.Connected;
+    end;
   except
     on E: Exception do
     begin
       DBError := E;
       Result := False;
     end;
+  end;
 end;
 
 end.
