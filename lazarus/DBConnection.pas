@@ -446,7 +446,7 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
       SQLTransaction.commit;
     end;
 
@@ -602,7 +602,8 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
+      ApplyUpdates; //test
       SQLTransaction.commit;
     end;
 
@@ -713,7 +714,7 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.ExecSQL;
+      ExecSQL;
       SQLTransaction.commit;
     end;
 
