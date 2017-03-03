@@ -236,7 +236,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE ''(:name)''';
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE (:name)';
       SQLQuery.ParamByName('name').AsString := firstName;
       SQLQuery.Open;
     end;
@@ -262,7 +262,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE ''(:name)''';
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE (:name)';
       SQLQuery.ParamByName('name').AsString := lastName;
       SQLQuery.Open;
     end;
@@ -287,7 +287,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = ''(:name)''';
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = (:name)';
       SQLQuery.ParamByName('name').AsString := classN;
       SQLQuery.Open;
     end;
