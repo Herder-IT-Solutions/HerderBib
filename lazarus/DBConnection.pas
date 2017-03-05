@@ -45,6 +45,11 @@ type
     // result: student object
     function getStudentById(id: longint): TStudent;
 
+    // Returns TStudent object with given birthdate
+    // parameter: TDate object (birthdate)
+    // result: TStudent object
+    function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
+
     // Persists student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
@@ -55,10 +60,6 @@ type
     // result: TRUE on success
     function deleteStudent(student: TStudent): boolean;
 
-    // Returns TStudent object with given birthdate
-    // parameter: TDate object (birthdate)
-    // result: TStudent object
-    function getStudentByBirthdate(birthdate: TDate): TStudent;
 
     /////////////////////////////////////////////////////////
     //             RENTAL                                  //
@@ -334,6 +335,32 @@ begin
     Result := arr[0];
 end;
 
+function TDBConnection.getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
+  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  Result := nil;
+
+  setStudentFields(Result, False);
+end;
+
+
 function TDBConnection.persistStudent(student: TStudent): boolean;
 begin
   DBError := nil;
@@ -393,27 +420,6 @@ begin
     begin
       DBError := E;
       Result := False;
-    end;
-  end;
-end;
-
-function TDBConnection.getStudentByBirthdate(birthdate: TDate): TStudent;
-begin
-  DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
-
-  try
-    with SQLQuery do
-    begin
-      SQLQuery.Open;
-    end;
-  except
-    on E: Exception do
-    begin
-      DBError := E;
-      Result := nil;
     end;
   end;
 end;
