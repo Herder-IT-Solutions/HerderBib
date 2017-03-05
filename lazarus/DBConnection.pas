@@ -50,10 +50,10 @@ type
     // result: TStudent object
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
-    // Updates or inserts a student object. Either updates an existing one or inserts a new one
+    // Persists student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
-    function updateInsertStudent(student: TStudent): boolean;
+    function persistStudent(student: TStudent): boolean;
 
     // Deletes a student
     // parameter: student object
@@ -75,10 +75,10 @@ type
     function getAllRentalsByBookAndStudent(student: TStudent;
       book: TBook): ArrayOfRentals;
 
-    // Updates or inserts a rental object. Either updates an existing one or inserts a new one
+    // Persists rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
-    function updateInsertRental(rental: TRental): boolean;
+    function persistRental(rental: TRental): boolean;
 
     // Deletes a student
     // parameter: rental object
@@ -103,10 +103,10 @@ type
     // result: book object | nil
     function getBookById(id: longint): TBook;
 
-    // Updates or inserts book object. Either updates an existing one or inserts a new one
+    // Persists book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
     // result: TRUE on success
-    function updateInsertBook(book: TBook): boolean;
+    function persistBook(book: TBook): boolean;
 
     // Deletes a book
     // parameter: book object
@@ -121,10 +121,10 @@ type
     // result: array of booktype objects
     function getBooktypes: ArrayOfBooktypes;
 
-    // Updates or inserts booktype object. Either updates an existing one or inserts a new one
+    // Persists booktype object into database. Either updates an existing one or inserts a new one
     // parameter: booktype object
     // result: TRUE on success
-    function updateInsertBooktype(booktype: TBooktype): boolean;
+    function persistBooktype(booktype: TBooktype): boolean;
 
     // Returns the Booktype of an ISBN Number
     // parameter: Isbn (String type)
@@ -360,7 +360,8 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.updateInsertStudent(student: TStudent): boolean;
+
+function TDBConnection.persistStudent(student: TStudent): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -516,7 +517,7 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.updateInsertRental(rental: TRental): boolean;
+function TDBConnection.persistRental(rental: TRental): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -702,7 +703,7 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.updateInsertBook(book: TBook): boolean;
+function TDBConnection.persistBook(book: TBook): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -826,7 +827,7 @@ begin
   setBooktypeFields(Result, False);
 end;
 
-function TDBConnection.updateInsertBooktype(booktype: TBooktype): boolean;
+function TDBConnection.persistBooktype(booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;

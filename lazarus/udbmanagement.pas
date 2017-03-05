@@ -5,7 +5,7 @@ unit uDBManagement;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental, dateutils;
+  Classes, SysUtils, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental;
 
 type
 
@@ -17,81 +17,26 @@ type
     constructor create();
 
     //Erg: Säubert Überreste des Programms
-    destructor Destroy;
-
-    // Überprüft die Verbindung zur Datenbank
-    // Wahr wenn verbunden
-    function isConnected: boolean;
-
-
-
-    //BOOK
-
-    //Vor: ISBN nur mit Zahlen
-    //Eff: Hinzufügen eines neuen Buches
-    //Erg: Id des neu hinzugefügten Buches
-    function BookAdd(isbn : String) : LongInt;
-
-    //Vor: Buch Id und Schüler Id
-    //Eff: Rückgabe eines Buches mit Schüler
-    //Erg: Trägt aktuelles Datum (als Double (nicht lesbar)) als Rückgabedatum in die Datenbank ein
-    procedure BookBack(BId, SId :LongInt);
+    destructor destroy();
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
     //Erg: Wahr, wenn Buch Id vergeben
-    function BIdCheck(BId :LongInt):Boolean;
-
-    //Vor: Die Buch Id
-    //Eff: Löscht ein Buch aus dem Bestand
-    procedure BookDel(BId:LongInt);
-
-    //Vor: Buch Id und seine Qualität
-    //Eff: Ändert die Buchqualität
-    //Erg: Trägt übergebene Qualität in die Datenbank ein
-    procedure BookQualiNew(BId, quali :LongInt);
+    function BIdCheck(BId :Cardinal):Boolean;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
     //Erg: Die ehemalige Quaität
-    function BQualiCheck(BId: LongInt): LongInt;
-
-    //Vor: Buch Id
-    //Erg: Das Buch-Object mit der Id
-    function getBookByID(BID: LongInt): TBook;
-
-
-
-
-    //BOOKTYPE
-
-    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
-    //Eff: Neuer Buchtyp
-    procedure BookTypeNew(isbn, title, subject :String);
+    function BQualiCheck(BId: Cardinal): Cardinal;
 
     //Vor: Die ISBN
     //Eff: Prüft den Buchtyp
     //Erg: Wahr, wenn isbn bereits vorhanden
     function BTypeCheck (isbn:String): Boolean;
 
-
-
-    //STUDENTS
-
-    // Importiert die Schüler Liste als CSV Datei
-    // Klasse; Name; Vorname; Geburtsdatum
-    // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
-    // False, wenn ein Fehler vorliegt
-    function importCSVSchueler(Dateiname:String):Boolean;
-
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
     function getStudents: ArrayOfStudents;
-
-    //Vor: Den Klassennamen
-    //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
-    //     welches alle Schüler in der Klasse beinhaltet
-    function getStudentsByClassName(classN: string): ArrayOfStudents;
 
     //Vor: Den Vornamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
@@ -103,11 +48,15 @@ type
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
+    //Vor: Den Klassennamen
+    //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
+    //     welches alle Schüler in der Klasse beinhaltet
+    function getStudentsByClassName(classN: string): ArrayOfStudents;
 
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
-    function getStudentById(id: LongInt): TStudent;
+    function getStudentById(id: Cardinal): TStudent;
 
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
@@ -117,31 +66,48 @@ type
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
     //Erg: Wahr, wenn vergeben
-    function SIdCheck(SId :LongInt):Boolean;
+    function SIdCheck(SId :Cardinal):Boolean;
 
-    //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
-    //Eff: Neuen Schüler erstellen
-    //Erg: Die Schüler Id
-    function NewStudent (lastN, firstN, classN : String; birth:TDate):LongInt;
+    //Vor: Buch Id und Schüler Id
+    //Eff: Rückgabe eines Buches mit Schüler
+    //Erg: Trägt aktuelles Datum (als Double (nicht lesbar)) als Rückgabedatum in die Datenbank ein
+    procedure BookBack(BId, SId :Cardinal);
 
-    //Vor: Eine Schüler Id
-    //Eff: Löscht einen Schüler
-    procedure DelStudent(SId : LongInt);
+    //Vor: ISBN nur mit Zahlen
+    //Eff: Hinzufügen eines neuen Buches
+    //Erg: Buch in Tabelle book
+    procedure BookAdd(isbn : String);
 
+    //Vor: Die Buch Id
+    //Eff: Löscht ein Buch aus dem Bestand
+    procedure BookDel(BId:Cardinal);
 
+    //Vor: Buch Id und seine Qualität
+    //Eff: Ändert die Buchqualität
+    //Erg: Trägt übergebene Qualität in die Datenbank ein
+    procedure BookQualiNew(BId, quali :Cardinal);
 
-    //RENTAL
+    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
+    //Eff: Neuer Buchtyp
+    procedure BookTypeNew(isbn, title, subject :String);
 
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
     //Erg: Trägt in der Datenbank in Tabelle rental das ausgeliehene Buch zu dem Schüler ein
-    procedure StuRentBook(BId, SId :LongInt);
+    procedure BookRentStu(BId, SId :Cardinal);
+
+    //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
+    //Eff: Neuen Schüler erstellen
+    //Erg: Neuer Schüler
+    procedure NewStudent (lastN, firstN, classN : String; birth: TDate);
+
+    //Vor: Eine Schüler Id
+    //Eff: Löscht einen Schüler
+    procedure DelStudent(SId : Cardinal);
 
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
     //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
     procedure DelRental(datum: TDate);  //bzw TDateTime
-
-
 
   //Atribute
   private
@@ -156,36 +122,48 @@ begin
   //Initialisierung
   uDBConn := TDBConnection.Create('buchverleih.sqlite');
 
-
   Randomize;
 end;
 
-destructor TDBManagement.Destroy;
+destructor TDBManagement.destroy();
 begin
-  uDBConn.Destroy;
+  uBDConn.Destroy;
 end;
 
-function TDBManagement.BIdCheck(BId :LongInt):Boolean;
-Var book : TBook;
+function TDBManagement.BIdCheck(BId :Cardinal):Boolean;
+Var ret : Boolean;
 begin
-  book:=uDBConn.getBookById(BId);
-  if book = nil then result:=False
-  else result :=true;
+  ret:=false;
+  query.Close;
+  query.SQL.text:='Select id from book where id = :Id';
+  query.ParamByName(persistStudent'Id').AsInteger:=BId;
+  query.Open;
+  if not query.EOF then ret:=true;
+  result:=ret;
 end;
 
-function TDBManagement.BQualiCheck(BId: LongInt): LongInt;
-Var book : TBook;
+function TDBManagement.BQualiCheck(BId: Cardinal): Cardinal;
+Var ret : Cardinal;
 begin
-  book := uDBConn.getBookById(BId);
-  result:=book.getCondition();
+  ret:=9;
+  query.Close;
+  query.SQL.text:='Select condition from book where id = :Id';
+  query.ParamByName('Id').AsInteger:=BId;
+  query.Open;
+  if not query.EOF then ret:=query.Fields[0].AsInteger;
+  result:=ret;
 end;
 
 function TDBManagement.BTypeCheck (isbn:String): Boolean;
-Var bt : TBooktype;
+Var ret : Boolean;
 begin
-  bt:=uDBConn.getBooktypeByIsbn(isbn);
-  if bt = nil then result:=false
-  else result:=true;
+  ret:=false;
+  query.Close;
+  query.SQL.text:='Select isbn from booktype where isbn = :ISBN';
+  query.ParamByName('ISBN').AsString:=isbn;
+  query.Open;
+  if not query.EOF then ret:=true;
+  result:=ret;
 end;
 
 function TDBManagement.getStudents(): ArrayOfStudents;
@@ -205,46 +183,39 @@ end;
 
 function TDBManagement.getStudentsByClassName(classN: string): ArrayOfStudents;
 begin
-  Result := uDBConn.getStudentsByClassName(classN);
+  Result := uDBConn.;getStudentsByClassName(classN)
 end;
 
-function TDBManagement.getStudentById(id: LongInt): TStudent;
-begin
-  Result:=uDBConn.getStudentById(id);
-end;
 
 function TDBManagement.persistStudent(student: TStudent): boolean;
 begin
-  Result:=uDBConn.updateinsertStudent(student);
+  Result:=uDBConn.persistStudent(student);
 end;
 
-function TDBManagement.SIdCheck(SId :LongInt):Boolean;
+function TDBManagement.SIdCheck(SId :Cardinal):Boolean;
 begin
   if (uDBConn.getStudentById(SId) = nil) then Result:= false
   else Result:=true;
 end;
 
-procedure TDBManagement.BookBack(BId, SId :LongInt);
-Var aoR :ArrayOfRentals;
-    rental : TRental;
+procedure TDBManagement.BookBack(BId, SId :Cardinal);                                //!
 begin
-  aoR := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
-  rental := aoR[1];
-  rental.setReturnDate(now);
+  query.Close;
+  query.SQL.text:='Update rental Set return_date = :Datum where student_id = :SId and book_id = :BId';
+  query.ParamByName('Datum').AsDate:= now;                 //Vorher: FormatDateTime(..)
+  query.ParamByName('BId').AsInteger:=BId;
+  query.ParamByName('Sid').AsInteger:=SId;
+  query.ExecSQL;
+  tran.Commit;
+
 end;
 
-function TDBManagement.BookAdd(isbn : String):LongInt;
-Var id, pz: LongInt;
-    hid :String;
-    book :TBook;
+procedure TDBManagement.BookAdd(isbn : String);
+Var id   : Cardinal;
+    book :TBook
 begin
   repeat
      id:= Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
-
-     hid:=inttostr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
-     pz:= ((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
-     if pz = 10 then pz := 0;
-     id:=(id*10)+ (10-pz);
   until BIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -253,21 +224,26 @@ begin
   book.setIsbn(isbn);
   book.setCondition(1);
 
-  uDBConn.updateinsertBook(book);
-
-  Result:=id;
+  uDBConn.persistBook(book);
 end;
 
-procedure TDBManagement.BookDel(BId:LongInt);
+procedure TDBManagement.BookDel(BId:Cardinal);                         //!
 begin
-  uDBConn.deleteBook(uDBConn.getBookById(BId));
+  query.Close;
+  query.SQL.Text:='Delete from book where Id = (:BId)';
+  query.ParamByName('BId').AsInteger:=BId;
+  query.ExecSQL;
+  tran.Commit;
 end;
 
-procedure TDBManagement.BookQualiNew(BId, quali :LongInt);
-Var book:TBook;
+procedure TDBManagement.BookQualiNew(BId, quali :Cardinal);         //!
 begin
-  book:=uDBConn.getBookById(BId);
-  book.setCondition(quali);
+  query.Close;
+  query.SQL.text:='Update book Set condition = :Quali where id = :BId';
+  query.ParamByName('Quali').AsInteger:=quali;
+  query.ParamByName('BId').AsInteger:=BId;
+  query.ExecSQL;
+  tran.Commit;
 end;
 
 procedure TDBManagement.BookTypeNew(isbn, title, subject :String);
@@ -277,47 +253,43 @@ begin
   booktype.setIsbn(isbn);
   booktype.setTitle(title);
   booktype.setSubject(subject);
+  booktype.setStorage(nil);
 
-  uDBConn.updateinsertBooktype(booktype);
+  uDBConn.persistBooktype(booktype);
 end;
 
-procedure TDBManagement.StuRentBook(BId, SId :LongInt);        //functioniert nicht !                        //!
+procedure TDBManagement.BookRentStu(BId, SId :Cardinal);                                //!
 Var rental: TRental;
 begin
   rental := TRental.Create;
 
-  rental.setBookId(BId);
-  rental.setStudentId(SId);
-  rental.setRentalDate(now);
 
-  uDBConn.updateinsertRental(rental);
 end;
 
-procedure TDBManagement.DelStudent(SId : LongInt);
+procedure TDBManagement.DelStudent(SId : Cardinal);
 begin
-  uDBConn.deleteStudent(uDBConn.getStudentById(SID));
+  query.Close;
+  query.SQL.Text:='Delete from student where Id = (:SId)';
+  query.ParamByName('SId').AsInteger:=SId;
+  query.ExecSQL;
+  tran.Commit;
 end;
 
 procedure TDBManagement.DelRental(datum: TDate);
 begin
-  uDBConn.deleteReturnedRentalOlderThan(datum);
+  query.Close;
+  query.SQL.Text:='Delete from rental where return_date <= (:date)';
+  query.ParamByName('date').AsDate:=datum;
+  query.ExecSQL;
+  tran.Commit;
 end;
 
-function TDBManagement.NewStudent (lastN, firstN, classN : String; birth:TDate) : LongInt;
-Var id, pz: LongInt;
-    hid: String;
+procedure TDBManagement.NewStudent (lastN, firstN, classN : String; birth: TDate);
+Var id: Cardinal;
     student: TStudent;
 begin
-  pz:=0;
-
   repeat
      id:= Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
-
-     hid:=inttostr(id); //hid ist eine Hilfsvariable zur Prüfnummererstellung
-
-     pz:= ((strtoint(hid[1])*3) + (strtoint(hid[3])*3) + (strtoint(hid[5])*3) + (strtoint(hid[7])*3) + strtoint(hid[2]) + strtoint(hid[4]) + strtoint(hid[6]))Mod 10; //Die Prüfziffer Teil 1
-     if pz = 10 then pz := 0;
-     id:=(id*10)+ pz;                  //Die Prüfziffer wird hinten angehangen
   until SIdCheck(id)=false;            //Wiederholung bis id nicht vergeben
 
   student := TStudent.Create;
@@ -328,154 +300,6 @@ begin
   student.setBirth(birth);
 
   self.persistStudent(student);
-  Result:=id;
-end;
-
-function TDBManagement.getBookByID(BID: LongInt): TBook;
-begin
-  result:= uDBConn.getBookById(bid);
-end;
-
-function TDBManagement.importCSVSchueler(Dateiname:String): Boolean;
-Var text: TextFile;
-    str, fname, lname, cname, birth : String;
-    birthDate : TDate;
-    i, j, k, id, indexS3 : Integer;
-    students, students2, students3: Array of TStudent;
-begin
-  str:='';
-  fname:='';
-  lname:='';
-  cname:='';
-  birth:='';
-  indexS3:=0;
-
-  AssignFile(text, Dateiname);
-
-  try
-    reset(text);
-
-
-    while not EoF (text) do                //Schüler zeilenweise einlesen
-    begin
-      readln(text, str);
-
-      i:=1;
-      while not (str[i] = ';') do        //Klassennamen einlesen
-      begin
-        cname:=cname+str[i];
-        i:=i+1;
-      end;
-
-      i:=i+1;
-      while not (str[i] = ';') do      //Namen einlesen
-      begin
-        lname:=lname+str[i];
-        i:=i+1;
-      end;
-
-      i:=i+1;
-      while not (str[i] = ';') do     //Vornamen einlesen
-      begin
-        fname:=fname+str[i];
-        i:=i+1;
-      end;
-
-      i:=i+1;
-      while ( not (str[i] = ';') and (length(str) >= i+1)) do     //Geburtsdatum einlesen
-      begin
-        birth:=birth+str[i];
-        i:=i+1;
-      end;
-      birthDate:=StrToDate(birth, '-');
-                                                                // Vergleich ob bereits vorhanden
-      students:=uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
-
-      students2:=uDBConn.getStudentsByLastNamePattern(lname);   //Name
-
-      if not (length(students) = 0) and not (length(students2) = 0) then
-      begin
-        j:=0;
-        while length(students) > j+1 do
-        begin
-          id := students[j].getId;
-
-          k:=0;
-          while length(students2) > k+1 do
-          begin
-            if id = students2[k].getId then
-            begin
-              students3[indexS3] := students2[k];
-              indexS3:=indexS3+1;
-            end;
-
-            k:=k+1;
-          end;
-          j:=j+1;
-        end;
-      end else if (length(students) = 0) then students3 := students2
-      else if (length(students2) = 0) then students3 := students;
-
-
-
-      students:=uDBConn.getStudentByBirthdate(birthDate);        //Geburtsdatum
-      indexS3:=0;
-
-      if not (length(students) = 0) and not (length(students3) = 0) then
-      begin
-        j:=0;
-        while length(students) > j+1 do
-        begin
-          id := students[j].getId;
-
-          k:=0;
-          while length(students3) > k+1 do
-          begin
-            if id = students3[k].getId then
-            begin
-              students2[indexS3] := students3[k];
-              indexS3:=indexS3+1;
-            end;
-
-            k:=k+1;
-          end;
-          j:=j+1;
-        end;
-      end else if (length(students) = 0) then students2 := students3
-      else if (length(students3) = 0) then students2 := students;
-
-                                                                //Verarbeitung
-      if (length(students2) = 0) then
-      begin                 //Fall Einfügen eines neuen Schülers
-
-        self.NewStudent(lname, fname, cname, birthDate);
-        Result:=true;
-
-      end else if (length(students2) = 1) then
-      begin                 //Fall Klasse überschreiben
-
-        students2[0].setClassName(cname);
-        Result:=uDBConn.updateinsertStudent(students2[0]);;
-
-      end else begin        //Fall Ein Fehler liegt vor
-        Result:=False;
-        break;
-      end;
-
-    end;
-  except
-    on E: Exception do
-      Result:=False;
-
-  end;
-  CloseFile(text);
-
-
-end;
-
-function TDBManagement.isConnected():Boolean;
-Begin
-  Result:=uDBConn.isConnected;
 end;
 
 end.
