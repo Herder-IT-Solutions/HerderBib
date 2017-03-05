@@ -45,20 +45,21 @@ type
     // result: student object
     function getStudentById(id: longint): TStudent;
 
+    // Returns TStudent object with given birthdate
+    // parameter: TDate object (birthdate)
+    // result: TStudent object
+    function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
+
     // Updates or inserts a student object. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
-    function updateinsertStudent(student: TStudent): boolean;
+    function updateInsertStudent(student: TStudent): boolean;
 
     // Deletes a student
     // parameter: student object
     // result: TRUE on success
     function deleteStudent(student: TStudent): boolean;
 
-    // Returns TStudent object with given birthdate
-    // parameter: TDate object (birthdate)
-    // result: TStudent object
-    function getStudentByBirthdate(birthdate: TDate): TStudent;
 
     /////////////////////////////////////////////////////////
     //             RENTAL                                  //
@@ -77,7 +78,7 @@ type
     // Updates or inserts a rental object. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
-    function updateinsertRental(rental: TRental): boolean;
+    function updateInsertRental(rental: TRental): boolean;
 
     // Deletes a student
     // parameter: rental object
@@ -105,7 +106,7 @@ type
     // Updates or inserts book object. Either updates an existing one or inserts a new one
     // parameter: book object
     // result: TRUE on success
-    function updateinsertBook(book: TBook): boolean;
+    function updateInsertBook(book: TBook): boolean;
 
     // Deletes a book
     // parameter: book object
@@ -123,7 +124,7 @@ type
     // Updates or inserts booktype object. Either updates an existing one or inserts a new one
     // parameter: booktype object
     // result: TRUE on success
-    function updateinsertBooktype(booktype: TBooktype): boolean;
+    function updateInsertBooktype(booktype: TBooktype): boolean;
 
     // Returns the Booktype of an ISBN Number
     // parameter: Isbn (String type)
@@ -334,7 +335,32 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.updateinsertStudent(student: TStudent): boolean;
+function TDBConnection.getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
+  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  Result := nil;
+
+  setStudentFields(Result, False);
+end;
+
+function TDBConnection.updateInsertStudent(student: TStudent): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -393,27 +419,6 @@ begin
     begin
       DBError := E;
       Result := False;
-    end;
-  end;
-end;
-
-function TDBConnection.getStudentByBirthdate(birthdate: TDate): TStudent;
-begin
-  DBError := nil;
-  SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
-
-  try
-    with SQLQuery do
-    begin
-      SQLQuery.Open;
-    end;
-  except
-    on E: Exception do
-    begin
-      DBError := E;
-      Result := nil;
     end;
   end;
 end;
@@ -511,7 +516,7 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.updateinsertRental(rental: TRental): boolean;
+function TDBConnection.updateInsertRental(rental: TRental): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -697,7 +702,7 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.updateinsertBook(book: TBook): boolean;
+function TDBConnection.updateInsertBook(book: TBook): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -821,7 +826,7 @@ begin
   setBooktypeFields(Result, False);
 end;
 
-function TDBConnection.updateinsertBooktype(booktype: TBooktype): boolean;
+function TDBConnection.updateInsertBooktype(booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
