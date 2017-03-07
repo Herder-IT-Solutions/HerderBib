@@ -243,6 +243,7 @@ var s:STRING;
       result := (check = StrToInt(isbn[13]));
   end;
 begin
+     a := FALSE;
      s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
      if not (s = '') then begin
 
@@ -264,7 +265,7 @@ begin
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
          management.BNew(s);
          INC(k);
-         TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
+         //TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
      end;
      end
      else begin
@@ -386,10 +387,15 @@ begin
 end;
 var
     birthdate: String;
+    stud : TStudent;
 begin
        LbInfoStudError.Visible := FALSE;
   try
        birthdate:=checkBD;
+       stud := management.getStudentbyID(STRTOINT(EdInfoStudID.text));
+       EdInfoStudSUr.text:=stud.getlastname;
+       EdInfoStudName.text:=stud.getfirstname;
+       EdInfoStudGrade.text:=stud.getclassname;
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;

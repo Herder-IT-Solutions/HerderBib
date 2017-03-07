@@ -1,11 +1,11 @@
 object Form1: TForm1
-  Left = 254
+  Left = 191
   Height = 571
-  Top = 191
+  Top = 145
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
-  ClientHeight = 571
-  ClientWidth = 763
+  ClientHeight = 0
+  ClientWidth = 0
   OnCreate = FormCreate
   LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
@@ -5946,9 +5946,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabBooktype
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 3
+        TabIndex = 0
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
