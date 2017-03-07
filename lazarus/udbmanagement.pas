@@ -344,7 +344,7 @@ function TDBManagement.importCSVSchueler(Dateiname:String): Boolean;
 Var text: TextFile;
     str, fname, lname, cname, birth : String;
     birthDate : TDate;
-    i, j, k, id : Integer;
+    i : Integer;
     students: Array of TStudent;
 begin
   str:='';
@@ -352,7 +352,6 @@ begin
   lname:='';
   cname:='';
   birth:='';
-  indexS3:=0;
 
   AssignFile(text, Dateiname);
 
@@ -396,17 +395,17 @@ begin
       students:=self.getStudentsByFirstLastNameBirthdate(fname, lname, birthDate);
 
                                                                 //Verarbeitung
-      if (length(students2) = 0) then
+      if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
         self.SNew(lname, fname, cname, birthDate);
         Result:=true;
 
-      end else if (length(students2) = 1) then
+      end else if (length(students) = 1) then
       begin                 //Fall Klasse überschreiben
 
-        students2[0].setClassName(cname);
-        Result:=uDBConn.updateinsertStudent(students2[0]);;
+        students[0].setClassName(cname);
+        Result:=uDBConn.updateinsertStudent(students[0]);;
 
       end else begin        //Fall Ein Fehler liegt vor
         Result:=False;
@@ -431,7 +430,7 @@ end;
 
 function TDBManagement.getStudentsByFirstLastNameBirthdate(fname, lname: STring; birth:TDate) : ArrayOfStudents;
 Var students, students2, students3: Array of TStudent;
-    indexS3: Integer;
+    indexS3, j, k, id: Integer;
 begin
   students:=uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
 
@@ -462,7 +461,7 @@ begin
 
 
 
-  students:=uDBConn.getStudentsByBirthdate(birthDate);        //Geburtsdatum
+  students:=uDBConn.getStudentsByBirthdate(birth);        //Geburtsdatum
   indexS3:=0;
 
   if not (length(students) = 0) and not (length(students3) = 0) then
