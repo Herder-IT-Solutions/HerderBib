@@ -44,10 +44,9 @@ type
     EdInfoBooktypeISBN: TEdit;
     EdInfoBookID: TEdit;
     EdInfoBooktypeName: TEdit;
-    EdInfoStudSur: TEdit;
-    EdInfoStudName: TEdit;
+    EdInfoStudFirstName: TEdit;
+    EdInfoStudLastName: TEdit;
     EdInfoStudGrade: TEdit;
-    EdInfoStudUser: TEdit;
     EdInfoStudID: TEdit;
     EdInfoBookRent: TEdit;
     EdInfoAdminPw: TEdit;
@@ -86,10 +85,9 @@ type
     LbInfoBooktypeName: TLabel;
     LbInfoBookState: TLabel;
     LbInfoStudID: TLabel;
-    LbInfoStudSur: TLabel;
-    LbInfoStudName: TLabel;
+    LbInfoStudFirstName: TLabel;
+    LbInfoStudLastName: TLabel;
     LbInfoStudGrade: TLabel;
-    LbInfoStudUser: TLabel;
     LbAddBookSubject: TLabel;
     LbAddBookQuantity: TLabel;
     LbAddBookName: TLabel;
@@ -132,6 +130,8 @@ type
     procedure BtInfoBookShow1Click(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
+    procedure BtInfoStudEditClick(Sender: TObject);
+    procedure BtInfoStudPrintQClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
     procedure BtPrintClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
@@ -140,6 +140,7 @@ type
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdBook1Change(Sender: TObject);
     procedure EdBookChange(Sender: TObject);
+    procedure EdInfoStudFirstNameChange(Sender: TObject);
     procedure EdStud1Change(Sender: TObject);
     procedure EdStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -209,6 +210,11 @@ end;
 procedure TForm1.EdBookChange(Sender: TObject);
 begin
   //LbBookName.Caption:= getBookName(EdBook.Text)
+end;
+
+procedure TForm1.EdInfoStudFirstNameChange(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.EdStud1Change(Sender: TObject);
@@ -370,6 +376,37 @@ readCSV('rental_relations.csv');
 //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
 
+procedure TForm1.BtInfoStudEditClick(Sender: TObject);
+  var
+    stud : TStudent;
+begin
+       LbInfoStudError.Visible := FALSE;
+  try
+       stud := management.getStudentbyID(STRTOINT(EdInfoStudID.text));
+       stud.setlastname(EdInfoStudLastName.text);
+       stud.setfirstname(EdInfoStudFirstName.text);
+       stud.setclassname(EdInfoStudGrade.text);
+       management.supdate(stud);
+  except
+    On EConvertError do begin
+        LbInfoStudError.Visible := TRUE;
+        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+end;
+
+procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
+begin
+  try
+     TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo');
+  except
+    On EConvertError do begin
+        LbInfoStudError.Visible := TRUE;
+        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+end;
+
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
 function checkBD:STRING;
 var mo :CARDINAL;
@@ -393,8 +430,8 @@ begin
   try
        birthdate:=checkBD;
        stud := management.getStudentbyID(STRTOINT(EdInfoStudID.text));
-       EdInfoStudSUr.text:=stud.getlastname;
-       EdInfoStudName.text:=stud.getfirstname;
+       EdInfoStudFirstName.text:=stud.getfirstname;
+       EdInfoStudLastName.text:=stud.getlastname;
        EdInfoStudGrade.text:=stud.getclassname;
   except
     On EConvertError do begin
