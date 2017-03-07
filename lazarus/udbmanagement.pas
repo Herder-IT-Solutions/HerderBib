@@ -156,6 +156,9 @@ end;
 
 implementation
 
+const
+  ourNil = -693594;
+
 constructor TDBManagement.create();
 begin
   //Initialisierung
@@ -291,18 +294,20 @@ end;
 
 function TDBManagement.RNew(BId, SId :LongInt): Boolean;
 Var rentals: Array Of TRental;
+    rental : TRental;
 begin
-  {rentals := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
-  if ((length(rentals) = 1) and not (rentals=nil)) then
+  rentals := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
+  if (length(rentals) = 1) then
   begin
     rental := TRental.Create;
 
     rental.setBookId(BId);
     rental.setStudentId(SId);
     rental.setRentalDate(now);
+    rental.setReturnDate(ourNil);
 
-    Result:=uDBConn.updateinsertRental(rentals[0]);
-  end else Result := False;     }
+    Result:=uDBConn.updateinsertRental(rental);
+  end else Result := False;
 end;
 
 procedure TDBManagement.SDel(SId : LongInt);
