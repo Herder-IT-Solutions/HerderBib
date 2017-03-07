@@ -340,7 +340,8 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+  SQLQuery.ParamByName('birthdate').AsString :=
+    FormatDateTime('YYYY-MM-DD', birthdate);
 
   try
     with SQLQuery do
