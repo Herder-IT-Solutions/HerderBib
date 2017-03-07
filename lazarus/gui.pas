@@ -260,9 +260,9 @@ begin
 
       k:=1;
 
-     if not( management.BTypeCheck(s)) then management.BookTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
+     if not( management.BTypeCheck(s)) then management.BTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
-         management.BookAdd(s);
+         management.BNew(s);
          INC(k);
          TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
      end;
@@ -409,7 +409,7 @@ begin
   try
   if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
      //Check if book is already rent
-     management.StuRentBook(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
+     management.RNew(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
   end;
 
   except
@@ -425,8 +425,8 @@ begin
      LbRetError.Visible := FALSE;
   try
     if (management.BIdCheck(STRTOINT(EdBook1.text)) and management.SIdCheck(STRTOINT(EdStud1.text))) then begin
-     management.BookQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
-     management.BookBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
+     management.BQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
+     management.BBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
   end;
       except
     On EConvertError do begin

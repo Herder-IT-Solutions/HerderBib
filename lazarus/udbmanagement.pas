@@ -30,12 +30,12 @@ type
     //Vor: ISBN nur mit Zahlen
     //Eff: Hinzufügen eines neuen Buches
     //Erg: Id des neu hinzugefügten Buches
-    function BookAdd(isbn : String) : LongInt;
+    function BNew(isbn : String) : LongInt;
 
     //Vor: Buch Id und Schüler Id
     //Eff: Rückgabe eines Buches mit Schüler
     //Erg: Trägt aktuelles Datum (als Double (nicht lesbar)) als Rückgabedatum in die Datenbank ein
-    procedure BookBack(BId, SId :LongInt);
+    procedure BBack(BId, SId :LongInt);
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
@@ -44,12 +44,12 @@ type
 
     //Vor: Die Buch Id
     //Eff: Löscht ein Buch aus dem Bestand
-    procedure BookDel(BId:LongInt);
+    procedure BDel(BId:LongInt);
 
     //Vor: Buch Id und seine Qualität
     //Eff: Ändert die Buchqualität
     //Erg: Trägt übergebene Qualität in die Datenbank ein
-    procedure BookQualiNew(BId, quali :LongInt);
+    procedure BQualiNew(BId, quali :LongInt);
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
@@ -67,7 +67,7 @@ type
 
     //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
     //Eff: Neuer Buchtyp
-    procedure BookTypeNew(isbn, title, subject :String);
+    procedure BTypeNew(isbn, title, subject :String);
 
     //Vor: Die ISBN
     //Eff: Prüft den Buchtyp
@@ -103,7 +103,6 @@ type
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
-
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
@@ -112,7 +111,7 @@ type
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
     //Erg: Wenn Schüler nicht vorhanden wahr -> False
-    function persistStudent(student: TStudent): boolean;
+    function SUpdate (student: TStudent): boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -122,11 +121,11 @@ type
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //Eff: Neuen Schüler erstellen
     //Erg: Die Schüler Id
-    function NewStudent (lastN, firstN, classN : String; birth:TDate):LongInt;
+    function SNew (lastN, firstN, classN : String; birth:TDate):LongInt;
 
     //Vor: Eine Schüler Id
     //Eff: Löscht einen Schüler
-    procedure DelStudent(SId : LongInt);
+    procedure SDel(SId : LongInt);
 
 
 
@@ -135,11 +134,11 @@ type
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
     //Erg: Trägt in der Datenbank in Tabelle rental das ausgeliehene Buch zu dem Schüler ein
-    procedure StuRentBook(BId, SId :LongInt);
+    procedure RNew(BId, SId :LongInt);
 
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
     //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
-    procedure DelRental(datum: TDate);  //bzw TDateTime
+    procedure RDel(datum: TDate);  //bzw TDateTime
 
 
 
@@ -213,7 +212,7 @@ begin
   Result:=uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.persistStudent(student: TStudent): boolean;
+function TDBManagement.SUpdate(student: TStudent): boolean;
 begin
   Result:=uDBConn.updateinsertStudent(student);
 end;
@@ -224,7 +223,7 @@ begin
   else Result:=true;
 end;
 
-procedure TDBManagement.BookBack(BId, SId :LongInt);
+procedure TDBManagement.BBack(BId, SId :LongInt);
 Var aoR :ArrayOfRentals;
     rental : TRental;
 begin
@@ -233,7 +232,7 @@ begin
   rental.setReturnDate(now);
 end;
 
-function TDBManagement.BookAdd(isbn : String):LongInt;
+function TDBManagement.BNew(isbn : String):LongInt;
 Var id, pz: LongInt;
     hid :String;
     book :TBook;
@@ -258,19 +257,19 @@ begin
   Result:=id;
 end;
 
-procedure TDBManagement.BookDel(BId:LongInt);
+procedure TDBManagement.BDel(BId:LongInt);
 begin
   uDBConn.deleteBook(uDBConn.getBookById(BId));
 end;
 
-procedure TDBManagement.BookQualiNew(BId, quali :LongInt);
+procedure TDBManagement.BQualiNew(BId, quali :LongInt);
 Var book:TBook;
 begin
   book:=uDBConn.getBookById(BId);
   book.setCondition(quali);
 end;
 
-procedure TDBManagement.BookTypeNew(isbn, title, subject :String);
+procedure TDBManagement.BTypeNew(isbn, title, subject :String);
 Var booktype : TBooktype;
 begin
   booktype := TBooktype.Create;
@@ -281,7 +280,7 @@ begin
   uDBConn.updateinsertBooktype(booktype);
 end;
 
-procedure TDBManagement.StuRentBook(BId, SId :LongInt);        //functioniert nicht !                        //!
+procedure TDBManagement.RNew(BId, SId :LongInt);        //functioniert nicht !                        //!
 Var rental: TRental;
 begin
   rental := TRental.Create;
@@ -293,17 +292,17 @@ begin
   uDBConn.updateinsertRental(rental);
 end;
 
-procedure TDBManagement.DelStudent(SId : LongInt);
+procedure TDBManagement.SDel(SId : LongInt);
 begin
   uDBConn.deleteStudent(uDBConn.getStudentById(SID));
 end;
 
-procedure TDBManagement.DelRental(datum: TDate);
+procedure TDBManagement.RDel(datum: TDate);
 begin
   uDBConn.deleteReturnedRentalOlderThan(datum);
 end;
 
-function TDBManagement.NewStudent (lastN, firstN, classN : String; birth:TDate) : LongInt;
+function TDBManagement.SNew (lastN, firstN, classN : String; birth:TDate) : LongInt;
 Var id, pz: LongInt;
     hid: String;
     student: TStudent;
@@ -327,7 +326,7 @@ begin
   student.setClassName(classN);
   student.setBirth(birth);
 
-  self.persistStudent(student);
+  self.SUpdate(student);
   Result:=id;
 end;
 
@@ -418,7 +417,7 @@ begin
 
 
 
-      students:=uDBConn.getStudentByBirthdate(birthDate);        //Geburtsdatum
+      students:=uDBConn.getStudentsByBirthdate(birthDate);        //Geburtsdatum
       indexS3:=0;
 
       if not (length(students) = 0) and not (length(students3) = 0) then
@@ -448,7 +447,7 @@ begin
       if (length(students2) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
-        self.NewStudent(lname, fname, cname, birthDate);
+        self.SNew(lname, fname, cname, birthDate);
         Result:=true;
 
       end else if (length(students2) = 1) then
