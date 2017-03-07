@@ -197,6 +197,7 @@ begin
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
+
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
@@ -385,6 +386,7 @@ procedure readCSV(dataname: STRING);
      CloseFile (f);
 end;
 begin;
+MeInfoRel.Clear;
 readCSV('rental_relations.csv');
 //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
