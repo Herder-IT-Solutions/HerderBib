@@ -344,14 +344,14 @@ function TDBManagement.importCSVSchueler(Dateiname:String): Boolean;
 Var text: TextFile;
     str, fname, lname, cname, birth : String;
     birthDate : TDate;
-    i : Integer;
-    students: Array of TStudent;
+    i, j, k, id, indexS3 : Integer;
 begin
   str:='';
   fname:='';
   lname:='';
   cname:='';
   birth:='';
+  indexS3:=0;
 
   AssignFile(text, Dateiname);
 
@@ -392,20 +392,20 @@ begin
       end;
       birthDate:=StrToDate(birth, '-');
                                                                 // Vergleich ob bereits vorhanden
-      students:=self.getStudentsByFirstLastNameBirthdate(fname, lname, birthDate);
+
 
                                                                 //Verarbeitung
-      if (length(students) = 0) then
+      if (length(students2) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
         self.SNew(lname, fname, cname, birthDate);
         Result:=true;
 
-      end else if (length(students) = 1) then
+      end else if (length(students2) = 1) then
       begin                 //Fall Klasse überschreiben
 
-        students[0].setClassName(cname);
-        Result:=uDBConn.updateinsertStudent(students[0]);;
+        students2[0].setClassName(cname);
+        Result:=uDBConn.updateinsertStudent(students2[0]);;
 
       end else begin        //Fall Ein Fehler liegt vor
         Result:=False;
@@ -430,7 +430,6 @@ end;
 
 function TDBManagement.getStudentsByFirstLastNameBirthdate(fname, lname: STring; birth:TDate) : ArrayOfStudents;
 Var students, students2, students3: Array of TStudent;
-    indexS3, j, k, id: Integer;
 begin
   students:=uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
 
@@ -461,7 +460,7 @@ begin
 
 
 
-  students:=uDBConn.getStudentsByBirthdate(birth);        //Geburtsdatum
+  students:=uDBConn.getStudentsByBirthdate(birthDate);        //Geburtsdatum
   indexS3:=0;
 
   if not (length(students) = 0) and not (length(students3) = 0) then
@@ -485,7 +484,6 @@ begin
   end else if (length(students) = 0) then students2 := students3
   else if (length(students3) = 0) then students2 := students;
 
-  Result:=students2;
 end;
 
 end.
