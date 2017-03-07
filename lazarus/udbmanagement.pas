@@ -103,6 +103,11 @@ type
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
+    //Vor: den Vorname, Nachnamen und Geburtsdatum
+    //     Geburtsdatum darf nil sein
+    //Erg: Ein Array von TStudent-Objekten mit den Daten
+    function getStudentsByFirstLastNameBirthdate(fname, lname: STring; birth:TDate) : ArrayOfStudents;
+
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
@@ -339,8 +344,8 @@ function TDBManagement.importCSVSchueler(Dateiname:String): Boolean;
 Var text: TextFile;
     str, fname, lname, cname, birth : String;
     birthDate : TDate;
-    i, j, k, id, indexS3 : Integer;
-    students, students2, students3: Array of TStudent;
+    i, j, k, id : Integer;
+    students: Array of TStudent;
 begin
   str:='';
   fname:='';
@@ -388,60 +393,7 @@ begin
       end;
       birthDate:=StrToDate(birth, '-');
                                                                 // Vergleich ob bereits vorhanden
-      students:=uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
-
-      students2:=uDBConn.getStudentsByLastNamePattern(lname);   //Name
-
-      if not (length(students) = 0) and not (length(students2) = 0) then
-      begin
-        j:=0;
-        while length(students) > j+1 do
-        begin
-          id := students[j].getId;
-
-          k:=0;
-          while length(students2) > k+1 do
-          begin
-            if id = students2[k].getId then
-            begin
-              students3[indexS3] := students2[k];
-              indexS3:=indexS3+1;
-            end;
-
-            k:=k+1;
-          end;
-          j:=j+1;
-        end;
-      end else if (length(students) = 0) then students3 := students2
-      else if (length(students2) = 0) then students3 := students;
-
-
-
-      students:=uDBConn.getStudentsByBirthdate(birthDate);        //Geburtsdatum
-      indexS3:=0;
-
-      if not (length(students) = 0) and not (length(students3) = 0) then
-      begin
-        j:=0;
-        while length(students) > j+1 do
-        begin
-          id := students[j].getId;
-
-          k:=0;
-          while length(students3) > k+1 do
-          begin
-            if id = students3[k].getId then
-            begin
-              students2[indexS3] := students3[k];
-              indexS3:=indexS3+1;
-            end;
-
-            k:=k+1;
-          end;
-          j:=j+1;
-        end;
-      end else if (length(students) = 0) then students2 := students3
-      else if (length(students3) = 0) then students2 := students;
+      students:=self.getStudentsByFirstLastNameBirthdate(fname, lname, birthDate);
 
                                                                 //Verarbeitung
       if (length(students2) = 0) then
@@ -475,6 +427,66 @@ end;
 function TDBManagement.isConnected():Boolean;
 Begin
   Result:=uDBConn.isConnected;
+end;
+
+function TDBManagement.getStudentsByFirstLastNameBirthdate(fname, lname: STring; birth:TDate) : ArrayOfStudents;
+Var students, students2, students3: Array of TStudent;
+    indexS3: Integer;
+begin
+  students:=uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
+
+  students2:=uDBConn.getStudentsByLastNamePattern(lname);   //Name
+
+  if not (length(students) = 0) and not (length(students2) = 0) then
+  begin
+    j:=0;
+    while length(students) > j+1 do
+    begin
+      id := students[j].getId;
+
+      k:=0;
+      while length(students2) > k+1 do
+      begin
+        if id = students2[k].getId then
+        begin
+          students3[indexS3] := students2[k];
+          indexS3:=indexS3+1;
+        end;
+
+        k:=k+1;
+      end;
+      j:=j+1;
+    end;
+  end else if (length(students) = 0) then students3 := students2
+  else if (length(students2) = 0) then students3 := students;
+
+
+
+  students:=uDBConn.getStudentsByBirthdate(birthDate);        //Geburtsdatum
+  indexS3:=0;
+
+  if not (length(students) = 0) and not (length(students3) = 0) then
+  begin
+    j:=0;
+    while length(students) > j+1 do
+    begin
+      id := students[j].getId;
+      k:=0;
+      while length(students3) > k+1 do
+      begin
+        if id = students3[k].getId then
+        begin
+          students2[indexS3] := students3[k];
+          indexS3:=indexS3+1;
+        end;
+        k:=k+1;
+      end;
+      j:=j+1;
+    end;
+  end else if (length(students) = 0) then students2 := students3
+  else if (length(students3) = 0) then students2 := students;
+
+  Result:=students2;
 end;
 
 end.
