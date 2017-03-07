@@ -55,10 +55,10 @@ type
     // result: TRUE on success
     function updateInsertStudent(student: TStudent): boolean;
 
-    // Deletes a student
+    // Deletes a student and destroys the object
     // parameter: student object
     // result: TRUE on success
-    function deleteStudent(student: TStudent): boolean;
+    function deleteStudent(var student: TStudent): boolean;
 
 
     /////////////////////////////////////////////////////////
@@ -80,10 +80,10 @@ type
     // result: TRUE on success
     function updateInsertRental(rental: TRental): boolean;
 
-    // Deletes a student
+    // Deletes a rental and destroys the object
     // parameter: rental object
     // result: TRUE on success
-    function deleteRental(rental: TRental): boolean;
+    function deleteRental(var rental: TRental): boolean;
 
     // Deletes all returned rentals older than a certain date
     // parameter: Date
@@ -108,10 +108,10 @@ type
     // result: TRUE on success
     function updateInsertBook(book: TBook): boolean;
 
-    // Deletes a book
+    // Deletes a book and destroys the object
     // parameter: book object
     // result: TRUE on success
-    function deleteBook(book: TBook): boolean;
+    function deleteBook(var book: TBook): boolean;
 
     /////////////////////////////////////////////////////////
     //             BOOKTYPE                                //
@@ -131,10 +131,10 @@ type
     // result: TBooktype on success, NIL on failure
     function getBooktypeByIsbn(isbn: string): TBooktype;
 
-    // Deletes a book
+    // Deletes a booktype and destroys the object
     // parameter: booktype object
     // result: TRUE on success
-    function deleteBooktype(booktype: TBooktype): boolean;
+    function deleteBooktype(var booktype: TBooktype): boolean;
 
     /////////////////////////////////////////////////////////
 
@@ -401,7 +401,7 @@ begin
   end;
 end;
 
-function TDBConnection.deleteStudent(student: TStudent): boolean;
+function TDBConnection.deleteStudent(var student: TStudent): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -414,6 +414,7 @@ begin
     begin
       SQLQuery.ExecSQL;
       SQLTransaction.commit;
+      student.Free;
     end;
 
   except
@@ -558,7 +559,7 @@ begin
   end;
 end;
 
-function TDBConnection.deleteRental(rental: TRental): boolean;
+function TDBConnection.deleteRental(var rental: TRental): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -570,6 +571,7 @@ begin
     begin
       ExecSQL;
       SQLTransaction.commit;
+      rental.Free;
     end;
 
   except
@@ -742,7 +744,7 @@ begin
   end;
 end;
 
-function TDBConnection.deleteBook(book: TBook): boolean;
+function TDBConnection.deleteBook(var book: TBook): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -754,8 +756,8 @@ begin
     with SQLQuery do
     begin
       ExecSQL;
-      ApplyUpdates; //test
       SQLTransaction.commit;
+      book.Free;
     end;
 
   except
@@ -867,7 +869,7 @@ begin
   end;
 end;
 
-function TDBConnection.deleteBooktype(booktype: TBooktype): boolean;
+function TDBConnection.deleteBooktype(var booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -880,6 +882,7 @@ begin
     begin
       ExecSQL;
       SQLTransaction.commit;
+      booktype.Free;
     end;
 
   except
