@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 155
+  Left = 251
   Height = 571
-  Top = 167
+  Top = -3
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -13,8 +13,8 @@ object Form1: TForm1
     Height = 600
     Top = 0
     Width = 765
-    ActivePage = TabInfo
-    TabIndex = 4
+    ActivePage = TabAdd
+    TabIndex = 2
     TabOrder = 0
     OnChange = PageControl1Change
     object TabRent: TTabSheet
@@ -75,6 +75,7 @@ object Form1: TForm1
         Width = 60
         Caption = 'LbStudName'
         ParentColor = False
+        Visible = False
       end
       object LbBookName: TLabel
         Left = 8
@@ -83,6 +84,7 @@ object Form1: TForm1
         Width = 61
         Caption = 'LbBookName'
         ParentColor = False
+        Visible = False
       end
       object Image1: TImage
         Left = 332
@@ -5690,6 +5692,7 @@ object Form1: TForm1
         Width = 66
         Caption = 'LbStudName1'
         ParentColor = False
+        Visible = False
       end
       object LbBookName1: TLabel
         Left = 8
@@ -5698,6 +5701,7 @@ object Form1: TForm1
         Width = 67
         Caption = 'LbBookName1'
         ParentColor = False
+        Visible = False
       end
       object TBBookState: TTrackBar
         Left = 8
@@ -5946,9 +5950,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabStud
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -6228,6 +6232,7 @@ object Form1: TForm1
             Width = 147
             Caption = 'Buch löschen'
             Color = clRed
+            OnClick = BtInfoBookDelClick
             TabOrder = 5
           end
           object LbInfoBookError: TLabel

@@ -127,6 +127,7 @@ type
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
+    procedure BtInfoBookDelClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
@@ -272,6 +273,10 @@ begin
          management.BNew(s);
          INC(k);
          //TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
+         EdAddBookName.text := '';
+         EdAddBookISBN.text := '';
+         CBAddBookSubject.text := '';
+         SEAddBookQuantity.Value:= 0;
      end;
      end
      else begin
@@ -301,6 +306,14 @@ begin
      BtInfoStudEdit.Enabled := False;
      BtInfoAdminLogin.Enabled:= True;
      BtInfoAdminLogout.Enabled:= False;
+end;
+
+procedure TForm1.BtInfoBookDelClick(Sender: TObject);
+begin
+  management.BDel(STRTOINT(EdInfoBookID.text));
+  EdInfoBookId.text:='';
+  EdInfoBookRent.text:='';
+  TBInfoBookState.Position:=1;
 end;
 
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
@@ -453,6 +466,8 @@ begin
   if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
      //Check if book is already rent
      management.RNew(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
+     EdStud.text:='';
+     EdBook.text:='';
   end;
 
   except
@@ -470,6 +485,9 @@ begin
     if (management.BIdCheck(STRTOINT(EdBook1.text)) and management.SIdCheck(STRTOINT(EdStud1.text))) then begin
      management.BQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
      management.BBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
+     EdStud1.text:='';
+     EdBook1.text:='';
+     TBBookState.Position :=1;
   end;
       except
     On EConvertError do begin
