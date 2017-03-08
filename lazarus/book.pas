@@ -5,7 +5,7 @@ unit book;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TBook = class
@@ -38,7 +38,7 @@ type
 
     // Sets a new book condition
     // parameter: newCondition
-    // result: TRUE on success, so if newIsbn has 1 character, is <=5 and not NULL
+    // result: TRUE on success, so if newIsbn has 1 character, is <=5 or is =SQLNull
     function setCondition(newCondition: cardinal): boolean;
 
     constructor Create;
@@ -97,7 +97,7 @@ end;
 function TBook.setCondition(newCondition: cardinal): boolean;
 begin
   Result := False;
-  if (newCondition <= 6) then
+  if (newCondition = SQLNull ) or (newCondition <= 6) then
   begin
     self.condition := newCondition;
     Result := True;
@@ -106,9 +106,9 @@ end;
 
 constructor TBook.Create;
 begin
-  self.id := -1;
+  self.id := SQLNull;
   self.isbn := '';
-  self.condition := 0;
+  self.condition := SQLNull;
 end;
 
 end.

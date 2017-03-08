@@ -685,8 +685,11 @@ begin
         resultVar[length(resultVar) - 1] := TBook.Create; //create new book object
         resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
         resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
-        resultVar[length(resultVar) - 1].setCondition(
-          FieldByName('condition').AsInteger);
+
+        if not (FieldByName('condition').IsNull) then
+          resultVar[length(resultVar) - 1].setCondition(
+            FieldByName('condition').AsInteger);
+
         if returnOne then
           exit;
         Next;
@@ -840,7 +843,10 @@ begin
         resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
         resultVar[length(resultVar) - 1].setTitle(FieldByName('title').AsString);
         resultVar[length(resultVar) - 1].setSubject(FieldByName('subject').AsString);
-        resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
+
+        if not (FieldByName('storage').IsNull) then
+          resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
+
         if returnOne then
           exit;
         Next;

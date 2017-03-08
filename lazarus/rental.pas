@@ -49,7 +49,7 @@ type
 
     // Sets a new book return datetime in seconds
     // parameter: newReturnDate
-    // result: TRUE on success, so if newReturnDate >= 0 and not NULL
+    // result: TRUE on success, so if newReturnDate >= 0 or =SQLNull
     function setReturnDate(newReturnDate: TDate): boolean;
 
     // Returns the book rental datetime in seconds
@@ -119,7 +119,7 @@ end;
 function TRental.setReturnDate(newReturnDate: TDate): boolean;
 begin
   Result := False;
-  if (newReturnDate <> NuLL) and (newReturnDate >= 0) then
+  if (newReturnDate = SQLNull) or (newReturnDate <> NuLL) and (newReturnDate >= 0) then
   begin
     self.return_date := newReturnDate;
     Result := True;
@@ -143,9 +143,9 @@ end;
 
 constructor TRental.Create;
 begin
-  self.id := -1;
-  self.book_id := -1;
-  self.student_id := -1;
+  self.id := SQLNull;
+  self.book_id := SQLNull;
+  self.student_id := SQLNull;
   self.return_date := SQLNull;
   self.rental_date := SQLNull;
 end;

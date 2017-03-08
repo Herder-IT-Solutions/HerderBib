@@ -168,7 +168,7 @@ end;
 
 constructor TStudent.Create;
 begin
-  self.id := -1;
+  self.id := SQLNull;
   self.last_name := '';
   self.first_name := '';
   self.class_name := '';
