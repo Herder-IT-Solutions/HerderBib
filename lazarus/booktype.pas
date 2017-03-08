@@ -5,7 +5,7 @@ unit booktype;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TBooktype = class
@@ -48,7 +48,7 @@ type
 
     // Sets a new book storage
     // parameter: newStorage
-    // result: TRUE on success, so if newStorage <= (2^63)-1)
+    // result: TRUE on success, so if newStorage <= (2^63)-1) or =SQLNull
     function setStorage(newStorage: integer): boolean;
 
     constructor Create;
@@ -119,7 +119,7 @@ end;
 function TBooktype.setStorage(newStorage: integer): boolean;
 begin
   Result := False;
-  if (newStorage <> NULL) then
+  if (newStorage = SQLNull) or (newStorage <> NULL) then
   begin
     self.storage := newStorage;
     Result := True;
@@ -131,7 +131,7 @@ begin
   self.isbn := '';
   self.title := '';
   self.subject := '';
-  self.storage := 0;
+  self.storage := SQLNull;
 end;
 
 end.

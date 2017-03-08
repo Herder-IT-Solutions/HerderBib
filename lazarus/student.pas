@@ -5,7 +5,7 @@ unit student;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TStudent = class
@@ -168,11 +168,11 @@ end;
 
 constructor TStudent.Create;
 begin
-  self.id := -1;
+  self.id := SQLNull;
   self.last_name := '';
   self.first_name := '';
   self.class_name := '';
-  self.birth := -1;
+  self.birth := SQLNull;
   self.ldap_user := '';
 end;
 
