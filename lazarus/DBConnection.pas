@@ -50,6 +50,11 @@ type
     // result: TStudent object
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
+    // Returns student object with given ldap username
+    // parameter: student's ldap username
+    // result: student object
+    function getStudentByLDAPUser(ldap_user: string): TStudent;
+
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
@@ -191,6 +196,7 @@ begin
         resultVar[length(resultVar) - 1].setClassName(
           FieldByName('class_name').AsString);
         resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+        resultVar[length(resultVar) - 1].setLDAPUser(FieldByName('ldap_user').AsString);
         if returnOne then
           exit;
         Next;
@@ -331,7 +337,7 @@ begin
   setStudentFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
@@ -361,6 +367,34 @@ begin
   setStudentFields(Result, False);
 end;
 
+function TDBConnection.getStudentByLDAPUser(ldap_user: string): TStudent;
+var
+  arr: ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user = (:ldap_user)';
+  SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  setStudentFields(arr, True);
+
+  Result := nil;
+  if (length(arr) = 0) then
+    Result := arr[0];
+end;
 
 function TDBConnection.updateInsertStudent(student: TStudent): boolean;
 begin
@@ -386,6 +420,7 @@ begin
       FieldByName('first_name').AsString := student.getFirstName;
       FieldByName('class_name').AsString := student.getClassName;
       FieldByName('birth').AsDateTime := student.getBirth;
+      FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
@@ -702,7 +737,7 @@ begin
   setBookFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
@@ -920,7 +955,7 @@ begin
   setBooktypeFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
