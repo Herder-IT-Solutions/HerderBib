@@ -62,21 +62,10 @@ implementation
   const page_size = columns * column_size;
 
   //Dateinamen und Pfade für die verwendeten Dateien
-  {$IFDEF LINUX}
-    const python = 'python ';
-    const path = './BarcodePrinter/';
-    const working_path = path + 'tmp/';
-    const print_command = 'lp ';
-  {$ENDIF}
-  {$IFDEF WIN32}
-    const python = 'C:\Python27\python.exe ';
-    const path = '.\BarcodePrinter\';
-    const working_path = path + 'tmp\';
-    const print_command = 'print ';
-  {$ENDIF}
 
-  const python_script_name = 'ean8.pyc';
-  const python_script_path = working_path + python_script_name;
+  const path = '.\BarcodePrinter\';
+  const working_path = path + 'tmp\';
+
   const latex_file = 'latex.tex';
   const latex_output = 'latex.pdf';
   const empty_barcode = 'empty.png';
