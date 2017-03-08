@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, Forms, Controls,
-  Graphics, Dialogs, DBGrids, book, booktype, rental, student;
+  Graphics, Dialogs, DBGrids, book, booktype, rental, student, DBConstants;
 
 type
   ArrayOfStudents = array of TStudent;
@@ -423,7 +423,7 @@ begin
       FieldByName('first_name').AsString := student.getFirstName;
       FieldByName('class_name').AsString := student.getClassName;
 
-      if student.getBirth <= -1 then //if set to null
+      if student.getBirth = SQLNull then //if set to null
         FieldByName('birth').Clear
       else
         FieldByName('birth').AsDateTime := student.getBirth;
@@ -590,7 +590,7 @@ begin
       FieldByName('book_id').AsLargeInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
 
-      if rental.getReturnDate <= -1 then //if set to null
+      if rental.getReturnDate = SQLNull then //if set to null
         FieldByName('return_date').Clear
       else
         FieldByName('return_date').AsDateTime := rental.getReturnDate;

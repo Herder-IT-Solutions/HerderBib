@@ -5,7 +5,7 @@ unit student;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TStudent = class
@@ -172,7 +172,7 @@ begin
   self.last_name := '';
   self.first_name := '';
   self.class_name := '';
-  self.birth := -1; // -1 or smaller equals NULL
+  self.birth := SQLNull;
   self.ldap_user := '';
 end;
 

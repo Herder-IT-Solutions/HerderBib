@@ -5,7 +5,7 @@ unit rental;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TRental = class
@@ -146,8 +146,8 @@ begin
   self.id := -1;
   self.book_id := -1;
   self.student_id := -1;
-  self.return_date := -1; // -1 or smaller equals NULL
-  self.rental_date := -1;
+  self.return_date := SQLNull;
+  self.rental_date := SQLNull;
 end;
 
 end.
