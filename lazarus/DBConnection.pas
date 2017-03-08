@@ -195,7 +195,10 @@ begin
           FieldByName('first_name').AsString);
         resultVar[length(resultVar) - 1].setClassName(
           FieldByName('class_name').AsString);
-        resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+
+        if not (FieldByName('birth').IsNull) then
+          resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+
         resultVar[length(resultVar) - 1].setLDAPUser(FieldByName('ldap_user').AsString);
         if returnOne then
           exit;
@@ -419,7 +422,12 @@ begin
       FieldByName('last_name').AsString := student.getLastName;
       FieldByName('first_name').AsString := student.getFirstName;
       FieldByName('class_name').AsString := student.getClassName;
-      FieldByName('birth').AsDateTime := student.getBirth;
+
+      if student.getBirth <= -1 then //if set to null
+        FieldByName('birth').Clear
+      else
+        FieldByName('birth').AsDateTime := student.getBirth;
+
       FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
@@ -481,8 +489,11 @@ begin
         resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
         resultVar[length(resultVar) - 1].setStudentId(
           FieldByName('student_id').AsLargeInt);
-        resultVar[length(resultVar) - 1].setReturnDate(
-          FieldByName('return_date').AsDateTime);
+
+        if not (FieldByName('return_date').IsNull) then
+          resultVar[length(resultVar) - 1].setReturnDate(
+            FieldByName('return_date').AsDateTime);
+
         resultVar[length(resultVar) - 1].setRentalDate(
           FieldByName('rental_date').AsDateTime);
         if returnOne then
@@ -578,7 +589,12 @@ begin
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
-      FieldByName('return_date').AsDateTime := rental.getReturnDate;
+
+      if rental.getReturnDate <= -1 then //if set to null
+        FieldByName('return_date').Clear
+      else
+        FieldByName('return_date').AsDateTime := rental.getReturnDate;
+
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;

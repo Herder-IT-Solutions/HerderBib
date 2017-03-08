@@ -172,7 +172,7 @@ begin
   self.last_name := '';
   self.first_name := '';
   self.class_name := '';
-  self.birth := -1;
+  self.birth := -1; // -1 or smaller equals NULL
   self.ldap_user := '';
 end;
 
