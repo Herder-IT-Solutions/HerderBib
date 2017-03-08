@@ -237,7 +237,7 @@ Var aoR :ArrayOfRentals;
     rental : TRental;
 begin
   aoR := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
-  rental := aoR[0];
+  rental := aoR[1];
   rental.setReturnDate(now);
 end;
 
