@@ -639,7 +639,7 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text :=
-    'delete from rental where return_date not null and date(date()) <= (:date)';
+    'delete from rental where return_date not null and date(return_date) <= date(:date)';
   SQLQuery.ParamByName('date').AsDate := date;
 
   try
@@ -649,6 +649,7 @@ begin
       SQLTransaction.commit;
 
       Close;
+      SQLQuery.ExecSQL;
       SQL.Text := 'SELECT @@ROWCOUNT as deleted';
       Open;
 
