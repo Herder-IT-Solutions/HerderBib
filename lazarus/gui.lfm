@@ -70,10 +70,9 @@ object Form1: TForm1
       end
       object LbRentStudName: TLabel
         Left = 8
-        Height = 13
+        Height = 1
         Top = 72
-        Width = 83
-        Caption = 'LbRentStudName'
+        Width = 1
         ParentColor = False
       end
       object LbRentBookName: TLabel
@@ -83,7 +82,6 @@ object Form1: TForm1
         Width = 84
         Caption = 'LbRentBookName'
         ParentColor = False
-        Visible = False
       end
       object ImRentHerder: TImage
         Left = 332
@@ -5691,7 +5689,7 @@ object Form1: TForm1
         Width = 77
         Caption = 'LbRetStudName'
         ParentColor = False
-        Visible = False
+        OnClick = LbRetStudNameClick
       end
       object LbRetBookName: TLabel
         Left = 8

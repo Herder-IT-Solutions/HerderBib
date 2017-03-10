@@ -44,7 +44,7 @@ type
 
     //Vor: Die Buch Id
     //Eff: Löscht ein Buch aus dem Bestand
-    procedure BDel(BId:LongInt);
+    procedure BDel(Book: Tbook);
 
     //Vor: Buch Id und seine Qualität
     //Eff: Ändert die Buchqualität
@@ -131,7 +131,7 @@ type
 
     //Vor: Eine Schüler Id
     //Eff: Löscht einen Schüler
-    procedure SDel(SId : LongInt);
+    procedure SDel(Student: TStudent);
 
 
 
@@ -237,8 +237,9 @@ Var aoR :ArrayOfRentals;
     rental : TRental;
 begin
   aoR := uDBConn.getAllRentalsByBookAndStudent(uDBConn.getStudentById(SId), uDBConn.getBookById(BId));
-  rental := aoR[1];
+  rental := aoR[0];
   rental.setReturnDate(now);
+  uDBConn.updateInsertRental(rental);
 end;
 
 function TDBManagement.BNew(isbn : String):LongInt;
@@ -266,9 +267,9 @@ begin
   Result:=id;
 end;
 
-procedure TDBManagement.BDel(BId:LongInt);
+procedure TDBManagement.BDel(book: Tbook);
 begin
-  uDBConn.deleteBook(uDBConn.getBookById(BId));
+  uDBConn.deleteBook(book);
 end;
 
 procedure TDBManagement.BQualiNew(BId, quali :LongInt);
@@ -310,9 +311,9 @@ begin
   end else Result := False;
 end;
 
-procedure TDBManagement.SDel(SId : LongInt);
+procedure TDBManagement.SDel(Student: TStudent);
 begin
-  uDBConn.deleteStudent(uDBConn.getStudentById(SID));
+  uDBConn.deleteStudent(student);
 end;
 
 procedure TDBManagement.RDel(datum: TDate);
