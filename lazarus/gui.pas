@@ -18,6 +18,7 @@ type
     BtInfoBookEdit: TButton;
     BtInfoBooktypeShow: TButton;
     BtInfoBookShow1: TButton;
+    BtInfoSuportError: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
@@ -53,6 +54,7 @@ type
     EdStud: TEdit;
     EdStud1: TEdit;
     Image1: TImage;
+    LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
     LbPrintQueue: TLabel;
@@ -311,7 +313,7 @@ end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
 begin
-  management.BDel(STRTOINT(EdInfoBookID.text));
+  management.BDel(management.getBookByID(STRTOINT(EdInfoBookID.text)));
   EdInfoBookId.text:='';
   EdInfoBookRent.text:='';
   TBInfoBookState.Position:=1;
@@ -502,7 +504,7 @@ end;
 
 procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
 begin
-     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Bedienungsanleitung');
+     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
 end;
 
 

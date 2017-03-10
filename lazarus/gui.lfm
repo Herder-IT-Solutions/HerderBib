@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 143
+  Left = 238
   Height = 571
-  Top = 536
+  Top = 115
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -5950,9 +5950,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabRel
+        ActivePage = TabCreditsHelp
         ParentBiDiMode = False
-        TabIndex = 2
+        TabIndex = 4
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -6470,9 +6470,9 @@ object Form1: TForm1
             Top = 8
             Width = 312
             Lines.Strings = (
-              'Copyright (C) 2017'
               'Informatik-LK am Herder-Gymnasium '
               'HERDER-IT-SOLUTIONS'
+              'EST. 2016'
               ''
               'PROJECT LEAD'
               '-----------------'
@@ -6535,6 +6535,23 @@ object Form1: TForm1
             Width = 322
             Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
             ParentColor = False
+          end
+          object LbInfoSupportError: TLabel
+            Left = 8
+            Height = 39
+            Top = 144
+            Width = 365
+            Caption = 'Wenn Sie auf einen Fehler gestoßen sind den Sie sich nicht erklären können,'#13#10'merken Sie sich den Fehlercode und klicken Sie auf die Schaltfläche. '#13#10'Dort finden Sie weitere Informationen.'
+            ParentColor = False
+          end
+          object BtInfoSuportError: TButton
+            Left = 8
+            Height = 25
+            Top = 200
+            Width = 227
+            Caption = 'Fehlerübersicht'
+            OnClick = BtInfoSuportWikiClick
+            TabOrder = 2
           end
         end
         object Admnistration: TTabSheet
