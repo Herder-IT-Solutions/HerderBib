@@ -51,9 +51,9 @@ type
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
     // Returns student object with given ldap username
-    // parameter: student's ldap username
+    // parameter: student's ldap username. "%" can be used as a placeholder
     // result: student object
-    function getStudentByLDAPUser(ldap_user: string): TStudent;
+    function getStudentByLDAPUserPattern(ldap_user: string): TStudent;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -370,13 +370,13 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentByLDAPUser(ldap_user: string): TStudent;
+function TDBConnection.getStudentByLDAPUserPattern(ldap_user: string): TStudent;
 var
   arr: ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user = (:ldap_user)';
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user LIKE (:ldap_user)';
   SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
 
   try
