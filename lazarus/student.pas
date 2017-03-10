@@ -5,25 +5,26 @@ unit student;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, DBConstants;
 
 type
   TStudent = class
   private
-    id: LongInt;
+    id: longint;
     last_name: string;
     first_name: string;
     class_name: string;
     birth: TDate;
+    ldap_user: string;
   public
     // Returns the student id
     // result: id
-    function getId(): LongInt;
+    function getId(): longint;
 
     // Sets a new student id
     // parameter: newId
     // result: TRUE on success, so if newId is not NULL
-    function setId(newId: LongInt): boolean;
+    function setId(newId: longint): boolean;
 
     // Returns the student's last name
     // result: last_name
@@ -61,17 +62,26 @@ type
     // result: TRUE on success, so if newBirth >= 0 and not NULL
     function setBirth(newBirth: TDate): boolean;
 
+    // Returns the student's ldap username
+    // result: ldap_user
+    function getLDAPUser(): string;
+
+    // Sets a new student's ldap username
+    // parameter: newLDAPUser
+    // result: TRUE on success, so if newLDAPUser has 0..255 characters and is not NULL
+    function setLDAPUser(newLDAPUser: string): boolean;
+
     constructor Create;
   end;
 
 implementation
 
-function TStudent.getId(): LongInt;
+function TStudent.getId(): longint;
 begin
   Result := self.id;
 end;
 
-function TStudent.setId(newId: LongInt): boolean;
+function TStudent.setId(newId: longint): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
@@ -141,13 +151,29 @@ begin
   end;
 end;
 
+function TStudent.getLDAPUser(): string;
+begin
+  Result := self.ldap_user;
+end;
+
+function TStudent.setLDAPUser(newLDAPUser: string): boolean;
+begin
+  Result := False;
+  if (newLDAPUser <> NULL) and (Length(newLDAPUser) <= 255) then
+  begin
+    self.ldap_user := newLDAPUser;
+    Result := True;
+  end;
+end;
+
 constructor TStudent.Create;
 begin
-  self.id := -1;
+  self.id := SQLNull;
   self.last_name := '';
   self.first_name := '';
   self.class_name := '';
-  self.birth := -1;
+  self.birth := SQLNull;
+  self.ldap_user := '';
 end;
 
 end.

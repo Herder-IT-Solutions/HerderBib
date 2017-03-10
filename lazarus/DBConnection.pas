@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, Forms, Controls,
-  Graphics, Dialogs, DBGrids, book, booktype, rental, student;
+  Graphics, Dialogs, DBGrids, book, booktype, rental, student, DBConstants;
 
 type
   ArrayOfStudents = array of TStudent;
@@ -49,6 +49,11 @@ type
     // parameter: TDate object (birthdate)
     // result: TStudent object
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
+
+    // Returns student object with given ldap username
+    // parameter: student's ldap username
+    // result: student object
+    function getStudentByLDAPUser(ldap_user: string): TStudent;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -190,7 +195,11 @@ begin
           FieldByName('first_name').AsString);
         resultVar[length(resultVar) - 1].setClassName(
           FieldByName('class_name').AsString);
-        resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+
+        if not (FieldByName('birth').IsNull) then
+          resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+
+        resultVar[length(resultVar) - 1].setLDAPUser(FieldByName('ldap_user').AsString);
         if returnOne then
           exit;
         Next;
@@ -331,7 +340,7 @@ begin
   setStudentFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
@@ -361,6 +370,34 @@ begin
   setStudentFields(Result, False);
 end;
 
+function TDBConnection.getStudentByLDAPUser(ldap_user: string): TStudent;
+var
+  arr: ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user = (:ldap_user)';
+  SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
+
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  setStudentFields(arr, True);
+
+  Result := nil;
+  if (length(arr) = 0) then
+    Result := arr[0];
+end;
 
 function TDBConnection.updateInsertStudent(student: TStudent): boolean;
 begin
@@ -385,7 +422,13 @@ begin
       FieldByName('last_name').AsString := student.getLastName;
       FieldByName('first_name').AsString := student.getFirstName;
       FieldByName('class_name').AsString := student.getClassName;
-      FieldByName('birth').AsDateTime := student.getBirth;
+
+      if student.getBirth = SQLNull then //if set to null
+        FieldByName('birth').Clear
+      else
+        FieldByName('birth').AsDateTime := student.getBirth;
+
+      FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
@@ -446,8 +489,11 @@ begin
         resultVar[length(resultVar) - 1].setBookId(FieldByName('book_id').AsLargeInt);
         resultVar[length(resultVar) - 1].setStudentId(
           FieldByName('student_id').AsLargeInt);
-        resultVar[length(resultVar) - 1].setReturnDate(
-          FieldByName('return_date').AsDateTime);
+
+        if not (FieldByName('return_date').IsNull) then
+          resultVar[length(resultVar) - 1].setReturnDate(
+            FieldByName('return_date').AsDateTime);
+
         resultVar[length(resultVar) - 1].setRentalDate(
           FieldByName('rental_date').AsDateTime);
         if returnOne then
@@ -543,7 +589,12 @@ begin
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
       FieldByName('rental_date').AsDateTime := rental.getRentalDate;
-      FieldByName('return_date').AsDateTime := rental.getReturnDate;
+
+      if rental.getReturnDate = SQLNull then //if set to null
+        FieldByName('return_date').Clear
+      else
+        FieldByName('return_date').AsDateTime := rental.getReturnDate;
+
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
@@ -634,8 +685,11 @@ begin
         resultVar[length(resultVar) - 1] := TBook.Create; //create new book object
         resultVar[length(resultVar) - 1].setId(FieldByName('id').AsLargeInt);
         resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
-        resultVar[length(resultVar) - 1].setCondition(
-          FieldByName('condition').AsInteger);
+
+        if not (FieldByName('condition').IsNull) then
+          resultVar[length(resultVar) - 1].setCondition(
+            FieldByName('condition').AsInteger);
+
         if returnOne then
           exit;
         Next;
@@ -702,7 +756,7 @@ begin
   setBookFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
@@ -789,7 +843,10 @@ begin
         resultVar[length(resultVar) - 1].setIsbn(FieldByName('isbn').AsString);
         resultVar[length(resultVar) - 1].setTitle(FieldByName('title').AsString);
         resultVar[length(resultVar) - 1].setSubject(FieldByName('subject').AsString);
-        resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
+
+        if not (FieldByName('storage').IsNull) then
+          resultVar[length(resultVar) - 1].setStorage(FieldByName('storage').AsInteger);
+
         if returnOne then
           exit;
         Next;
@@ -920,7 +977,7 @@ begin
   setBooktypeFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 0) then
     Result := arr[0];
 end;
 
