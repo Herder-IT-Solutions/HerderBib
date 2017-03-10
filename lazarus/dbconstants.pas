@@ -5,7 +5,7 @@ unit DBConstants;
 interface
 
 const
-  SQLNull = -1;
+  SQLNull = -693594;
 
 implementation
 
