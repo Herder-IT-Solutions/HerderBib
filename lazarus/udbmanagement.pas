@@ -25,36 +25,37 @@ type
 
 
 
-    //BOOK
-
-    //Vor: ISBN nur mit Zahlen
-    //Eff: Hinzufügen eines neuen Buches
-    //Erg: Id des neu hinzugefügten Buches
-    function BNew(isbn : String) : LongInt;
+    //BOOK                                                --------------------
 
     //Vor: Buch Id und Schüler Id
     //Eff: Rückgabe eines Buches mit Schüler
     //Erg: False, wenn gescheitert
     function BBack(BId, SId :LongInt): Boolean;
 
+    //Vor: Die Buch Id
+    //Eff: Löscht ein Buch aus dem Bestand
+    //Erg: Wahr wenn erfolgreich
+    function BDel(BId:LongInt):Boolean;
+
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
     //Erg: Wahr, wenn Buch Id vergeben
     function BIdCheck(BId :LongInt):Boolean;
 
-    //Vor: Die Buch Id
-    //Eff: Löscht ein Buch aus dem Bestand
-    procedure BDel(BId:LongInt);
-
-    //Vor: Buch Id und seine Qualität
-    //Eff: Ändert die Buchqualität
-    //Erg: Trägt übergebene Qualität in die Datenbank ein
-    procedure BQualiNew(BId, quali :LongInt);
+    //Vor: ISBN nur mit Zahlen
+    //Eff: Hinzufügen eines neuen Buches
+    //Erg: Id des neu hinzugefügten Buches; -1 bei einem Fehler
+    function BNew(isbn : String) : LongInt;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
-    //Erg: Die ehemalige Quaität
+    //Erg: Die Buchqualität
     function BQualiCheck(BId: LongInt): LongInt;
+
+    //Vor: Buch Id und seine Qualität
+    //Eff: Ändert die Buchqualität
+    //Erg: Wahr wenn erfolgreich
+    function BQualiNew(BId, quali :LongInt):Boolean;
 
     //Vor: Buch Id
     //Erg: Das Buch-Object mit der Id
@@ -63,31 +64,51 @@ type
 
 
 
-    //BOOKTYPE
-
-    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
-    //Eff: Neuer Buchtyp
-    //Erg: Falls Buchtyp bereits vorhanden wird False zurückgegeben
-    function BTypeNew(isbn, title, subject :String):Boolean;
+    //BOOKTYPE                                            --------------------
 
     //Vor: Die ISBN
     //Eff: Prüft den Buchtyp
     //Erg: Wahr, wenn isbn bereits vorhanden
     function BTypeCheck (isbn:String): Boolean;
 
+    //Vor: isbn nur mit Zahlen, Titel und Fach des Buches, isbn darf nicht existieren
+    //Eff: Neuer Buchtyp
+    //Erg: Wahr wenn erfolgreich; Falsch wenn Fehler oder Buchtyp bereits vorhanden
+    function BTypeNew(isbn, title, subject :String):Boolean;
 
 
-    //STUDENTS
 
-    // Importiert die Schüler Liste als CSV Datei
-    // Klasse; Name; Vorname; Geburtsdatum
-    // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
-    // False, wenn ein Fehler vorliegt
-    function importCSVSchueler(Dateiname:String):Boolean;
+
+    //RENTAL                                              --------------------
+
+    //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
+    //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
+    //Erg: Anzahl der gelöschten Objekte; -1 bei einem Fehler
+    function RDel(datum: TDate):Integer;
+
+    //Vor: Ein Rental-Objekt, dass gelöscht werden soll
+    //Eff: Löscht das Rental Objekt
+    //Erg: wahr wenn erfolgreich
+    function RDelOne(rental:TRental):Boolean;
+
+    //Vor: Buch Id und Schüler Id
+    //Eff: Neue Vergabe eines Buches
+    //Erg: Wahr wenn es geklappt hat, falsch wenn rental bereits vorhanden
+    function RNew(BId, SId :LongInt):Boolean;
+
+
+
+
+    //STUDENTS                                            --------------------
 
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
     function getStudents: ArrayOfStudents;
+
+    //Vor: Die Schüler Id
+    //Erg: Gibt ein Element vom Typ TStudent zurück,
+    //     welches den Schüler mit der übergebnen Id beinhaltet
+    function getStudentById(id: LongInt): TStudent;
 
     //Vor: Den Klassennamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
@@ -104,20 +125,21 @@ type
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
-    //Vor: den Vorname, Nachnamen und Geburtsdatum
-    //     Geburtsdatum und Klassenname darf nil sein       kommt noch
+    //Vor: den Vorname, Nachnamen, Klassennamen und Geburtsdatum
+    //     Geburtsdatum darf ourNil sein; cname darf '' sein, um keine Werte zu übergeben
     //Erg: Ein Array von TStudent-Objekten mit den Daten
     function getStudentsByFirstLastClassNameBirthdate(fname, lname, cname: STring; birth:TDate) : ArrayOfStudents;
 
-    //Vor: Die Schüler Id
-    //Erg: Gibt ein Element vom Typ TStudent zurück,
-    //     welches den Schüler mit der übergebnen Id beinhaltet
-    function getStudentById(id: LongInt): TStudent;
+    // Importiert die Schüler Liste als CSV Datei
+    // Klasse; Name; Vorname; Geburtsdatum
+    // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
+    // Wahr wenn erfolgreich
+    function importCSVSchueler(Dateiname:String):Boolean;
 
-    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
-    //     Datenbank mit dem Übergebenen Schüler
-    //Erg: Wenn Schüler nicht vorhanden wahr -> False
-    function SUpdate (student: TStudent): boolean;
+    //Vor: Eine Schüler Id
+    //Eff: Löscht einen Schüler
+    //Wahr wenn erfolgreich
+    function SDel(SId : LongInt):Boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -129,22 +151,11 @@ type
     //Erg: Die Schüler Id
     function SNew (lastN, firstN, classN : String; birth:TDate):LongInt;
 
-    //Vor: Eine Schüler Id
-    //Eff: Löscht einen Schüler
-    procedure SDel(SId : LongInt);
+    //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
+    //     Datenbank mit dem Übergebenen Schüler
+    //Erg: Wenn Schüler nicht vorhanden wahr -> False
+    function SUpdate (student: TStudent): boolean;
 
-
-
-    //RENTAL
-
-    //Vor: Buch Id und Schüler Id
-    //Eff: Neue Vergabe eines Buches
-    //Erg: Wahr wenn es geklappt hat, falsch wenn rental bereits vorhanden
-    function RNew(BId, SId :LongInt):Boolean;
-
-    //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
-    //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
-    procedure RDel(datum: TDate);  //bzw TDateTime
 
 
 
@@ -172,6 +183,16 @@ destructor TDBManagement.Destroy;
 begin
   uDBConn.Destroy;
 end;
+
+function TDBManagement.isConnected():Boolean;
+Begin
+  Result:=uDBConn.isConnected;
+end;
+
+
+
+
+//-----------------------------------------------------------------------------
 
 function TDBManagement.BIdCheck(BId :LongInt):Boolean;
 Var book : TBook;
@@ -270,23 +291,27 @@ begin
   book.setIsbn(isbn);
   book.setCondition(1);
 
-  uDBConn.updateinsertBook(book);
-
-  Result:=id;
+  if not (uDBConn.updateinsertBook(book)) then Result:=-1
+  else Result:=id;
 end;
 
-procedure TDBManagement.BDel(BId:LongInt);
+function TDBManagement.BDel(BId:LongInt):Boolean;
 Var book : TBook;
 begin
   book:=self.getBookByID(BId);
-  if not (book=nil) then uDBConn.deleteBook(book);
+  if not (book=nil) then Result:=uDBConn.deleteBook(book)
+  else Result:=False;
 end;
 
-procedure TDBManagement.BQualiNew(BId, quali :LongInt);
+function TDBManagement.BQualiNew(BId, quali :LongInt):Boolean;
 Var book:TBook;
 begin
-  book:=uDBConn.getBookById(BId);
-  book.setCondition(quali);
+  book:=self.getBookById(BId);
+  if not (book = nil) then
+  begin
+    book.setCondition(quali);
+    Result:=uDBConn.updateInsertBook(book);
+  end else Result:=False;
 end;
 
 function TDBManagement.BTypeNew(isbn, title, subject :String):Boolean;
@@ -328,16 +353,17 @@ begin
   end else Result:=false;
 end;
 
-procedure TDBManagement.SDel(SId : LongInt);
+function TDBManagement.SDel(SId : LongInt):Boolean;
 Var student:TStudent;
 begin
   student:=self.getStudentById(SId);
-  if not (student=nil) then uDBConn.deleteStudent(student);
+  if not (student=nil) then Result:=uDBConn.deleteStudent(student)
+  else Result:=False;
 end;
 
-procedure TDBManagement.RDel(datum: TDate);
+function TDBManagement.RDel(datum: TDate):Integer;
 begin
-  uDBConn.deleteReturnedRentalOlderThan(datum);
+  Result:=uDBConn.deleteReturnedRentalOlderThan(datum);
 end;
 
 function TDBManagement.SNew (lastN, firstN, classN : String; birth:TDate) : LongInt;
@@ -458,11 +484,6 @@ begin
 
 end;
 
-function TDBManagement.isConnected():Boolean;
-Begin
-  Result:=uDBConn.isConnected;
-end;
-
 function TDBManagement.getStudentsByFirstLastClassNameBirthdate(fname, lname, cname: STring; birth:TDate) : ArrayOfStudents;
 Var students, students2, students3: Array of TStudent;
     indexS3, j, k, id: Integer;
@@ -496,7 +517,7 @@ begin
   else if (length(students2) = 0) then students3 := students;
 
 
-  if not (true) then
+  if not (birth = -693594) then
   begin
     students:=uDBConn.getStudentsByBirthdate(birth);        //Geburtsdatum
     indexS3:=0;
@@ -525,7 +546,7 @@ begin
     students2:=students3;
   end;
 
-  if not ((true) or (cname = '')) then
+  if not (cname = '') then
   begin
     students:=uDBConn.getStudentsByClassName(cname);     //Klassenname
     indexS3:=0;
@@ -554,6 +575,12 @@ begin
   end;
 
   Result:=students2;
+end;
+
+function TDBManagement.RDelOne(rental:TRental):Boolean;
+begin
+  if not (rental=nil) then Result:=uDBConn.deleteRental(rental)
+  else Result:=False;
 end;
 
 end.
