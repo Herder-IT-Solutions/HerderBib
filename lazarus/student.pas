@@ -144,7 +144,7 @@ end;
 function TStudent.setBirth(newBirth: TDate): boolean;
 begin
   Result := False;
-  if (newBirth <> NuLL) and (newBirth >= 0) then
+  if (newBirth <> NuLL) and (newBirth > SQLNull) then
   begin
     self.birth := newBirth;
     Result := True;

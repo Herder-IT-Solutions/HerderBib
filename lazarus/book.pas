@@ -10,18 +10,18 @@ uses
 type
   TBook = class
   private
-    id: LongInt;
+    id: longint;
     isbn: string;
     condition: cardinal;
   public
     // Returns the book id
     // result: id
-    function getId(): LongInt;
+    function getId(): longint;
 
     // Sets a new book id
     // parameter: newId
     // result: TRUE on success, so if newId not NULL
-    function setId(newId: LongInt): boolean;
+    function setId(newId: longint): boolean;
 
     // Returns the book ISBN
     // result: isbn[13]
@@ -46,12 +46,12 @@ type
 
 implementation
 
-function TBook.getId(): LongInt;
+function TBook.getId(): longint;
 begin
   Result := self.id;
 end;
 
-function TBook.setId(newId: LongInt): boolean;
+function TBook.setId(newId: longint): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
@@ -97,7 +97,7 @@ end;
 function TBook.setCondition(newCondition: cardinal): boolean;
 begin
   Result := False;
-  if (newCondition = SQLNull ) or (newCondition <= 6) then
+  if (newCondition = SQLNull) or (newCondition <= 6) then
   begin
     self.condition := newCondition;
     Result := True;

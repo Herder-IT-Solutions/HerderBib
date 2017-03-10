@@ -51,14 +51,14 @@ type
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
     // Returns student object with given ldap username
-    // parameter: student's ldap username
+    // parameter: student's ldap username. "%" can be used as a placeholder
     // result: student object
-    function getStudentByLDAPUser(ldap_user: string): TStudent;
+    function getStudentByLDAPUserPattern(ldap_user: string): TStudent;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
-    function updateInsertStudent(student: TStudent): boolean;
+    function updateInsertStudent(var student: TStudent): boolean;
 
     // Deletes a student and destroys the object
     // parameter: student object
@@ -77,13 +77,13 @@ type
     // Returns an array of all rentals with given student and book
     // parameter: student, book
     // result: array of rental objects
-    function getAllRentalsByBookAndStudent(student: TStudent;
-      book: TBook): ArrayOfRentals;
+    function getAllRentalsByBookAndStudent(var student: TStudent;
+      var book: TBook): ArrayOfRentals;
 
     // updateInserts rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
     // result: TRUE on success
-    function updateInsertRental(rental: TRental): boolean;
+    function updateInsertRental(var rental: TRental): boolean;
 
     // Deletes a rental and destroys the object
     // parameter: rental object
@@ -111,7 +111,7 @@ type
     // updateInserts book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
     // result: TRUE on success
-    function updateInsertBook(book: TBook): boolean;
+    function updateInsertBook(var book: TBook): boolean;
 
     // Deletes a book and destroys the object
     // parameter: book object
@@ -126,15 +126,15 @@ type
     // result: array of booktype objects
     function getBooktypes: ArrayOfBooktypes;
 
-    // updateInserts booktype object into database. Either updates an existing one or inserts a new one
-    // parameter: booktype object
-    // result: TRUE on success
-    function updateInsertBooktype(booktype: TBooktype): boolean;
-
     // Returns the Booktype of an ISBN Number
     // parameter: Isbn (String type)
     // result: TBooktype on success, NIL on failure
     function getBooktypeByIsbn(isbn: string): TBooktype;
+
+    // updateInserts booktype object into database. Either updates an existing one or inserts a new one
+    // parameter: booktype object
+    // result: TRUE on success
+    function updateInsertBooktype(var booktype: TBooktype): boolean;
 
     // Deletes a booktype and destroys the object
     // parameter: booktype object
@@ -370,13 +370,13 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentByLDAPUser(ldap_user: string): TStudent;
+function TDBConnection.getStudentByLDAPUserPattern(ldap_user: string): TStudent;
 var
   arr: ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user = (:ldap_user)';
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user LIKE (:ldap_user)';
   SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
 
   try
@@ -400,7 +400,7 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.updateInsertStudent(student: TStudent): boolean;
+function TDBConnection.updateInsertStudent(var student: TStudent): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -537,8 +537,8 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.getAllRentalsByBookAndStudent(student: TStudent;
-  book: TBook): ArrayOfRentals;
+function TDBConnection.getAllRentalsByBookAndStudent(var student: TStudent;
+  var book: TBook): ArrayOfRentals;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -566,7 +566,7 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.updateInsertRental(rental: TRental): boolean;
+function TDBConnection.updateInsertRental(var rental: TRental): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -640,7 +640,7 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text :=
-    'delete from rental where return_date not null and date(date()) <= (:date)';
+    'delete from rental where return_date not null and date(return_date) <= date(:date)';
   SQLQuery.ParamByName('date').AsDate := date;
 
   try
@@ -650,6 +650,7 @@ begin
       SQLTransaction.commit;
 
       Close;
+      SQLQuery.ExecSQL;
       SQL.Text := 'SELECT @@ROWCOUNT as deleted';
       Open;
 
@@ -761,7 +762,7 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.updateInsertBook(book: TBook): boolean;
+function TDBConnection.updateInsertBook(var book: TBook): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -888,7 +889,7 @@ begin
   setBooktypeFields(Result, False);
 end;
 
-function TDBConnection.updateInsertBooktype(booktype: TBooktype): boolean;
+function TDBConnection.updateInsertBooktype(var booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
