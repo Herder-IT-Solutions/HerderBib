@@ -18,6 +18,7 @@ type
     BtInfoBookEdit: TButton;
     BtInfoBooktypeShow: TButton;
     BtInfoBookShow1: TButton;
+    BtInfoSuportError: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
@@ -37,8 +38,8 @@ type
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
-    EdBook: TEdit;
-    EdBook1: TEdit;
+    EdRentBook: TEdit;
+    EdRetBook: TEdit;
     EdAddBookName: TEdit;
     EdAddBookISBN: TEdit;
     EdInfoBooktypeISBN: TEdit;
@@ -50,9 +51,11 @@ type
     EdInfoStudID: TEdit;
     EdInfoBookRent: TEdit;
     EdInfoAdminPw: TEdit;
-    EdStud: TEdit;
-    EdStud1: TEdit;
-    Image1: TImage;
+    EdRentStud: TEdit;
+    EdRetStud: TEdit;
+    ImRentHerder: TImage;
+    ImRetHerder: TImage;
+    LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
     LbPrintQueue: TLabel;
@@ -72,14 +75,14 @@ type
     LbInfoRelFilter: TLabel;
     LbAddBookHint: TLabel;
     LbAddBookError: TLabel;
-    LbBookState: TLabel;
+    LbRetBookState: TLabel;
     LbInfoBookRent: TLabel;
     LbInfoBookTrack1: TLabel;
-    LbBookTrack1: TLabel;
+    LbRetBookTrack1: TLabel;
     LbInfoBookTrack3: TLabel;
-    LbBookTrack3: TLabel;
+    LbRetBookTrack3: TLabel;
     LbInfoBookTrack5: TLabel;
-    LbBookTrack5: TLabel;
+    LbRetBookTrack5: TLabel;
     LbInfoBooktypeISBN: TLabel;
     LbInfoBookID: TLabel;
     LbInfoBooktypeName: TLabel;
@@ -92,15 +95,15 @@ type
     LbAddBookQuantity: TLabel;
     LbAddBookName: TLabel;
     LbAddBookISBN: TLabel;
-    LbBookName1: TLabel;
+    LbRetBookName: TLabel;
     LbInfoSupport2: TLabel;
-    LbStudInstruct2: TLabel;
-    LbStudInstruct3: TLabel;
-    LbStudName: TLabel;
-    LbStudInstruct: TLabel;
-    LbStudInstruct1: TLabel;
-    LbBookName: TLabel;
-    LbStudName1: TLabel;
+    LbRetStudInstruct: TLabel;
+    LbRetBookInstruct: TLabel;
+    LbRentStudName: TLabel;
+    LbRentStudInstruct: TLabel;
+    LbRentBookInstruct: TLabel;
+    LbRentBookName: TLabel;
+    LbRetStudName: TLabel;
     LiPrintQueue: TListBox;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
@@ -123,7 +126,7 @@ type
     TabPrint: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
-    TBBookState: TTrackBar;
+    TBRetBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
@@ -139,11 +142,11 @@ type
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
-    procedure EdBook1Change(Sender: TObject);
-    procedure EdBookChange(Sender: TObject);
+    procedure EdRetBookChange(Sender: TObject);
+    procedure EdRentBookChange(Sender: TObject);
     procedure EdInfoStudFirstNameChange(Sender: TObject);
-    procedure EdStud1Change(Sender: TObject);
-    procedure EdStudChange(Sender: TObject);
+    procedure EdRetStudChange(Sender: TObject);
+    procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
@@ -191,7 +194,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
- // LbStudInstruct := 'Hello' + #13#10 + 'world';
+ // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
     PermissionLevel :=1;
     management := tdbmanagement.create();
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
@@ -203,15 +206,15 @@ begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
 
-procedure TForm1.EdBook1Change(Sender: TObject);
+procedure TForm1.EdRetBookChange(Sender: TObject);
 begin
    //
-   //LbBookName1.Caption:= getBookName(EdBook.Text)
+   //LbRetBookName.Caption:= getBookName(EdRentBook.Text)
 end;
 
-procedure TForm1.EdBookChange(Sender: TObject);
+procedure TForm1.EdRentBookChange(Sender: TObject);
 begin
-  //LbBookName.Caption:= getBookName(EdBook.Text)
+  //LbRentBookName.Caption:= getBookName(EdRentBook.Text)
 end;
 
 procedure TForm1.EdInfoStudFirstNameChange(Sender: TObject);
@@ -219,14 +222,16 @@ begin
 
 end;
 
-procedure TForm1.EdStud1Change(Sender: TObject);
+procedure TForm1.EdRetStudChange(Sender: TObject);
 begin
-     //LbStudName1.Caption:= getStudName(EdStud1.Text)
+     //LbRetStudName.Caption:= getStudName(EdRetStud.Text)
 end;
 
-procedure TForm1.EdStudChange(Sender: TObject);
+procedure TForm1.EdRentStudChange(Sender: TObject);
+Var stu :TSTUDENT;
 begin
-  //LbStudName.Caption:= getStudName(EdStud.Text)
+  //stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
+  //LbRentStudName.Caption:= stu.getFirstName() + stu.getLastName();
 end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
@@ -311,7 +316,7 @@ end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
 begin
-  management.BDel(STRTOINT(EdInfoBookID.text));
+  management.BDel(management.getBookByID(STRTOINT(EdInfoBookID.text)));
   EdInfoBookId.text:='';
   EdInfoBookRent.text:='';
   TBInfoBookState.Position:=1;
@@ -465,11 +470,11 @@ procedure TForm1.BtRentClick(Sender: TObject);
 begin
   LbRentError.Visible := FALSE;
   try
-  if (management.BIdCheck(STRTOINT(EdBook.text)) and management.SIdCheck(STRTOINT(EdStud.text))) then begin
+  if (management.BIdCheck(STRTOINT(EdRentBook.text)) and management.SIdCheck(STRTOINT(EdRentStud.text))) then begin
      //Check if book is already rent
-     management.RNew(STRTOINT(EdBook.text), STRTOINT(EdStud.text));
-     EdStud.text:='';
-     EdBook.text:='';
+     management.RNew(STRTOINT(EdRentBook.text), STRTOINT(EdRentStud.text));
+     EdRentStud.text:='';
+     EdRentBook.text:='';
   end;
 
   except
@@ -484,12 +489,12 @@ procedure TForm1.BtRetClick(Sender: TObject);
 begin
      LbRetError.Visible := FALSE;
   try
-    if (management.BIdCheck(STRTOINT(EdBook1.text)) and management.SIdCheck(STRTOINT(EdStud1.text))) then begin
-     management.BQualiNew(STRTOINT(EdBook1.text), TBBookState.Position);
-     management.BBack(STRTOINT(EdBook1.text), STRTOINT(EdStud1.text));
-     EdStud1.text:='';
-     EdBook1.text:='';
-     TBBookState.Position :=1;
+    if (management.BIdCheck(STRTOINT(EdRetBook.text)) and management.SIdCheck(STRTOINT(EdRetStud.text))) then begin
+     management.BQualiNew(STRTOINT(EdRetBook.text), TBRetBookState.Position);
+     management.BBack(STRTOINT(EdRetBook.text), STRTOINT(EdRetStud.text));
+     EdRetStud.text:='';
+     EdRetBook.text:='';
+     TBRetBookState.Position :=1;
   end;
       except
     On EConvertError do begin
@@ -497,12 +502,12 @@ begin
         LbRetError.Caption := 'Error 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
-  //returnBook(StrToINT(EdStud1.text),StrToINT(EdBook1.text),TBBookState.Position)
+  //returnBook(StrToINT(EdRetStud.text),StrToINT(EdRetBook.text),TBRetBookState.Position)
 end;
 
 procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
 begin
-     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Bedienungsanleitung');
+     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
 end;
 
 
