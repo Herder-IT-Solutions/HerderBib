@@ -32,10 +32,10 @@ type
     //Erg: False, wenn gescheitert
     function BBack(BId, SId :LongInt): Boolean;
 
-    //Vor: Die Buch Id
+    //Vor: Ein Buch mittels TBook-Objekt
     //Eff: Löscht ein Buch aus dem Bestand
     //Erg: Wahr wenn erfolgreich
-    function BDel(BId:LongInt):Boolean;
+    function BDel(book:TBook):Boolean;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
@@ -120,6 +120,10 @@ type
     //     welches alle Schüler mit dem übergebenen Vornamen beinhaltet
     function getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 
+    //Vor: LDAP Benutzernamen
+    //Erg: TStudent-Objekt mit dem Benutzernamen
+    function getStudentByLDAPUserPattern(ldap_user: string): TStudent;
+
     //Vor: Den Nachnamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
@@ -136,10 +140,10 @@ type
     // Wahr wenn erfolgreich
     function importCSVSchueler(Dateiname:String):Boolean;
 
-    //Vor: Eine Schüler Id
+    //Vor: Eine Schüler mittels TStudent-Objekt
     //Eff: Löscht einen Schüler
-    //Wahr wenn erfolgreich
-    function SDel(SId : LongInt):Boolean;
+    //Erg: Wahr wenn erfolgreich
+    function SDel(student:TStudent):Boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -237,6 +241,11 @@ begin
   Result := uDBConn.getStudentsByClassName(classN);
 end;
 
+function TDBManagement.getStudentByLDAPUserPattern(ldap_user: string): TStudent;
+begin
+  Result:=uDBConn.getStudentByLDAPUserPattern(ldap_user);
+end;
+
 function TDBManagement.getStudentById(id: LongInt): TStudent;
 begin
   Result:=uDBConn.getStudentById(id);
@@ -295,10 +304,8 @@ begin
   else Result:=id;
 end;
 
-function TDBManagement.BDel(BId:LongInt):Boolean;
-Var book : TBook;
+function TDBManagement.BDel(book:TBook):Boolean;
 begin
-  book:=self.getBookByID(BId);
   if not (book=nil) then Result:=uDBConn.deleteBook(book)
   else Result:=False;
 end;
@@ -353,10 +360,8 @@ begin
   end else Result:=false;
 end;
 
-function TDBManagement.SDel(SId : LongInt):Boolean;
-Var student:TStudent;
+function TDBManagement.SDel(student:TStudent):Boolean;
 begin
-  student:=self.getStudentById(SId);
   if not (student=nil) then Result:=uDBConn.deleteStudent(student)
   else Result:=False;
 end;
