@@ -119,7 +119,8 @@ end;
 function TRental.setReturnDate(newReturnDate: TDate): boolean;
 begin
   Result := False;
-  if (newReturnDate = SQLNull) or (newReturnDate <> NuLL) and (newReturnDate >= 0) then
+  if (newReturnDate = SQLNull) or (newReturnDate <> NuLL) and
+    (newReturnDate > SQLNull) then
   begin
     self.return_date := newReturnDate;
     Result := True;
@@ -134,7 +135,7 @@ end;
 function TRental.setRentalDate(newRentalDate: TDate): boolean;
 begin
   Result := False;
-  if (newRentalDate <> NULL) and (newRentalDate >= 0) then
+  if (newRentalDate <> NULL) and (newRentalDate > SQLNull) then
   begin
     self.rental_date := newRentalDate;
     Result := True;
@@ -151,4 +152,3 @@ begin
 end;
 
 end.
-
