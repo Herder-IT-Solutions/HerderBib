@@ -197,7 +197,8 @@ begin
           FieldByName('class_name').AsString);
 
         if not (FieldByName('birth').IsNull) then
-          resultVar[length(resultVar) - 1].setBirth(FieldByName('birth').AsDateTime);
+          resultVar[length(resultVar) - 1].setBirth(
+            StrToDate(FieldByName('birth').AsString));
 
         resultVar[length(resultVar) - 1].setLDAPUser(FieldByName('ldap_user').AsString);
         if returnOne then
@@ -494,10 +495,10 @@ begin
 
         if not (FieldByName('return_date').IsNull) then
           resultVar[length(resultVar) - 1].setReturnDate(
-            FieldByName('return_date').AsDateTime);
+            StrToDate(FieldByName('return_date').AsString));
 
         resultVar[length(resultVar) - 1].setRentalDate(
-          FieldByName('rental_date').AsDateTime);
+          StrToDate(FieldByName('rental_date').AsString));
         if returnOne then
           exit;
         Next;
