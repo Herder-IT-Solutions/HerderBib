@@ -340,7 +340,7 @@ begin
   setStudentFields(arr, True);
 
   Result := nil;
-  if (length(arr) = 0) then
+  if (length(arr) > 0) then
     Result := arr[0];
 end;
 
@@ -758,7 +758,7 @@ begin
   setBookFields(arr, True);
 
   Result := nil;
-  if (length(arr) = 0) then
+  if (length(arr) > 0) then
     Result := arr[0];
 end;
 
@@ -979,7 +979,7 @@ begin
   setBooktypeFields(arr, True);
 
   Result := nil;
-  if (length(arr) = 0) then
+  if (length(arr) > 0) then
     Result := arr[0];
 end;
 
