@@ -53,7 +53,7 @@ type
     // Returns student object with given ldap username
     // parameter: student's ldap username. "%" can be used as a placeholder
     // result: student object
-    function getStudentByLDAPUserPattern(ldap_user: string): TStudent;
+    function getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -371,9 +371,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentByLDAPUserPattern(ldap_user: string): TStudent;
-var
-  arr: ArrayOfStudents;
+function TDBConnection.getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -393,12 +391,9 @@ begin
       exit;
     end;
   end;
-  setStudentFields(arr, True);
-
   Result := nil;
 
-  if (length(arr) > 0) then
-    Result := arr[0];
+  setStudentFields(Result, False);
 end;
 
 function TDBConnection.updateInsertStudent(var student: TStudent): boolean;
