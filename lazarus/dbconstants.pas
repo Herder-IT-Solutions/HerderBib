@@ -7,6 +7,7 @@ interface
 const
   SQLNull = -693594;
 
+
 implementation
 
 end.
