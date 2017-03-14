@@ -753,7 +753,7 @@ begin
   setBookFields(arr, True);
 
   Result := nil;
-  if (length(arr) > 0) then
+  if (length(arr) = 1) then
     Result := arr[0];
 end;
 
