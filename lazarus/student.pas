@@ -10,7 +10,7 @@ uses
 type
   TStudent = class
   private
-    id: longint;
+    id: LargeInt;
     last_name: string;
     first_name: string;
     class_name: string;
@@ -19,12 +19,12 @@ type
   public
     // Returns the student id
     // result: id
-    function getId(): longint;
+    function getId(): LargeInt;
 
     // Sets a new student id
     // parameter: newId
     // result: TRUE on success, so if newId is not NULL
-    function setId(newId: longint): boolean;
+    function setId(newId: LargeInt): boolean;
 
     // Returns the student's last name
     // result: last_name
@@ -76,12 +76,12 @@ type
 
 implementation
 
-function TStudent.getId(): longint;
+function TStudent.getId(): LargeInt;
 begin
   Result := self.id;
 end;
 
-function TStudent.setId(newId: longint): boolean;
+function TStudent.setId(newId: LargeInt): boolean;
 begin
   Result := False;
   if (newId <> NULL) then

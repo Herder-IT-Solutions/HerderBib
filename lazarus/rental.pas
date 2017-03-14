@@ -10,38 +10,38 @@ uses
 type
   TRental = class
   private
-    id: longint;
-    book_id: longint;
-    student_id: longint;
+    id: LargeInt;
+    book_id: LargeInt;
+    student_id: LargeInt;
     return_date: TDate;
     rental_date: TDate;
   public
     // Returns the id
     // result: id
-    function getId(): longint;
+    function getId(): LargeInt;
 
     // Sets a new id
     // parameter: newId
     // result: TRUE on success, so if newID is not NULL
-    function setId(newId: longint): boolean;
+    function setId(newId: LargeInt): boolean;
 
     // Returns the book id
     // result: book_id
-    function getBookId(): longint;
+    function getBookId(): LargeInt;
 
     // Sets a new book id
     // parameter: newBookId
     // result: TRUE on success, so if newBookID is not NULL
-    function setBookId(newBookId: longint): boolean;
+    function setBookId(newBookId: LargeInt): boolean;
 
     // Returns the student id
     // result: student_id
-    function getStudentId(): longint;
+    function getStudentId(): LargeInt;
 
     // Sets a new sudent id
     // parameter: newStudentId
     // result: TRUE on success, so if new StudentId is not NULL
-    function setStudentId(newStudentId: longint): boolean;
+    function setStudentId(newStudentId: LargeInt): boolean;
 
     // Returns the book return date
     // result: return_date
@@ -66,12 +66,12 @@ type
 
 implementation
 
-function TRental.getId(): longint;
+function TRental.getId(): LargeInt;
 begin
   Result := self.id;
 end;
 
-function TRental.setId(newId: longint): boolean;
+function TRental.setId(newId: LargeInt): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
@@ -81,12 +81,12 @@ begin
   end;
 end;
 
-function TRental.getBookId(): longint;
+function TRental.getBookId(): LargeInt;
 begin
   Result := self.book_id;
 end;
 
-function TRental.setBookId(newBookId: longint): boolean;
+function TRental.setBookId(newBookId: LargeInt): boolean;
 begin
   Result := False;
   if (newBookId <> NULL) then
@@ -96,12 +96,12 @@ begin
   end;
 end;
 
-function TRental.getStudentId(): longint;
+function TRental.getStudentId(): LargeInt;
 begin
   Result := self.student_id;
 end;
 
-function TRental.setStudentId(newStudentId: longint): boolean;
+function TRental.setStudentId(newStudentId: LargeInt): boolean;
 begin
   Result := False;
   if (newStudentId <> NULL) then

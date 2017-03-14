@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: longint): TStudent;
+    function getStudentById(id: LargeInt): TStudent;
 
     // Returns TStudent object with given birthdate
     // parameter: TDate object (birthdate)
@@ -106,7 +106,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: longint): TBook;
+    function getBookById(id: LargeInt): TBook;
 
     // updateInserts book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -316,7 +316,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: longint): TStudent;
+function TDBConnection.getStudentById(id: LargeInt): TStudent;
 var
   arr: ArrayOfStudents;
 begin
@@ -731,7 +731,7 @@ begin
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: longint): TBook;
+function TDBConnection.getBookById(id: LargeInt): TBook;
 var
   arr: ArrayOfBooks;
 begin
