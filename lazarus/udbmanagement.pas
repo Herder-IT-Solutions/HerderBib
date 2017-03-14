@@ -32,10 +32,10 @@ type
     //Erg: False, wenn gescheitert
     function BBack(BId, SId :LongInt): Boolean;
 
-    //Vor: Die Buch Id
+    //Vor: Ein Buch mittels TBook-Objekt
     //Eff: Löscht ein Buch aus dem Bestand
     //Erg: Wahr wenn erfolgreich
-    function BDel(BId:LongInt):Boolean;
+    function BDel(var book:TBook):Boolean;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
@@ -89,7 +89,7 @@ type
     //Vor: Ein Rental-Objekt, dass gelöscht werden soll
     //Eff: Löscht das Rental Objekt
     //Erg: wahr wenn erfolgreich
-    function RDelOne(rental:TRental):Boolean;
+    function RDelOne(var rental:TRental):Boolean;
 
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
@@ -120,6 +120,10 @@ type
     //     welches alle Schüler mit dem übergebenen Vornamen beinhaltet
     function getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 
+    //Vor: LDAP Benutzernamen
+    //Erg: Array von TStudent-Objekte mit dem Benutzernamen
+    function getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
+
     //Vor: Den Nachnamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler mit dem übergebenen Nachnamen beinhaltet
@@ -136,10 +140,10 @@ type
     // Wahr wenn erfolgreich
     function importCSVSchueler(Dateiname:String):Boolean;
 
-    //Vor: Eine Schüler Id
+    //Vor: Eine Schüler mittels TStudent-Objekt
     //Eff: Löscht einen Schüler
-    //Wahr wenn erfolgreich
-    function SDel(SId : LongInt):Boolean;
+    //Erg: Wahr wenn erfolgreich
+    function SDel(var student:TStudent):Boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -154,7 +158,7 @@ type
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
     //Erg: Wenn Schüler nicht vorhanden wahr -> False
-    function SUpdate (student: TStudent): boolean;
+    function SUpdate (var student: TStudent): boolean;
 
 
 
@@ -237,12 +241,17 @@ begin
   Result := uDBConn.getStudentsByClassName(classN);
 end;
 
+function TDBManagement.getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
+begin
+  Result:=uDBConn.getStudentsByLDAPUserPattern(ldap_user);
+end;
+
 function TDBManagement.getStudentById(id: LongInt): TStudent;
 begin
   Result:=uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.SUpdate(student: TStudent): boolean;
+function TDBManagement.SUpdate(var student: TStudent): boolean;
 begin
   Result:=uDBConn.updateinsertStudent(student);
 end;
@@ -295,10 +304,8 @@ begin
   else Result:=id;
 end;
 
-function TDBManagement.BDel(BId:LongInt):Boolean;
-Var book : TBook;
+function TDBManagement.BDel(var book:TBook):Boolean;
 begin
-  book:=self.getBookByID(BId);
   if not (book=nil) then Result:=uDBConn.deleteBook(book)
   else Result:=False;
 end;
@@ -353,10 +360,8 @@ begin
   end else Result:=false;
 end;
 
-function TDBManagement.SDel(SId : LongInt):Boolean;
-Var student:TStudent;
+function TDBManagement.SDel(var student:TStudent):Boolean;
 begin
-  student:=self.getStudentById(SId);
   if not (student=nil) then Result:=uDBConn.deleteStudent(student)
   else Result:=False;
 end;
@@ -577,7 +582,7 @@ begin
   Result:=students2;
 end;
 
-function TDBManagement.RDelOne(rental:TRental):Boolean;
+function TDBManagement.RDelOne(var rental:TRental):Boolean;
 begin
   if not (rental=nil) then Result:=uDBConn.deleteRental(rental)
   else Result:=False;

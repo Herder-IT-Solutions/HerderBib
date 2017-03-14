@@ -148,6 +148,7 @@ type
     procedure EdRetStudChange(Sender: TObject);
     procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure LbRetStudNameClick(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
@@ -200,6 +201,11 @@ begin
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
+procedure TForm1.LbRetStudNameClick(Sender: TObject);
+begin
+
+end;
+
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
@@ -213,8 +219,17 @@ begin
 end;
 
 procedure TForm1.EdRentBookChange(Sender: TObject);
+Var book :TBook;
 begin
-  //LbRentBookName.Caption:= getBookName(EdRentBook.Text)
+  if not (EdRentBook.text='') then
+  begin
+       book :=  management.getBookByID(STRTOINT(EdRentBook.Text));
+            if not (book=nil) then
+                LbRentBookName.Caption:= book.getISBN
+            else
+                LbRentBookname.caption := '';
+  end
+  else LbRentBookname.caption := '';
 end;
 
 procedure TForm1.EdInfoStudFirstNameChange(Sender: TObject);
@@ -223,15 +238,31 @@ begin
 end;
 
 procedure TForm1.EdRetStudChange(Sender: TObject);
+Var stu :TSTUDENT;
 begin
-     //LbRetStudName.Caption:= getStudName(EdRetStud.Text)
+  if not (EdRetStud.text='') then
+  begin
+       stu :=  management.getStudentByID(STRTOINT(EdRetStud.Text));
+            if not (stu=nil) then
+                LbRetStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
+            else
+                LbRetStudname.caption := '';
+  end
+  else LbRetStudname.caption := '';
 end;
 
 procedure TForm1.EdRentStudChange(Sender: TObject);
 Var stu :TSTUDENT;
 begin
-  //stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
-  //LbRentStudName.Caption:= stu.getFirstName() + stu.getLastName();
+  if not (EdRentStud.text='') then
+  begin
+       stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
+            if not (stu=nil) then
+                LbRentStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
+            else
+                LbRentStudname.caption := '';
+  end
+  else LbRentStudname.caption := '';
 end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
@@ -266,11 +297,13 @@ begin
         if not (b) then begin
            LbAddBookError.Visible := True;
            LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
-           end;
+           exit;
+        end;
         if a then begin
            LbAddBookError.Visible := True;
            LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
-           end;
+           exit;
+        end;
 
       k:=1;
 
@@ -278,16 +311,17 @@ begin
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
          management.BNew(s);
          INC(k);
-         //TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
-         EdAddBookName.text := '';
-         EdAddBookISBN.text := '';
+         TBarcodePrinter.instance.add_barcode('09334562', 'jfdisfjo')
+     end;
+     EdAddBookName.text := '';
+     EdAddBookISBN.text := '';
          CBAddBookSubject.text := '';
          SEAddBookQuantity.Value:= 0;
-     end;
      end
      else begin
          LbAddBookError.Visible := True;
          LbAddBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+         exit;
      end;
 end;
 
@@ -315,8 +349,10 @@ begin
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
+var b:TBook;
 begin
-  management.BDel(management.getBookByID(STRTOINT(EdInfoBookID.text)));
+  b := management.getBookByID(STRTOINT(EdInfoBookID.text));
+  management.BDel(b);
   EdInfoBookId.text:='';
   EdInfoBookRent.text:='';
   TBInfoBookState.Position:=1;
@@ -418,7 +454,7 @@ end;
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 begin
   try
-     TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo');
+     TBarcodePrinter.instance.add_barcode('9342', 'jfdisfjo');
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;
