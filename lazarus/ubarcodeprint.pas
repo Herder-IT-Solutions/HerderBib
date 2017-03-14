@@ -19,7 +19,7 @@ type TBarcodePrinter = class
             {Das n-te (von 1 an) Druckerblatt mehrmals verwenden, used gibt an, wie viele Stellen auf diesem Blatt schon benutzt wurden}
             procedure add_used_sheet(n : Cardinal; used: Cardinal);
 
-            procedure add_barcode(code: Cardinal; title: String);
+            procedure add_barcode(code: String; title: String);
 
             procedure print;  //Alle hinzugefügten Barcodes drucken
 
@@ -62,13 +62,9 @@ implementation
   const page_size = columns * column_size;
 
   //Dateinamen und Pfade für die verwendeten Dateien
-
-  const path = '.\BarcodePrinter\';
-  const working_path = path + 'tmp\';
-
-  const latex_file = 'latex.tex';
-  const latex_output = 'latex.pdf';
-  const empty_barcode = 'empty.png';
+    const working_path = '.\BarcodePrinter\';
+    const latex_file = 'latex.tex';
+    const latex_output = 'latex.pdf';
 
 constructor TBarcodePrinter.create;
 begin
@@ -95,10 +91,9 @@ begin
 end;
 
 
-procedure TBarcodePrinter.add_barcode(code: Cardinal; title: String);
+procedure TBarcodePrinter.add_barcode(code: String; title: String);
 begin
-     //Fehlerbehandlung, falls Code falsche Länge hat, implementieren
-     barcodes.add(IntToStr(code));
+     barcodes.add(code);
      titles.add(title);
 end;
 
@@ -108,10 +103,8 @@ procedure TBarcodePrinter.print;
     var curr_page, i, j, empty : Integer;
     var code : Integer;
 begin
-     //Fehlerbehandlung, wenn Verzeichnis nicht erstellt werden kann?
      //Ein temporäres Arbeitsverzeichnis wird angelegt
      createDir(working_path);
-     copyFile(path + empty_barcode, working_path + empty_barcode); //Den leeren Barcode brauchen wir auch im Arbeitsverzeichnis
 
      fill_empty_spaces;
      generate_barcodes;
@@ -120,9 +113,8 @@ begin
 
      //pdf ausdrucken
      ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
-     //run_command(print_command + working_path + latex_output);
      //das Arbeitsverzeichnis wieder löschen
-     deleteDirectory(working_path, false);
+     //deleteDirectory(working_path, false);
 
 end;
 
@@ -133,7 +125,6 @@ procedure TBarcodePrinter.generate_latex_code;
     var i : Cardinal;
     var barcode, title : String;
 begin
-     //Schreibfehler in Datei?
      //Datei für den Latex-Code erstellen
      AssignFile(latex, working_path + latex_file);
      rewrite(latex);
@@ -153,21 +144,21 @@ begin
          //Die leeren Strichcodes beachten
          if barcode = '' then
          begin
-            writeln(latex, Tab, Tab,'\includegraphics{empty}\\');
-            writeln(latex, Tab, Tab, '\vspace{7pt}');
-            writeln(latex, Tab, Tab,'\parbox[t][0.88cm]{134px}{\phantom{\Large{unsichtbar} \\ \Large{unsichtbar}}}\\');
+            writeln(latex, Tab, Tab,'\parbox[b][50px][t]{134px}{}\\');
+            writeln(latex, Tab, Tab, '\vspace{3pt}');
+            writeln(latex, Tab, Tab,'\parbox[b][0.88cm][t]{134px}{}\\');
          end
          else
          begin
              writeln(latex, Tab, Tab,'\includegraphics{', barcode, '}\\');
-             writeln(latex, Tab, Tab, '\vspace{7pt}');
-             writeln(latex, Tab, Tab,'\parbox[t][0.88cm]{134px}{\centering \Large{', barcode, '}\\\Large{', title, '}}\\');
+             writeln(latex, Tab, Tab, '\vspace{3pt}');
+             writeln(latex, Tab, Tab,'\parbox[b][0.88cm][t]{134px}{\centering \Large{', barcode, '}\\\Large{', title, '}}\\');
          end;
 
          //Am Ende einer Spalte angelangt
          if ((i + 1) mod column_size = 0) and (i < barcodes.count - 1) then
          begin
-            writeln(latex, Tab, Tab, '\vfill\null', NewLine,  Tab, Tab, '\columnbreak')
+            writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak')
          end
          else
              writeln(latex, Tab, Tab,'\vspace{14pt}', NewLine);
@@ -237,21 +228,13 @@ end;
 procedure TBarcodePrinter.run_command(text : string);
 var command : TProcess;
 begin
+     //Nur für Windows
      command := TProcess.create(nil);
      command.Options := command.Options + [poWaitOnExit];// + [poNoConsole];
-     {$IFDEF LINUX}
-     command.executable := '/bin/sh';
-     command.parameters.add('-c');
-     command.parameters.add(text);
-     command.execute;
-     {$ENDIF}
-
-     {$IFDEF WIN32}
      command.executable := 'c:\windows\system32\cmd.exe';
      command.parameters.add('/C');
      command.parameters.add(text);
      command.execute;
-     {$ENDIF}
 end;
 
 procedure TBarcodePrinter.clear;
@@ -325,7 +308,7 @@ begin
     barcode[66] := True;
 
     canvas.Brush.FPColor:=colWhite;
-    canvas.Rectangle(0,0,image.Width,image.Height);
+    canvas.Rectangle(0,-1,image.Width,image.Height);
     canvas.Brush.FPColor:=colBlack;
 
     for i := 0 to 66 do
