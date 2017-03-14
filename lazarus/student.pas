@@ -10,7 +10,7 @@ uses
 type
   TStudent = class
   private
-    id: LargeInt;
+    id: Int64;
     last_name: string;
     first_name: string;
     class_name: string;
