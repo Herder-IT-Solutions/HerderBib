@@ -47,6 +47,7 @@ type
     //Erg: Id des neu hinzugefügten Buches; -1 bei einem Fehler
     function BNew(isbn : String) : LongInt;
 
+
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
     //Erg: Die Buchqualität
@@ -155,10 +156,12 @@ type
     //Erg: Die Schüler Id
     function SNew (lastN, firstN, classN : String; birth:TDate):LongInt;
 
+
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
     //Erg: Wenn Schüler nicht vorhanden wahr -> False
     function SUpdate (student: TStudent): boolean;
+
 
 
 
@@ -268,6 +271,7 @@ Var aoR :ArrayOfRentals;
     book: TBook;
     student: TStudent;
 begin
+
   book:= self.getBookByID(BID);
   student:=self.getStudentById(SId);
   if not ((book=nil) and (student=nil)) then
@@ -278,6 +282,7 @@ begin
 
     Result:=uDBConn.updateInsertRental(rental);
   end else Result:=False;
+
 end;
 
 function TDBManagement.BNew(isbn : String):LongInt;
@@ -304,10 +309,12 @@ begin
   else Result:=id;
 end;
 
+
 function TDBManagement.BDel(book:TBook):Boolean;
 begin
   if not (book=nil) then Result:=uDBConn.deleteBook(book)
   else Result:=False;
+
 end;
 
 function TDBManagement.BQualiNew(BId, quali :LongInt):Boolean;

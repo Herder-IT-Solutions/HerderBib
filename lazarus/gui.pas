@@ -148,6 +148,7 @@ type
     procedure EdRetStudChange(Sender: TObject);
     procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure LbRetStudNameClick(Sender: TObject);
     procedure PageControl1Change(Sender: TObject);
     procedure Panel1Click(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
@@ -200,6 +201,11 @@ begin
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
+procedure TForm1.LbRetStudNameClick(Sender: TObject);
+begin
+
+end;
+
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
@@ -213,8 +219,17 @@ begin
 end;
 
 procedure TForm1.EdRentBookChange(Sender: TObject);
+Var book :TBook;
 begin
-  //LbRentBookName.Caption:= getBookName(EdRentBook.Text)
+  if not (EdRentBook.text='') then
+  begin
+       book :=  management.getBookByID(STRTOINT(EdRentBook.Text));
+            if not (book=nil) then
+                LbRentBookName.Caption:= book.getISBN
+            else
+                LbRentBookname.caption := '';
+  end
+  else LbRentBookname.caption := '';
 end;
 
 procedure TForm1.EdInfoStudFirstNameChange(Sender: TObject);
@@ -223,15 +238,31 @@ begin
 end;
 
 procedure TForm1.EdRetStudChange(Sender: TObject);
+Var stu :TSTUDENT;
 begin
-     //LbRetStudName.Caption:= getStudName(EdRetStud.Text)
+  if not (EdRetStud.text='') then
+  begin
+       stu :=  management.getStudentByID(STRTOINT(EdRetStud.Text));
+            if not (stu=nil) then
+                LbRetStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
+            else
+                LbRetStudname.caption := '';
+  end
+  else LbRetStudname.caption := '';
 end;
 
 procedure TForm1.EdRentStudChange(Sender: TObject);
 Var stu :TSTUDENT;
 begin
-  //stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
-  //LbRentStudName.Caption:= stu.getFirstName() + stu.getLastName();
+  if not (EdRentStud.text='') then
+  begin
+       stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
+            if not (stu=nil) then
+                LbRentStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
+            else
+                LbRentStudname.caption := '';
+  end
+  else LbRentStudname.caption := '';
 end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
