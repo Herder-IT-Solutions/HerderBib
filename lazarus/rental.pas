@@ -5,43 +5,43 @@ unit rental;
 interface
 
 uses
-  Classes, SysUtils, DBConstants;
+  Classes, SysUtils,db, DBConstants;
 
 type
   TRental = class
   private
-    id: Int64;
-    book_id: Int64;
-    student_id: Int64;
+    id: longint;
+    book_id: longint;
+    student_id: longint;
     return_date: TDate;
     rental_date: TDate;
   public
     // Returns the id
     // result: id
-    function getId(): Int64;
+    function getId(): longint;
 
     // Sets a new id
     // parameter: newId
     // result: TRUE on success, so if newID is not NULL
-    function setId(newId: Int64): boolean;
+    function setId(newId: longint): boolean;
 
     // Returns the book id
     // result: book_id
-    function getBookId(): Int64;
+    function getBookId(): longint;
 
     // Sets a new book id
     // parameter: newBookId
     // result: TRUE on success, so if newBookID is not NULL
-    function setBookId(newBookId: Int64): boolean;
+    function setBookId(newBookId: longint): boolean;
 
     // Returns the student id
     // result: student_id
-    function getStudentId(): Int64;
+    function getStudentId(): longint;
 
     // Sets a new sudent id
     // parameter: newStudentId
     // result: TRUE on success, so if new StudentId is not NULL
-    function setStudentId(newStudentId: Int64): boolean;
+    function setStudentId(newStudentId: longint): boolean;
 
     // Returns the book return date
     // result: return_date
@@ -66,12 +66,12 @@ type
 
 implementation
 
-function TRental.getId(): Int64;
+function TRental.getId(): longint;
 begin
   Result := self.id;
 end;
 
-function TRental.setId(newId: Int64): boolean;
+function TRental.setId(newId: longint): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
@@ -81,12 +81,12 @@ begin
   end;
 end;
 
-function TRental.getBookId(): Int64;
+function TRental.getBookId(): longint;
 begin
   Result := self.book_id;
 end;
 
-function TRental.setBookId(newBookId: Int64): boolean;
+function TRental.setBookId(newBookId: longint): boolean;
 begin
   Result := False;
   if (newBookId <> NULL) then
@@ -96,12 +96,12 @@ begin
   end;
 end;
 
-function TRental.getStudentId(): Int64;
+function TRental.getStudentId(): longint;
 begin
   Result := self.student_id;
 end;
 
-function TRental.setStudentId(newStudentId: Int64): boolean;
+function TRental.setStudentId(newStudentId: longint): boolean;
 begin
   Result := False;
   if (newStudentId <> NULL) then

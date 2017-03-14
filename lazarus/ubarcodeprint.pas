@@ -114,7 +114,7 @@ begin
      //pdf ausdrucken
      ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
      //das Arbeitsverzeichnis wieder löschen
-     deleteDirectory(working_path, false);
+     //deleteDirectory(working_path, false);
 
 end;
 

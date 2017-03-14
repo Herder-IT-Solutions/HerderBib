@@ -5,23 +5,23 @@ unit book;
 interface
 
 uses
-  Classes, SysUtils, DBConstants;
+  Classes, SysUtils,db, DBConstants;
 
 type
   TBook = class
   private
-    id: Int64;
+    id: longint;
     isbn: string;
     condition: cardinal;
   public
     // Returns the book id
     // result: id
-    function getId(): Int64;
+    function getId(): longint;
 
     // Sets a new book id
     // parameter: newId
     // result: TRUE on success, so if newId not NULL
-    function setId(newId: Int64): boolean;
+    function setId(newId: longint): boolean;
 
     // Returns the book ISBN
     // result: isbn[13]
@@ -46,12 +46,12 @@ type
 
 implementation
 
-function TBook.getId(): Int64;
+function TBook.getId(): longint;
 begin
   Result := self.id;
 end;
 
-function TBook.setId(newId: Int64): boolean;
+function TBook.setId(newId: longint): boolean;
 begin
   Result := False;
   if (newId <> NULL) then

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, CheckLst, uDBManagement, Student, Book, Rental, Booktype,LConvEncoding,uBarcodePrint ;
+  Buttons, CheckLst,db, uDBManagement, Student, Book, Rental, Booktype,LConvEncoding,uBarcodePrint ;
 
 type
 
@@ -131,7 +131,10 @@ type
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookDelClick(Sender: TObject);
+    procedure BtInfoBookEditClick(Sender: TObject);
+    procedure BtInfoBookPrintQClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
+    procedure BtInfoBooktypeEditClick(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
@@ -201,6 +204,8 @@ begin
     //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
+
+
 procedure TForm1.LbRetStudNameClick(Sender: TObject);
 begin
 
@@ -213,9 +218,17 @@ if not (Key in ['0'..'9', #8, #9]) then Key := #0;
 end;
 
 procedure TForm1.EdRetBookChange(Sender: TObject);
+Var book :TBook;
 begin
-   //
-   //LbRetBookName.Caption:= getBookName(EdRentBook.Text)
+  if not (EdRetBook.text='') then
+  begin
+       book :=  management.getBookByID(STRTOINT(EdRetBook.Text));
+            if not (book=nil) then
+                LbRetBookName.Caption:= book.getISBN
+            else
+                LbRetBookname.caption := '';
+  end
+  else LbRetBookname.caption := '';
 end;
 
 procedure TForm1.EdRentBookChange(Sender: TObject);
@@ -269,6 +282,7 @@ procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
   a,b: BOOLEAN;
   k: CARDINAL;
+  tempCode : LARGEINT;
 
 
   function CheckSumISBN13(isbn:STRING): BOOLEAN;
@@ -309,9 +323,9 @@ begin
 
      if not( management.BTypeCheck(s)) then management.BTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
-         management.BNew(s);
+         tempcode := management.BNew(s);
          INC(k);
-         TBarcodePrinter.instance.add_barcode('09334562', 'jfdisfjo')
+         TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text)
      end;
      EdAddBookName.text := '';
      EdAddBookISBN.text := '';
@@ -358,6 +372,34 @@ begin
   TBInfoBookState.Position:=1;
 end;
 
+procedure TForm1.BtInfoBookEditClick(Sender: TObject);
+begin
+  LbInfoBookError.Visible := FALSE;
+try
+
+except
+ On EConvertError do begin
+     LbInfoBookError.Visible := TRUE;
+     LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+ end;
+end;
+
+end;
+
+procedure TForm1.BtInfoBookPrintQClick(Sender: TObject);
+begin
+  LbInfoBookError.Visible := FALSE;
+try
+
+except
+  On EConvertError do begin
+      LbInfoBookError.Visible := TRUE;
+      LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  end;
+end;
+
+end;
+
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
 begin
      LbInfoBookError.Visible := FALSE;
@@ -369,6 +411,19 @@ begin
         LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+
+end;
+
+procedure TForm1.BtInfoBooktypeEditClick(Sender: TObject);
+begin
+  LbInfoBooktypeError.Visible := FALSE;
+try
+except
+  On EConvertError do begin
+      LbInfoBooktypeError.Visible := TRUE;
+      LbInfoBooktypeError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  end;
+end;
 
 end;
 
