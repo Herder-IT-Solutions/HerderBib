@@ -349,9 +349,9 @@ function TDBConnection.getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-  SQLQuery.ParamByName('birthdate').AsString :=
-    FormatDateTime('YYYY-MM-DD', birthdate);
+
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE birth = (:birthdate)';
+  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
 
   try
     with SQLQuery do
