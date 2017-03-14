@@ -311,7 +311,7 @@ begin
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
          management.BNew(s);
          INC(k);
-         //TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
+         TBarcodePrinter.instance.add_barcode('09334562', 'jfdisfjo')
      end;
      EdAddBookName.text := '';
      EdAddBookISBN.text := '';
@@ -454,7 +454,7 @@ end;
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 begin
   try
-     TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo');
+     TBarcodePrinter.instance.add_barcode('9342', 'jfdisfjo');
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;
