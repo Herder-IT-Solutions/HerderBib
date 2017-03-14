@@ -43,7 +43,7 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: LargeInt): TStudent;
+    function getStudentById(id: longint): TStudent;
 
     // Returns TStudent object with given birthdate
     // parameter: TDate object (birthdate)
@@ -106,7 +106,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: LargeInt): TBook;
+    function getBookById(id: longint): TBook;
 
     // updateInserts book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -316,7 +316,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: LargeInt): TStudent;
+function TDBConnection.getStudentById(id: longint): TStudent;
 var
   arr: ArrayOfStudents;
 begin
@@ -350,7 +350,8 @@ begin
   DBError := nil;
   SQLQuery.Close;
   SQLQuery.SQL.Text := 'SELECT FROM student WHERE birth = (:birthdate)';
-  SQLQuery.ParamByName('birthdate').AsDate := birthdate;
+  SQLQuery.ParamByName('birthdate').AsString :=
+    FormatDateTime('YYYY-MM-DD', birthdate);
 
   try
     with SQLQuery do
@@ -422,7 +423,8 @@ begin
       if student.getBirth = SQLNull then //if set to null
         FieldByName('birth').Clear
       else
-        FieldByName('birth').AsDateTime := Student.getBirth;
+        FieldByName('birth').AsString :=
+          FormatDateTime('YYYY-MM-DD', student.getBirth);
 
       FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
@@ -584,12 +586,14 @@ begin
       //update object
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
-      FieldByName('rental_date').AsDateTime := rental.getRentalDate;
+      FieldByName('rental_date').AsString :=
+        FormatDateTime('YYYY-MM-DD', rental.getRentalDate);
 
       if rental.getReturnDate = SQLNull then //if set to null
         FieldByName('return_date').Clear
       else
-        FieldByName('return_date').AsDateTime := rental.getReturnDate;
+        FieldByName('return_date').AsString :=
+          FormatDateTime('YYYY-MM-DD', rental.getReturnDate);
 
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
@@ -727,7 +731,7 @@ begin
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: LargeInt): TBook;
+function TDBConnection.getBookById(id: longint): TBook;
 var
   arr: ArrayOfBooks;
 begin
@@ -753,7 +757,7 @@ begin
   setBookFields(arr, True);
 
   Result := nil;
-  if (length(arr) = 1) then
+  if (length(arr) > 0) then
     Result := arr[0];
 end;
 

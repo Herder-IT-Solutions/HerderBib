@@ -5,12 +5,12 @@ unit student;
 interface
 
 uses
-  Classes, SysUtils, DBConstants;
+  Classes, SysUtils, DBConstants,db;
 
 type
   TStudent = class
   private
-    id: Int64;
+    id: longint;
     last_name: string;
     first_name: string;
     class_name: string;
@@ -19,12 +19,12 @@ type
   public
     // Returns the student id
     // result: id
-    function getId(): Int64;
+    function getId(): longint;
 
     // Sets a new student id
     // parameter: newId
     // result: TRUE on success, so if newId is not NULL
-    function setId(newId: Int64): boolean;
+    function setId(newId: longint): boolean;
 
     // Returns the student's last name
     // result: last_name
@@ -76,12 +76,12 @@ type
 
 implementation
 
-function TStudent.getId(): Int64;
+function TStudent.getId(): longint;
 begin
   Result := self.id;
 end;
 
-function TStudent.setId(newId: Int64): boolean;
+function TStudent.setId(newId: longint): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
