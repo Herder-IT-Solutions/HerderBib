@@ -297,11 +297,13 @@ begin
         if not (b) then begin
            LbAddBookError.Visible := True;
            LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
-           end;
+           exit;
+        end;
         if a then begin
            LbAddBookError.Visible := True;
            LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
-           end;
+           exit;
+        end;
 
       k:=1;
 
@@ -309,16 +311,17 @@ begin
      while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
          management.BNew(s);
          INC(k);
-         //TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo')
-         EdAddBookName.text := '';
-         EdAddBookISBN.text := '';
+         TBarcodePrinter.instance.add_barcode('09334562', 'jfdisfjo')
+     end;
+     EdAddBookName.text := '';
+     EdAddBookISBN.text := '';
          CBAddBookSubject.text := '';
          SEAddBookQuantity.Value:= 0;
-     end;
      end
      else begin
          LbAddBookError.Visible := True;
          LbAddBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+         exit;
      end;
 end;
 
@@ -346,8 +349,10 @@ begin
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
+var b:TBook;
 begin
-  management.BDel(management.getBookByID(STRTOINT(EdInfoBookID.text)));
+  b := management.getBookByID(STRTOINT(EdInfoBookID.text));
+  management.BDel(b);
   EdInfoBookId.text:='';
   EdInfoBookRent.text:='';
   TBInfoBookState.Position:=1;
@@ -449,7 +454,7 @@ end;
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 begin
   try
-     TBarcodePrinter.instance.add_barcode(9342, 'jfdisfjo');
+     TBarcodePrinter.instance.add_barcode('9342', 'jfdisfjo');
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;
