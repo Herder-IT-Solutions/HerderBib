@@ -19,12 +19,12 @@ type
   public
     // Returns the student id
     // result: id
-    function getId(): LargeInt;
+    function getId(): Int64;
 
     // Sets a new student id
     // parameter: newId
     // result: TRUE on success, so if newId is not NULL
-    function setId(newId: LargeInt): boolean;
+    function setId(newId: Int64): boolean;
 
     // Returns the student's last name
     // result: last_name
@@ -76,12 +76,12 @@ type
 
 implementation
 
-function TStudent.getId(): LargeInt;
+function TStudent.getId(): Int64;
 begin
   Result := self.id;
 end;
 
-function TStudent.setId(newId: LargeInt): boolean;
+function TStudent.setId(newId: Int64): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
