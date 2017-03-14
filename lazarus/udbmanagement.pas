@@ -35,7 +35,7 @@ type
     //Vor: Ein Buch mittels TBook-Objekt
     //Eff: Löscht ein Buch aus dem Bestand
     //Erg: Wahr wenn erfolgreich
-    function BDel(book:TBook):Boolean;
+    function BDel(var book:TBook):Boolean;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
@@ -46,7 +46,6 @@ type
     //Eff: Hinzufügen eines neuen Buches
     //Erg: Id des neu hinzugefügten Buches; -1 bei einem Fehler
     function BNew(isbn : String) : LongInt;
-
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
@@ -90,7 +89,7 @@ type
     //Vor: Ein Rental-Objekt, dass gelöscht werden soll
     //Eff: Löscht das Rental Objekt
     //Erg: wahr wenn erfolgreich
-    function RDelOne(rental:TRental):Boolean;
+    function RDelOne(var rental:TRental):Boolean;
 
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
@@ -122,8 +121,8 @@ type
     function getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
 
     //Vor: LDAP Benutzernamen
-    //Erg: TStudent-Objekt mit dem Benutzernamen
-    function getStudentByLDAPUserPattern(ldap_user: string): TStudent;
+    //Erg: Array von TStudent-Objekte mit dem Benutzernamen
+    function getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 
     //Vor: Den Nachnamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
@@ -144,7 +143,7 @@ type
     //Vor: Eine Schüler mittels TStudent-Objekt
     //Eff: Löscht einen Schüler
     //Erg: Wahr wenn erfolgreich
-    function SDel(student:TStudent):Boolean;
+    function SDel(var student:TStudent):Boolean;
 
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
@@ -156,12 +155,10 @@ type
     //Erg: Die Schüler Id
     function SNew (lastN, firstN, classN : String; birth:TDate):LongInt;
 
-
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
     //Erg: Wenn Schüler nicht vorhanden wahr -> False
-    function SUpdate (student: TStudent): boolean;
-
+    function SUpdate (var student: TStudent): boolean;
 
 
 
@@ -244,9 +241,9 @@ begin
   Result := uDBConn.getStudentsByClassName(classN);
 end;
 
-function TDBManagement.getStudentByLDAPUserPattern(ldap_user: string): TStudent;
+function TDBManagement.getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 begin
-  Result:=uDBConn.getStudentByLDAPUserPattern(ldap_user);
+  Result:=uDBConn.getStudentsByLDAPUserPattern(ldap_user);
 end;
 
 function TDBManagement.getStudentById(id: LongInt): TStudent;
@@ -254,7 +251,7 @@ begin
   Result:=uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.SUpdate(student: TStudent): boolean;
+function TDBManagement.SUpdate(var student: TStudent): boolean;
 begin
   Result:=uDBConn.updateinsertStudent(student);
 end;
@@ -271,7 +268,6 @@ Var aoR :ArrayOfRentals;
     book: TBook;
     student: TStudent;
 begin
-
   book:= self.getBookByID(BID);
   student:=self.getStudentById(SId);
   if not ((book=nil) and (student=nil)) then
@@ -282,7 +278,6 @@ begin
 
     Result:=uDBConn.updateInsertRental(rental);
   end else Result:=False;
-
 end;
 
 function TDBManagement.BNew(isbn : String):LongInt;
@@ -309,12 +304,10 @@ begin
   else Result:=id;
 end;
 
-
-function TDBManagement.BDel(book:TBook):Boolean;
+function TDBManagement.BDel(var book:TBook):Boolean;
 begin
   if not (book=nil) then Result:=uDBConn.deleteBook(book)
   else Result:=False;
-
 end;
 
 function TDBManagement.BQualiNew(BId, quali :LongInt):Boolean;
@@ -367,7 +360,7 @@ begin
   end else Result:=false;
 end;
 
-function TDBManagement.SDel(student:TStudent):Boolean;
+function TDBManagement.SDel(var student:TStudent):Boolean;
 begin
   if not (student=nil) then Result:=uDBConn.deleteStudent(student)
   else Result:=False;
@@ -589,7 +582,7 @@ begin
   Result:=students2;
 end;
 
-function TDBManagement.RDelOne(rental:TRental):Boolean;
+function TDBManagement.RDelOne(var rental:TRental):Boolean;
 begin
   if not (rental=nil) then Result:=uDBConn.deleteRental(rental)
   else Result:=False;
