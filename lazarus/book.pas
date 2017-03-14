@@ -10,18 +10,18 @@ uses
 type
   TBook = class
   private
-    id: Int64;
+    id: int64;
     isbn: string;
     condition: cardinal;
   public
     // Returns the book id
     // result: id
-    function getId(): Int64;
+    function getId(): int64;
 
     // Sets a new book id
     // parameter: newId
     // result: TRUE on success, so if newId not NULL
-    function setId(newId: Int64): boolean;
+    function setId(newId: int64): boolean;
 
     // Returns the book ISBN
     // result: isbn[13]
@@ -46,12 +46,12 @@ type
 
 implementation
 
-function TBook.getId(): Int64;
+function TBook.getId(): int64;
 begin
   Result := self.id;
 end;
 
-function TBook.setId(newId: Int64): boolean;
+function TBook.setId(newId: int64): boolean;
 begin
   Result := False;
   if (newId <> NULL) then
@@ -71,17 +71,14 @@ var
   isbn1, isbn2: cardinal;
 begin
   Result := False;
-  if (newIsbn = NULL) or (length(newIsbn) = 13) then
+  if length(newIsbn) = 13 then
   begin
-    if (length(newIsbn) = 13) then
-    begin
-      try // is numeric?
-        isbn1 := StrToInt(Copy(newIsbn, 0, 8));
-        isbn2 := StrToInt(Copy(newIsbn, 8, 5));
-      except
-        On E: EConvertError do
-          exit;
-      end;
+    try // is numeric?
+      isbn1 := StrToInt(Copy(newIsbn, 0, 8));
+      isbn2 := StrToInt(Copy(newIsbn, 8, 5));
+    except
+      On E: EConvertError do
+        exit;
     end;
 
     self.isbn := newIsbn;
