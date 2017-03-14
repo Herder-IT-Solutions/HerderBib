@@ -5,7 +5,7 @@ unit uDBManagement;
 interface
 
 uses
-  Classes,db, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental, dateutils;
+  Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection, book, booktype, rental, dateutils;
 
 type
 
@@ -30,7 +30,7 @@ type
     //Vor: Buch Id und Schüler Id
     //Eff: Rückgabe eines Buches mit Schüler
     //Erg: False, wenn gescheitert
-    function BBack(BId, SId :LargeInt): Boolean;
+    function BBack(BId, SId :Int64): Boolean;
 
     //Vor: Ein Buch mittels TBook-Objekt
     //Eff: Löscht ein Buch aus dem Bestand
@@ -40,26 +40,30 @@ type
     //Vor: Eine Buch Id
     //Eff: Überprüft, ob eine Buch Id bereits vergeben ist
     //Erg: Wahr, wenn Buch Id vergeben
-    function BIdCheck(BId :LargeInt):Boolean;
+    function BIdCheck(BId :Int64):Boolean;
 
     //Vor: ISBN nur mit Zahlen
     //Eff: Hinzufügen eines neuen Buches
     //Erg: Id des neu hinzugefügten Buches; -1 bei einem Fehler
-    function BNew(isbn : String) : LargeInt;
+    function BNew(isbn : String) : Int64;
 
     //Vor: Eine Buch Id
     //Eff: Überprüft die Buchqualität
     //Erg: Die Buchqualität
-    function BQualiCheck(BId: LargeInt): LargeInt;
+    function BQualiCheck(BId: Int64): Int64;
 
     //Vor: Buch Id und seine Qualität
     //Eff: Ändert die Buchqualität
     //Erg: Wahr wenn erfolgreich
-    function BQualiNew(BId, quali :LargeInt):Boolean;
+    function BQualiNew(BId, quali :Int64):Boolean;
+
+    //Vor: Eine Buch Id
+    //Erg: Gibt den Titel des Buches wieder
+    function BTitleById(BId: int64):String;
 
     //Vor: Buch Id
     //Erg: Das Buch-Object mit der Id
-    function getBookByID(BID: LargeInt): TBook;
+    function getBookByID(BID: Int64): TBook;
 
 
 
@@ -94,12 +98,16 @@ type
     //Vor: Buch Id und Schüler Id
     //Eff: Neue Vergabe eines Buches
     //Erg: Wahr wenn es geklappt hat, falsch wenn rental bereits vorhanden
-    function RNew(BId, SId :LargeInt):Boolean;
+    function RNew(BId, SId :Int64):Boolean;
 
 
 
 
     //STUDENTS                                            --------------------
+
+    //Vor: Eine Schüler Id
+    //Erg: Den Namen des Schülers ('Vorname Nachname')
+    function getSNameById(id: int64): String;
 
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
     //     welches alle Schüler beinhaltet
@@ -108,7 +116,7 @@ type
     //Vor: Die Schüler Id
     //Erg: Gibt ein Element vom Typ TStudent zurück,
     //     welches den Schüler mit der übergebnen Id beinhaltet
-    function getStudentById(id: LargeInt): TStudent;
+    function getStudentById(id: Int64): TStudent;
 
     //Vor: Den Klassennamen
     //Erg: Gibt ein Element vom Typ ArrayOfStudents zurück,
@@ -148,12 +156,12 @@ type
     //Vor: Eine Schüler Id
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
     //Erg: Wahr, wenn vergeben
-    function SIdCheck(SId :LargeInt):Boolean;
+    function SIdCheck(SId :Int64):Boolean;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //Eff: Neuen Schüler erstellen
     //Erg: Die Schüler Id
-    function SNew (lastN, firstN, classN : String; birth:TDate):LargeInt;
+    function SNew (lastN, firstN, classN : String; birth:TDate):Int64;
 
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
@@ -198,7 +206,7 @@ end;
 
 //-----------------------------------------------------------------------------
 
-function TDBManagement.BIdCheck(BId :LargeInt):Boolean;
+function TDBManagement.BIdCheck(BId :Int64):Boolean;
 Var book : TBook;
 begin
   book:=uDBConn.getBookById(BId);
@@ -206,7 +214,7 @@ begin
   else result :=true;
 end;
 
-function TDBManagement.BQualiCheck(BId: LargeInt): LargeInt;
+function TDBManagement.BQualiCheck(BId: Int64): Int64;
 Var book : TBook;
 begin
   book := uDBConn.getBookById(BId);
@@ -246,7 +254,7 @@ begin
   Result:=uDBConn.getStudentsByLDAPUserPattern(ldap_user);
 end;
 
-function TDBManagement.getStudentById(id: LargeInt): TStudent;
+function TDBManagement.getStudentById(id: Int64): TStudent;
 begin
   Result:=uDBConn.getStudentById(id);
 end;
@@ -256,13 +264,13 @@ begin
   Result:=uDBConn.updateinsertStudent(student);
 end;
 
-function TDBManagement.SIdCheck(SId :LargeInt):Boolean;
+function TDBManagement.SIdCheck(SId :Int64):Boolean;
 begin
   if (uDBConn.getStudentById(SId) = nil) then Result:= false
   else Result:=true;
 end;
 
-function TDBManagement.BBack(BId, SId :LargeInt):Boolean;
+function TDBManagement.BBack(BId, SId :Int64):Boolean;
 Var aoR :ArrayOfRentals;
     rental : TRental;
     book: TBook;
@@ -280,8 +288,8 @@ begin
   end else Result:=False;
 end;
 
-function TDBManagement.BNew(isbn : String):LargeInt;
-Var id, pz: LargeInt;
+function TDBManagement.BNew(isbn : String):Int64;
+Var id, pz: Int64;
     hid :String;
     book :TBook;
 begin
@@ -310,7 +318,7 @@ begin
   else Result:=False;
 end;
 
-function TDBManagement.BQualiNew(BId, quali :LargeInt):Boolean;
+function TDBManagement.BQualiNew(BId, quali :Int64):Boolean;
 Var book:TBook;
 begin
   book:=self.getBookById(BId);
@@ -335,7 +343,7 @@ begin
   end else Result:=False;
 end;
 
-function TDBManagement.RNew(BId, SId :LargeInt): Boolean;
+function TDBManagement.RNew(BId, SId :Int64): Boolean;
 Var rentals: Array Of TRental;
     rental : TRental;
     book: TBook;
@@ -371,8 +379,8 @@ begin
   Result:=uDBConn.deleteReturnedRentalOlderThan(datum);
 end;
 
-function TDBManagement.SNew (lastN, firstN, classN : String; birth:TDate) : LargeInt;
-Var id, pz: LargeInt;
+function TDBManagement.SNew (lastN, firstN, classN : String; birth:TDate) : Int64;
+Var id, pz: Int64;
     hid: String;
     student: TStudent;
 begin
@@ -401,7 +409,7 @@ begin
   Result:=id;
 end;
 
-function TDBManagement.getBookByID(BID: LargeInt): TBook;
+function TDBManagement.getBookByID(BID: Int64): TBook;
 begin
   result:= uDBConn.getBookById(bid);
 end;
@@ -586,6 +594,24 @@ function TDBManagement.RDelOne(var rental:TRental):Boolean;
 begin
   if not (rental=nil) then Result:=uDBConn.deleteRental(rental)
   else Result:=False;
+end;
+
+function TDBManagement.getSNameById(id: int64): String;
+Var res: String;
+    student:TStudent;
+begin
+  student:= self.getStudentById(id);
+  res:= student.getFirstName() + ' ' + student.getLastName();
+  Result:= res;
+end;
+
+function TDBManagement.BTitleById(BId: int64):String;
+Var book:TBook;
+    booktype:TBooktype;
+begin
+  book:=self.getBookByID(BId);
+  booktype:=uDBConn.getBooktypeByIsbn(book.getIsbn());
+  Result:=booktype.getTitle();
 end;
 
 end.
