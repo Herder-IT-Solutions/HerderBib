@@ -412,9 +412,15 @@ end;
 end;
 
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
+var book : TBOOK;
 begin
      LbInfoBookError.Visible := FALSE;
   try
+     if management.BIdCheck(StrToInt(EdInfoBookID.text)) and not(EdInfoBookID.text = '') then begin
+          book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+          TBInfoBookState.Position := book.getcondition;
+          //SHOW RENTAL RELATION
+     end;
 
   except
     On EConvertError do begin
@@ -449,7 +455,7 @@ begin
      end
      else if  management.BTypeCheck(EdInfoBooktypeISBN.text) then
      begin
-     LbInfoBooktypeError.Visible := FALSE;
+
      //Anfrage an uDBManagement stellen
      end;
   except
