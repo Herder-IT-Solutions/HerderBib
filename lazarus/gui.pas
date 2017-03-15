@@ -212,6 +212,7 @@ begin
 end;
 
 
+
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
 if not (Key in ['0'..'9', #8, #9]) then Key := #0;
@@ -387,10 +388,20 @@ end;
 end;
 
 procedure TForm1.BtInfoBookPrintQClick(Sender: TObject);
+var book : TBook;
+    booktitle : STRING;
 begin
   LbInfoBookError.Visible := FALSE;
 try
-
+   if not(EdInfoBookId.text = '') then begin
+   book:=management.getBookByID(StrToInt(EdInfoBookID.text));
+   booktitle := management.BTitleByID(StrToInt(EdInfoBookID.text));
+   TBarcodePrinter.instance.add_barcode(inttostr(book.getid), booktitle);
+   end
+   else begin
+       LbInfoBookError.Visible := TRUE;
+       LbInfoBookError.Caption := 'Fehler 5: Die Buch-Identifikationsnummer ist keinem Buch zugeordnet';
+    end;
 except
   On EConvertError do begin
       LbInfoBookError.Visible := TRUE;
@@ -507,9 +518,14 @@ begin
 end;
 
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
+var stud : Tstudent;
 begin
   try
-     TBarcodePrinter.instance.add_barcode('9342', 'jfdisfjo');
+     if not(EdInfoStudID.text = '') then begin
+        stud := management.getStudentById(StrToInt(EdInfoStudID.text));
+        TBarcodePrinter.instance.add_barcode(EdInfoStudID.text, management.getSNameById(StrToInt(EdInfoStudID.text)));
+     end;
+
   except
     On EConvertError do begin
         LbInfoStudError.Visible := TRUE;
