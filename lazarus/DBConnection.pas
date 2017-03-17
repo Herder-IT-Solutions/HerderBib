@@ -55,6 +55,11 @@ type
     // result: student object
     function getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 
+    // Returns student who rented a book, nil if the book is not rented
+    // parameter: book object
+    // result: student object
+    function getStudentWhoRentedBook(book: TBook): TStudent;
+
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
     // result: TRUE on success
@@ -394,6 +399,36 @@ begin
   Result := nil;
 
   setStudentFields(Result, False);
+end;
+
+function TDBConnection.getStudentWhoRentedBook(book: TBook): TStudent;
+var
+  arr: ArrayOfStudents;
+begin
+  DBError := nil;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text :=
+        'SELECT r.student_id, r.return_date, s.* FROM rental r JOIN student s ON r.student_id = s.id WHERE r.book_id = (:book_id) AND r.return_date IS NULL LIMIT 1';
+      SQLQuery.ParamByName('book_id').AsLargeInt := book.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  setStudentFields(arr, True);
+
+  Result := nil;
+  if (length(arr) = 1) then
+    Result := arr[0];
 end;
 
 function TDBConnection.updateInsertStudent(var student: TStudent): boolean;
@@ -980,7 +1015,7 @@ begin
   Result := nil;
 
   if (length(arr) = 1) then
-  Result := arr[0];
+    Result := arr[0];
 
 end;
 
