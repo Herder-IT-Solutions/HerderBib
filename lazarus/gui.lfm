@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 237
+  Left = 241
   Height = 571
-  Top = 85
+  Top = 91
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -11576,23 +11576,22 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
-    Left = -2
+    Left = 0
     Height = 600
     Top = 0
     Width = 765
     ActivePage = TabRent
     TabIndex = 0
     TabOrder = 0
-    OnChange = PageControl1Change
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
       ClientHeight = 574
       ClientWidth = 757
       object EdRentStud: TEdit
-        Left = 8
+        Left = 7
         Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
-        Top = 48
+        Top = 40
         Width = 408
         OnChange = EdRentStudChange
         ParentShowHint = False
@@ -11600,10 +11599,10 @@ object Form1: TForm1
         TabOrder = 0
       end
       object EdRentBook: TEdit
-        Left = 8
+        Left = 7
         Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
-        Top = 128
+        Top = 104
         Width = 408
         OnChange = EdRentBookChange
         ParentShowHint = False
@@ -11613,7 +11612,7 @@ object Form1: TForm1
       object LbRentStudInstruct: TLabel
         Left = 8
         Height = 13
-        Top = 25
+        Top = 16
         Width = 400
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
@@ -11621,39 +11620,40 @@ object Form1: TForm1
       object LbRentBookInstruct: TLabel
         Left = 8
         Height = 13
-        Top = 104
+        Top = 80
         Width = 388
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
       object BtRent: TButton
-        Left = 7
+        Left = 8
         Height = 25
-        Top = 184
+        Top = 144
         Width = 75
         Caption = 'Ausleihen'
         OnClick = BtRentClick
         TabOrder = 2
       end
       object LbRentStudName: TLabel
-        Left = 8
+        Left = 440
         Height = 1
-        Top = 72
+        Top = 40
         Width = 1
         ParentColor = False
       end
       object LbRentBookName: TLabel
-        Left = 7
+        Left = 440
         Height = 1
-        Top = 152
+        Top = 104
         Width = 1
         ParentColor = False
       end
       object ImRentHerder: TImage
-        Left = 332
+        Left = 333
         Height = 316
         Top = 240
         Width = 426
+        AntialiasingMode = amOff
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963FFB2020089504E47
           0D0A1A0A0000000D4948445200000190000001F208040000006F8A5016000000
@@ -17187,9 +17187,9 @@ object Form1: TForm1
         }
       end
       object LbRentError: TLabel
-        Left = 8
+        Left = 7
         Height = 13
-        Top = 216
+        Top = 184
         Width = 58
         Caption = 'LbRentError'
         ParentColor = False
@@ -17198,14 +17198,14 @@ object Form1: TForm1
     end
     object TabRet: TTabSheet
       Caption = 'Zurückgeben'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       OnContextPopup = TabRetContextPopup
       object EdRetStud: TEdit
         Left = 8
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
-        Top = 64
+        Top = 40
         Width = 408
         OnChange = EdRetStudChange
         ParentShowHint = False
@@ -17214,9 +17214,9 @@ object Form1: TForm1
       end
       object EdRetBook: TEdit
         Left = 8
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Scannen Sie hierfür den Barcode. '
-        Top = 136
+        Top = 104
         Width = 408
         OnChange = EdRetBookChange
         ParentShowHint = False
@@ -17225,41 +17225,41 @@ object Form1: TForm1
       end
       object LbRetStudInstruct: TLabel
         Left = 8
-        Height = 30
-        Top = 25
-        Width = 447
-        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        Height = 13
+        Top = 16
+        Width = 400
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
       end
       object LbRetBookInstruct: TLabel
         Left = 8
-        Height = 15
-        Top = 112
-        Width = 435
+        Height = 13
+        Top = 80
+        Width = 388
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
       object BtRet: TButton
         Left = 8
         Height = 25
-        Top = 264
-        Width = 75
+        Top = 240
+        Width = 91
         Caption = 'Zurückgeben'
         OnClick = BtRetClick
         TabOrder = 2
       end
       object LbRetStudName: TLabel
-        Left = 8
+        Left = 440
         Height = 1
-        Top = 88
+        Top = 40
         Width = 1
         ParentColor = False
         OnClick = LbRetStudNameClick
       end
       object LbRetBookName: TLabel
-        Left = 8
+        Left = 440
         Height = 1
-        Top = 160
+        Top = 104
         Width = 1
         ParentColor = False
       end
@@ -17267,11 +17267,11 @@ object Form1: TForm1
         Left = 8
         Height = 25
         Hint = 'Bitte geben Sie den Zustand des Buches in Schulnoten an,'#13#10'wobei 1 sehr gut ist und 5 das Schlechteste.'
-        Top = 208
+        Top = 176
         Width = 272
         Max = 5
         Min = 1
-        Position = 2
+        Position = 3
         SelEnd = 1
         SelStart = 6
         ParentShowHint = False
@@ -17280,41 +17280,41 @@ object Form1: TForm1
       end
       object LbRetBookTrack1: TLabel
         Left = 16
-        Height = 15
-        Top = 236
+        Height = 13
+        Top = 208
         Width = 6
         Caption = '1'
         ParentColor = False
       end
       object LbRetBookTrack5: TLabel
         Left = 265
-        Height = 15
-        Top = 236
+        Height = 13
+        Top = 208
         Width = 6
         Caption = '5'
         ParentColor = False
       end
       object LbRetBookTrack3: TLabel
         Left = 141
-        Height = 15
-        Top = 236
+        Height = 13
+        Top = 208
         Width = 6
         Caption = '3'
         ParentColor = False
       end
       object LbRetBookState: TLabel
         Left = 8
-        Height = 15
-        Top = 184
-        Width = 189
+        Height = 13
+        Top = 152
+        Width = 171
         Caption = 'Zustand des Buches (in Schulnoten)'
         ParentColor = False
       end
       object LbRetError: TLabel
         Left = 8
-        Height = 15
-        Top = 296
-        Width = 55
+        Height = 13
+        Top = 280
+        Width = 52
         Caption = 'LbRetError'
         ParentColor = False
         Visible = False
@@ -17324,6 +17324,7 @@ object Form1: TForm1
         Height = 316
         Top = 240
         Width = 426
+        AntialiasingMode = amOn
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963FFB2020089504E47
           0D0A1A0A0000000D4948445200000190000001F208040000006F8A5016000000
@@ -22859,11 +22860,11 @@ object Form1: TForm1
     end
     object TabAdd: TTabSheet
       Caption = 'Einpflegen'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object EdAddBookName: TEdit
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Bitte geben Sie den Namen des Buches ein.'#13#10'Strukturieren Sie ihn wiefolgt:'#13#10'"Name Klasse, Verlag"'
         Top = 8
         Width = 512
@@ -22873,7 +22874,7 @@ object Form1: TForm1
       end
       object EdAddBookISBN: TEdit
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 512
@@ -22886,7 +22887,7 @@ object Form1: TForm1
       end
       object SEAddBookQuantity: TSpinEdit
         Left = 232
-        Height = 23
+        Height = 21
         Top = 104
         Width = 50
         TabOrder = 2
@@ -22932,33 +22933,33 @@ object Form1: TForm1
       end
       object LbAddBookName: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 16
-        Width = 218
+        Width = 197
         Caption = 'Bitte geben Sie den Namen des Buchs ein'
         ParentColor = False
       end
       object LbAddBookISBN: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 48
-        Width = 200
+        Width = 183
         Caption = 'Bitte geben Sie die ISBN des Buchs ein'
         ParentColor = False
       end
       object LbAddBookQuantity: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 112
-        Width = 155
+        Width = 141
         Caption = 'Bitte geben Sie die Anzahl ein'
         ParentColor = False
       end
       object LbAddBookSubject: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 80
-        Width = 153
+        Width = 142
         Caption = 'Bitte wählen Sie das Fach aus'
         ParentColor = False
       end
@@ -22976,18 +22977,18 @@ object Form1: TForm1
       end
       object LbAddBookError: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 176
-        Width = 64
+        Width = 59
         Caption = 'Keine Fehler'
         ParentColor = False
         Visible = False
       end
       object LbAddBookHint: TLabel
         Left = 8
-        Height = 60
+        Height = 52
         Top = 200
-        Width = 558
+        Width = 513
         Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10'müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10'bei neuen Büchern weisen Sie bitte auch Name und Fach hinzu.'#13#10'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
         ParentColor = False
       end

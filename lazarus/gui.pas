@@ -152,8 +152,6 @@ type
     procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
-    procedure PageControl1Change(Sender: TObject);
-    procedure Panel1Click(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
@@ -180,21 +178,15 @@ begin
 
 end;
 
-procedure TForm1.PageControl1Change(Sender: TObject);
-begin
 
-end;
-
-procedure TForm1.Panel1Click(Sender: TObject);
-begin
-
-end;
 
 procedure TForm1.PCInfosChange(Sender: TObject);
 begin
    if management.isConnected then LbInfoAdminConnection.Caption := 'Datenbankverbindung hergestellt'
    else if not (management.isConnected) then LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt'
 end;
+
+
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -221,6 +213,8 @@ end;
 procedure TForm1.EdRetBookChange(Sender: TObject);
 Var book :TBook;
 begin
+  LbRetError.Visible := False;
+  try
   if not (EdRetBook.text='') then
   begin
        book :=  management.getBookByID(STRTOINT(EdRetBook.Text));
@@ -230,6 +224,12 @@ begin
                 LbRetBookname.caption := '';
   end
   else LbRetBookname.caption := '';
+  except
+    On EConvertError do begin
+        LbRetError.Visible := TRUE;
+        LbRetError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 end;
 
 procedure TForm1.EdRentBookChange(Sender: TObject);
@@ -263,6 +263,8 @@ end;
 procedure TForm1.EdRetStudChange(Sender: TObject);
 Var stu :TSTUDENT;
 begin
+  LbRetError.Visible := False;
+  try
   if not (EdRetStud.text='') then
   begin
        stu :=  management.getStudentByID(STRTOINT(EdRetStud.Text));
@@ -272,11 +274,19 @@ begin
                 LbRetStudname.caption := '';
   end
   else LbRetStudname.caption := '';
+  except
+    On EConvertError do begin
+        LbRetError.Visible := TRUE;
+        LbRetError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 end;
 
 procedure TForm1.EdRentStudChange(Sender: TObject);
 Var stu :TSTUDENT;
 begin
+  LbRentError.Visible := FALSE;
+  try
   if not (EdRentStud.text='') then
   begin
        stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
@@ -286,7 +296,13 @@ begin
                 LbRentStudname.caption := '';
   end
   else LbRentStudname.caption := '';
-end;
+  except
+    On EConvertError do begin
+        LbRentError.Visible := TRUE;
+        LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+  end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
 var s:STRING;
