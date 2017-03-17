@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, CheckLst, DB, uDBManagement, Student, Book, Rental,
+  Buttons, CheckLst, DB, uManagement, Student, Book, Rental,
   Booktype, LConvEncoding, uBarcodePrint;
 
 type
@@ -164,7 +164,7 @@ type
 
 var
   Form1: TForm1;
-  management: TDBManagement;
+  management: TManagement;
   PermissionLevel: cardinal;
 
 implementation
