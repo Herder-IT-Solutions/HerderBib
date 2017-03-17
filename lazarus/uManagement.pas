@@ -1,4 +1,4 @@
-unit uDBManagement;
+unit uManagement;
 
 {$mode objfpc}{$H+}
 
@@ -10,7 +10,7 @@ uses
 
 type
 
-  TDBManagement = class
+  TManagement = class
 
     //Methoden
   public
@@ -109,7 +109,7 @@ type
 
 
 
-    //STUDENTS                                            --------------------
+    //STUDENT                                            --------------------
 
     //Vor: Eine Schüler Id
     //Erg: Den Namen des Schülers ('Vorname Nachname')
@@ -189,7 +189,7 @@ implementation
 const
   ourNil = -693594;
 
-constructor TDBManagement.Create();
+constructor TManagement.Create();
 begin
   //Initialisierung
   uDBConn := TDBConnection.Create('buchverleih.sqlite');
@@ -198,12 +198,12 @@ begin
   Randomize;
 end;
 
-destructor TDBManagement.Destroy;
+destructor TManagement.Destroy;
 begin
   uDBConn.Destroy;
 end;
 
-function TDBManagement.isConnected(): boolean;
+function TManagement.isConnected(): boolean;
 begin
   Result := uDBConn.isConnected;
 end;
@@ -211,82 +211,9 @@ end;
 
 
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------BOOK-------
 
-function TDBManagement.BIdCheck(BId: int64): boolean;
-var
-  book: TBook;
-begin
-  book := uDBConn.getBookById(BId);
-  if book = nil then
-    Result := False
-  else
-    Result := True;
-end;
-
-function TDBManagement.BQualiCheck(BId: int64): int64;
-var
-  book: TBook;
-begin
-  book := uDBConn.getBookById(BId);
-  Result := book.getCondition();
-end;
-
-function TDBManagement.BTypeCheck(isbn: string): boolean;
-var
-  bt: TBooktype;
-begin
-  bt := uDBConn.getBooktypeByIsbn(isbn);
-  if bt = nil then
-    Result := False
-  else
-    Result := True;
-end;
-
-function TDBManagement.getStudents(): ArrayOfStudents;
-begin
-  Result := uDBConn.getStudents;
-end;
-
-function TDBManagement.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
-begin
-  Result := uDBConn.getStudentsByFirstNamePattern(firstName);
-end;
-
-function TDBManagement.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
-begin
-  Result := uDBConn.getStudentsByLastNamePattern(lastName);
-end;
-
-function TDBManagement.getStudentsByClassName(classN: string): ArrayOfStudents;
-begin
-  Result := uDBConn.getStudentsByClassName(classN);
-end;
-
-function TDBManagement.getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
-begin
-  Result := uDBConn.getStudentsByLDAPUserPattern(ldap_user);
-end;
-
-function TDBManagement.getStudentById(id: int64): TStudent;
-begin
-  Result := uDBConn.getStudentById(id);
-end;
-
-function TDBManagement.SUpdate(var student: TStudent): boolean;
-begin
-  Result := uDBConn.updateinsertStudent(student);
-end;
-
-function TDBManagement.SIdCheck(SId: int64): boolean;
-begin
-  if (uDBConn.getStudentById(SId) = nil) then
-    Result := False
-  else
-    Result := True;
-end;
-
-function TDBManagement.BBack(BId, SId: int64): boolean;
+function TManagement.BBack(BId, SId: int64): boolean;
 var
   aoR: ArrayOfRentals;
   rental: TRental;
@@ -307,7 +234,26 @@ begin
     Result := False;
 end;
 
-function TDBManagement.BNew(isbn: string): int64;
+function TManagement.BDel(var book: TBook): boolean;
+begin
+  if not (book = nil) then
+    Result := uDBConn.deleteBook(book)
+  else
+    Result := False;
+end;
+
+function TManagement.BIdCheck(BId: int64): boolean;
+var
+  book: TBook;
+begin
+  book := uDBConn.getBookById(BId);
+  if book = nil then
+    Result := False
+  else
+    Result := True;
+end;
+
+function TManagement.BNew(isbn: string): int64;
 var
   id, pz: int64;
   hid: string;
@@ -316,9 +262,11 @@ begin
   repeat
     id := Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
 
-    hid := IntToStr(id);              //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) + (StrToInt(hid[5]) * 3) +
-      (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+    hid := IntToStr(id);
+    //hid ist eine Hilfsvariable zur Prüfnummererstellung
+    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
+      (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
+      StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
     //Die Prüfziffer Teil 1
     if pz = 10 then
       pz := 0;
@@ -337,15 +285,15 @@ begin
     Result := id;
 end;
 
-function TDBManagement.BDel(var book: TBook): boolean;
+function TManagement.BQualiCheck(BId: int64): int64;
+var
+  book: TBook;
 begin
-  if not (book = nil) then
-    Result := uDBConn.deleteBook(book)
-  else
-    Result := False;
+  book := uDBConn.getBookById(BId);
+  Result := book.getCondition();
 end;
 
-function TDBManagement.BQualiNew(BId, quali: int64): boolean;
+function TManagement.BQualiNew(BId, quali: int64): boolean;
 var
   book: TBook;
 begin
@@ -359,7 +307,35 @@ begin
     Result := False;
 end;
 
-function TDBManagement.BTypeNew(isbn, title, subject: string): boolean;
+function TManagement.BTitleById(BId: int64): string;
+var
+  book: TBook;
+  booktype: TBooktype;
+begin
+  book := self.getBookByID(BId);
+  booktype := uDBConn.getBooktypeByIsbn(book.getIsbn());
+  Result := booktype.getTitle();
+end;
+
+function TManagement.getBookByID(BID: int64): TBook;
+begin
+  Result := uDBConn.getBookById(bid);
+end;
+
+//---------------------------------------------------------------BOOKTYPE---
+
+function TManagement.BTypeCheck(isbn: string): boolean;
+var
+  bt: TBooktype;
+begin
+  bt := uDBConn.getBooktypeByIsbn(isbn);
+  if bt = nil then
+    Result := False
+  else
+    Result := True;
+end;
+
+function TManagement.BTypeNew(isbn, title, subject: string): boolean;
 var
   booktype: TBooktype;
 begin
@@ -376,12 +352,27 @@ begin
     Result := False;
 end;
 
-function TDBManagement.getBooktypeByISBN(isbn: string): TBooktype;
+function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
 begin
   Result := uDBConn.getBooktypeByISBN(isbn);
 end;
 
-function TDBManagement.RNew(BId, SId: int64): boolean;
+//---------------------------------------------------------------RENTAL-----
+
+function TManagement.RDel(datum: TDate): integer;
+begin
+  Result := uDBConn.deleteReturnedRentalOlderThan(datum);
+end;
+
+function TManagement.RDelOne(var rental: TRental): boolean;
+begin
+  if not (rental = nil) then
+    Result := uDBConn.deleteRental(rental)
+  else
+    Result := False;
+end;
+
+function TManagement.RNew(BId, SId: int64): boolean;
 var
   rentals: array of TRental;
   rental: TRental;
@@ -411,147 +402,49 @@ begin
     Result := False;
 end;
 
-function TDBManagement.SDel(var student: TStudent): boolean;
-begin
-  if not (student = nil) then
-    Result := uDBConn.deleteStudent(student)
-  else
-    Result := False;
-end;
+//---------------------------------------------------------------STUDENT----
 
-function TDBManagement.RDel(datum: TDate): integer;
-begin
-  Result := uDBConn.deleteReturnedRentalOlderThan(datum);
-end;
-
-function TDBManagement.SNew(lastN, firstN, classN: string; birth: TDate): int64;
+function TManagement.getSNameById(id: int64): string;
 var
-  id, pz: int64;
-  hid: string;
+  res: string;
   student: TStudent;
 begin
-  pz := 0;
-
-  //if (self.getStudentsByFirstLastClassNameBirthdate(firstN, lastN, birth)
-
-  repeat
-    id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
-
-    hid := IntToStr(id); //hid ist eine Hilfsvariable zur Prüfnummererstellung
-
-    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) + (StrToInt(hid[5]) * 3) +
-      (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
-    //Die Prüfziffer Teil 1
-    if pz = 10 then
-      pz := 0;
-    id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
-  until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
-
-  student := TStudent.Create;
-  student.setId(id);
-  student.setFirstName(firstN);
-  student.setLastName(lastN);
-  student.setClassName(classN);
-  student.setBirth(birth);
-
-  self.SUpdate(student);
-  Result := id;
+  student := self.getStudentById(id);
+  res := student.getFirstName() + ' ' + student.getLastName();
+  Result := res;
 end;
 
-function TDBManagement.getBookByID(BID: int64): TBook;
+function TManagement.getStudents(): ArrayOfStudents;
 begin
-  Result := uDBConn.getBookById(bid);
+  Result := uDBConn.getStudents;
 end;
 
-function TDBManagement.importCSVSchueler(Dateiname: string): boolean;
-var
-  Text: TextFile;
-  str, fname, lname, cname, birth: string;
-  birthDate: TDate;
-  i: integer;
-  students: array of TStudent;
+function TManagement.getStudentById(id: int64): TStudent;
 begin
-  str := '';
-  fname := '';
-  lname := '';
-  cname := '';
-  birth := '';
-
-  AssignFile(Text, Dateiname);
-
-  try
-    reset(Text);
-
-
-    while not EOF(Text) do                //Schüler zeilenweise einlesen
-    begin
-      readln(Text, str);
-
-      i := 1;
-      while not (str[i] = ';') do        //Klassennamen einlesen
-      begin
-        cname := cname + str[i];
-        i := i + 1;
-      end;
-
-      i := i + 1;
-      while not (str[i] = ';') do      //Namen einlesen
-      begin
-        lname := lname + str[i];
-        i := i + 1;
-      end;
-
-      i := i + 1;
-      while not (str[i] = ';') do     //Vornamen einlesen
-      begin
-        fname := fname + str[i];
-        i := i + 1;
-      end;
-
-      i := i + 1;
-      while (not (str[i] = ';') and (length(str) >= i + 1)) do     //Geburtsdatum einlesen
-      begin
-        birth := birth + str[i];
-        i := i + 1;
-      end;
-      birthDate := StrToDate(birth, '-');
-      // Vergleich ob bereits vorhanden
-      students := self.getStudentsByFirstLastClassNameBirthdate(fname,
-        lname, '', birthDate);
-
-      //Verarbeitung
-      if (length(students) = 0) then
-      begin                 //Fall Einfügen eines neuen Schülers
-
-        self.SNew(lname, fname, cname, birthDate);
-        Result := True;
-
-      end
-      else if (length(students) = 1) then
-      begin                 //Fall Klasse überschreiben
-
-        students[0].setClassName(cname);
-        Result := uDBConn.updateinsertStudent(students[0]);
-        ;                   //????? What does this do there ?????
-
-      end
-      else
-      begin        //Fall Ein Fehler liegt vor
-        Result := False;
-        break;
-      end;
-
-    end;
-  except
-    on E: Exception do
-      Result := False;
-
-  end;
-  CloseFile(Text);
-
+  Result := uDBConn.getStudentById(id);
 end;
 
-function TDBManagement.getStudentsByFirstLastClassNameBirthdate(
+function TManagement.getStudentsByClassName(classN: string): ArrayOfStudents;
+begin
+  Result := uDBConn.getStudentsByClassName(classN);
+end;
+
+function TManagement.getStudentsByFirstNamePattern(firstName: string): ArrayOfStudents;
+begin
+  Result := uDBConn.getStudentsByFirstNamePattern(firstName);
+end;
+
+function TManagement.getStudentByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
+begin
+  Result := uDBConn.getStudentsByLDAPUserPattern(ldap_user);
+end;
+
+function TManagement.getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
+begin
+  Result := uDBConn.getStudentsByLastNamePattern(lastName);
+end;
+
+function TManagement.getStudentsByFirstLastClassNameBirthdate(
   fname, lname, cname: string; birth: TDate): ArrayOfStudents;
 var
   students, students2, students3: array of TStudent;
@@ -657,32 +550,147 @@ begin
   Result := students2;
 end;
 
-function TDBManagement.RDelOne(var rental: TRental): boolean;
+function TManagement.importCSVSchueler(Dateiname: string): boolean;
+var
+  Text: TextFile;
+  str, fname, lname, cname, birth: string;
+  birthDate: TDate;
+  i: integer;
+  students: array of TStudent;
 begin
-  if not (rental = nil) then
-    Result := uDBConn.deleteRental(rental)
+  str := '';
+  fname := '';
+  lname := '';
+  cname := '';
+  birth := '';
+
+  AssignFile(Text, Dateiname);
+
+  try
+    reset(Text);
+
+
+    while not EOF(Text) do                //Schüler zeilenweise einlesen
+    begin
+      readln(Text, str);
+
+      i := 1;
+      while not (str[i] = ';') do        //Klassennamen einlesen
+      begin
+        cname := cname + str[i];
+        i := i + 1;
+      end;
+
+      i := i + 1;
+      while not (str[i] = ';') do      //Namen einlesen
+      begin
+        lname := lname + str[i];
+        i := i + 1;
+      end;
+
+      i := i + 1;
+      while not (str[i] = ';') do     //Vornamen einlesen
+      begin
+        fname := fname + str[i];
+        i := i + 1;
+      end;
+
+      i := i + 1;
+      while (not (str[i] = ';') and (length(str) >= i + 1)) do
+      begin                          //Geburtsdatum einlesen
+        birth := birth + str[i];
+        i := i + 1;
+      end;
+      birthDate := StrToDate(birth, '-');
+                                    // Vergleich ob bereits vorhanden
+      students := self.getStudentsByFirstLastClassNameBirthdate(fname,
+        lname, '', birthDate);
+
+                              //Verarbeitung
+      if (length(students) = 0) then
+      begin                 //Fall Einfügen eines neuen Schülers
+
+        self.SNew(lname, fname, cname, birthDate);
+        Result := True;
+
+      end
+      else if (length(students) = 1) then
+      begin                 //Fall Klasse überschreiben
+
+        students[0].setClassName(cname);
+        Result := uDBConn.updateinsertStudent(students[0]);
+
+      end
+      else
+      begin                  //Fall Ein Fehler liegt vor
+        Result := False;
+        break;
+      end;
+
+    end;
+  except
+    on E: Exception do
+      Result := False;
+
+  end;
+  CloseFile(Text);
+
+end;
+
+function TManagement.SDel(var student: TStudent): boolean;
+begin
+  if not (student = nil) then
+    Result := uDBConn.deleteStudent(student)
   else
     Result := False;
 end;
 
-function TDBManagement.getSNameById(id: int64): string;
-var
-  res: string;
-  student: TStudent;
+function TManagement.SIdCheck(SId: int64): boolean;
 begin
-  student := self.getStudentById(id);
-  res := student.getFirstName() + ' ' + student.getLastName();
-  Result := res;
+  if (uDBConn.getStudentById(SId) = nil) then
+    Result := False
+  else
+    Result := True;
 end;
 
-function TDBManagement.BTitleById(BId: int64): string;
+function TManagement.SNew(lastN, firstN, classN: string; birth: TDate): int64;
 var
-  book: TBook;
-  booktype: TBooktype;
+  id, pz: int64;
+  hid: string;
+  student: TStudent;
 begin
-  book := self.getBookByID(BId);
-  booktype := uDBConn.getBooktypeByIsbn(book.getIsbn());
-  Result := booktype.getTitle();
+  pz := 0;
+
+  //if (self.getStudentsByFirstLastClassNameBirthdate(firstN, lastN, birth)
+
+  repeat
+    id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
+
+    hid := IntToStr(id); //hid ist eine Hilfsvariable zur Prüfnummererstellung
+
+    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
+      (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
+      StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+    //Die Prüfziffer Teil 1
+    if pz = 10 then
+      pz := 0;
+    id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
+  until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
+
+  student := TStudent.Create;
+  student.setId(id);
+  student.setFirstName(firstN);
+  student.setLastName(lastN);
+  student.setClassName(classN);
+  student.setBirth(birth);
+
+  self.SUpdate(student);
+  Result := id;
+end;
+
+function TManagement.SUpdate(var student: TStudent): boolean;
+begin
+  Result := uDBConn.updateinsertStudent(student);
 end;
 
 end.
