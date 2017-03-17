@@ -1,4 +1,4 @@
-unit uDBManagement;
+unit uManagement;
 
 {$mode objfpc}{$H+}
 
@@ -10,7 +10,7 @@ uses
 
 type
 
-  TDBManagement = class
+  TManagement = class
 
     //Methoden
   public
