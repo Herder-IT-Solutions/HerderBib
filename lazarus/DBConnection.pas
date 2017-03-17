@@ -252,7 +252,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(first_name) LIKE LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := firstName;
       SQLQuery.Open;
     end;
@@ -278,7 +279,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(last_name) LIKE LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := lastName;
       SQLQuery.Open;
     end;
@@ -303,7 +305,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(class_name) = LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := classN;
       SQLQuery.Open;
     end;
@@ -380,7 +383,7 @@ function TDBConnection.getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfS
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user LIKE (:ldap_user)';
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE LOWER(ldap_user) LIKE LOWER(:ldap_user)';
   SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
 
   try
