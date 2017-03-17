@@ -11574,7 +11574,7 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000
   }
   OnCreate = FormCreate
-  LCLVersion = '1.6.2.0'
+  LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
     Left = -2
     Height = 600
@@ -11586,11 +11586,11 @@ object Form1: TForm1
     OnChange = PageControl1Change
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object EdRentStud: TEdit
         Left = 8
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 48
         Width = 408
@@ -11601,7 +11601,7 @@ object Form1: TForm1
       end
       object EdRentBook: TEdit
         Left = 8
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
         Top = 128
         Width = 408
@@ -11612,22 +11612,22 @@ object Form1: TForm1
       end
       object LbRentStudInstruct: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 25
-        Width = 447
+        Width = 400
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
       end
       object LbRentBookInstruct: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 104
-        Width = 435
+        Width = 388
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
       object BtRent: TButton
-        Left = 8
+        Left = 7
         Height = 25
         Top = 184
         Width = 75
@@ -17188,9 +17188,9 @@ object Form1: TForm1
       end
       object LbRentError: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 216
-        Width = 62
+        Width = 58
         Caption = 'LbRentError'
         ParentColor = False
         Visible = False
@@ -22894,11 +22894,11 @@ object Form1: TForm1
       end
       object CBAddBookSubject: TComboBox
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
         Top = 72
         Width = 100
-        ItemHeight = 15
+        ItemHeight = 13
         ItemIndex = 5
         Items.Strings = (
           'Arbeitsgemeinschaft'
@@ -23024,7 +23024,7 @@ object Form1: TForm1
           '345235353245, ghdgfsdjf'
           '72384793824, sdfdjsf'
         )
-        ItemHeight = 15
+        ItemHeight = 13
         TabOrder = 1
       end
       object LbPrintQueue: TLabel
@@ -23358,10 +23358,10 @@ object Form1: TForm1
           ClientWidth = 744
           object CBInfoRelGrade: TComboBox
             Left = 112
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               '5'
@@ -23401,10 +23401,10 @@ object Form1: TForm1
           end
           object CBInfoRelSubject: TComboBox
             Left = 256
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'
@@ -23515,11 +23515,11 @@ object Form1: TForm1
           end
           object CBInfoBooktypeSubject: TComboBox
             Left = 240
-            Height = 23
+            Height = 21
             Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
             Top = 80
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'

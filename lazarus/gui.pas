@@ -235,6 +235,7 @@ end;
 procedure TForm1.EdRentBookChange(Sender: TObject);
 Var book :TBook;
 begin
+try
   if not (EdRentBook.text='') then
   begin
        book :=  management.getBookByID(STRTOINT(EdRentBook.Text));
@@ -244,7 +245,15 @@ begin
                 LbRentBookname.caption := '';
   end
   else LbRentBookname.caption := '';
+
+except
+  On EConvertError do begin
+      LbRentError.Visible := TRUE;
+      LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  end;
 end;
+end;
+
 
 procedure TForm1.EdInfoStudFirstNameChange(Sender: TObject);
 begin
