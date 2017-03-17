@@ -24,7 +24,7 @@ object Form1: TForm1
       object EdRentStud: TEdit
         Left = 8
         Height = 21
-        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        Hint = 'Während sich der Cursor in diesem Feld befindet scannen Sie bitte mit dem Barcode-Scanner die Schüler-ID oder geben diese per Hand ein'
         Top = 48
         Width = 408
         OnChange = EdRentStudChange
@@ -35,7 +35,7 @@ object Form1: TForm1
       object EdRentBook: TEdit
         Left = 8
         Height = 21
-        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
+        Hint = 'Während sich der Cursor in diesem Feld befindet scannen Sie bitte mit dem Barcode-Scanner die Buch-ID oder geben diese per Hand ein.'#13#10'Diese finden Sie als Barcode im Buch. '
         Top = 128
         Width = 408
         OnChange = EdRentBookChange
@@ -48,7 +48,7 @@ object Form1: TForm1
         Height = 13
         Top = 25
         Width = 400
-        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner oder per Hand die Schüler-ID ein.'
         ParentColor = False
       end
       object LbRentBookInstruct: TLabel
@@ -56,7 +56,7 @@ object Form1: TForm1
         Height = 13
         Top = 104
         Width = 388
-        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner oder per Hand die Buch-ID ein.'
         ParentColor = False
       end
       object BtRent: TButton
@@ -5637,7 +5637,7 @@ object Form1: TForm1
       object EdRetStud: TEdit
         Left = 8
         Height = 21
-        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        Hint = 'Während sich der Cursor in diesem Feld befindet scannen Sie bitte mit dem Barcode-Scanner die Schüler-ID oder geben diese per Hand ein.'
         Top = 64
         Width = 408
         OnChange = EdRetStudChange
@@ -5648,7 +5648,7 @@ object Form1: TForm1
       object EdRetBook: TEdit
         Left = 8
         Height = 21
-        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Scannen Sie hierfür den Barcode. '
+        Hint = 'Während sich der Cursor in diesem Feld befindet scannen Sie bitte mit dem Barcode-Scanner die Buch-ID oder geben diese per Hand ein.'#13#10'Diese finden Sie als Barcode im Buch.'
         Top = 136
         Width = 408
         OnChange = EdRetBookChange
@@ -5661,7 +5661,7 @@ object Form1: TForm1
         Height = 26
         Top = 25
         Width = 400
-        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner oder per Hand die Schüler-ID ein.'
         ParentColor = False
       end
       object LbRetBookInstruct: TLabel
@@ -5669,7 +5669,7 @@ object Form1: TForm1
         Height = 13
         Top = 112
         Width = 388
-        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
+        Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner oder per Hand die Buch-ID ein.'
         ParentColor = False
       end
       object BtRet: TButton
@@ -11307,7 +11307,7 @@ object Form1: TForm1
       object EdAddBookISBN: TEdit
         Left = 232
         Height = 21
-        Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
+        Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner oder per Hand die ISBN (ohne Bindestriche)  ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 512
         MaxLength = 13
@@ -11376,7 +11376,7 @@ object Form1: TForm1
         Height = 13
         Top = 48
         Width = 183
-        Caption = 'Bitte geben Sie die ISBN des Buchs ein'
+        Caption = 'Bitte tragen Sie die ISBN des Buchs ein'
         ParentColor = False
       end
       object LbAddBookQuantity: TLabel
@@ -11421,7 +11421,7 @@ object Form1: TForm1
         Height = 52
         Top = 200
         Width = 513
-        Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10'müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10'bei neuen Büchern weisen Sie bitte auch Name und Fach hinzu.'#13#10'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
+        Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10'müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10'bei neuen Büchern weisen Sie bitte auch Name und Fach zu.'#13#10'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
         ParentColor = False
       end
     end
@@ -11434,7 +11434,7 @@ object Form1: TForm1
         Height = 26
         Top = 8
         Width = 510
-        Caption = 'Hier können Sie alle Strichcodes (Schüler/Bücher) drucken, die sich zur Zeit in der Warteschlange befinden.'#13#10'Dadurch werden alle Elemente aus der Warteschlnge entfernt.'
+        Caption = 'Hier können Sie alle IDs (Schüler/Bücher) in Form von Barcodes drucken, die sich zur Zeit in der Warteschlange befinden.'#13#10'Dadurch werden alle Elemente aus der Warteschlnge entfernt.'
         ParentColor = False
       end
       object BtPrint: TButton
@@ -11548,7 +11548,7 @@ object Form1: TForm1
             Height = 13
             Top = 112
             Width = 104
-            Caption = 'ID-Nummer (Barcode)'
+            Caption = 'Schüler-ID'
             ParentColor = False
           end
           object BtInfoStudShow: TButton
@@ -11652,7 +11652,7 @@ object Form1: TForm1
             Height = 25
             Top = 256
             Width = 216
-            Caption = 'Strichcode in Druckwarteschlange'
+            Caption = 'Schüler-ID in Druckwarteschlange'
             OnClick = BtInfoStudPrintQClick
             TabOrder = 11
           end
@@ -11690,7 +11690,7 @@ object Form1: TForm1
             Height = 13
             Top = 24
             Width = 133
-            Caption = 'Buch-Identifikationsnummer'
+            Caption = 'Schüler-ID in Druckwarteschlange'
             ParentColor = False
           end
           object BtInfoBookEdit: TButton
@@ -11780,7 +11780,7 @@ object Form1: TForm1
             Height = 25
             Top = 280
             Width = 195
-            Caption = 'Zur Druckwarteschlange hinzufügen'
+            Caption = 'Buch-ID zur Druckwarteschlange hinzufügen'
             OnClick = BtInfoBookPrintQClick
             TabOrder = 6
           end
@@ -12066,7 +12066,7 @@ object Form1: TForm1
             Height = 39
             Top = 87
             Width = 322
-            Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
+            Caption = 'Im Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
             ParentColor = False
           end
           object LbInfoSupportError: TLabel
