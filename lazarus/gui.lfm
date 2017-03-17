@@ -11574,7 +11574,7 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000
   }
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.6.2.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 600
@@ -11585,11 +11585,11 @@ object Form1: TForm1
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
-      ClientHeight = 574
+      ClientHeight = 572
       ClientWidth = 757
       object EdRentStud: TEdit
         Left = 7
-        Height = 21
+        Height = 23
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 40
         Width = 408
@@ -11600,7 +11600,7 @@ object Form1: TForm1
       end
       object EdRentBook: TEdit
         Left = 7
-        Height = 21
+        Height = 23
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
         Top = 104
         Width = 408
@@ -11611,17 +11611,17 @@ object Form1: TForm1
       end
       object LbRentStudInstruct: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 16
-        Width = 400
+        Width = 447
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
       end
       object LbRentBookInstruct: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 80
-        Width = 388
+        Width = 435
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
@@ -17188,9 +17188,9 @@ object Form1: TForm1
       end
       object LbRentError: TLabel
         Left = 7
-        Height = 13
+        Height = 15
         Top = 184
-        Width = 58
+        Width = 62
         Caption = 'LbRentError'
         ParentColor = False
         Visible = False
@@ -22895,11 +22895,11 @@ object Form1: TForm1
       end
       object CBAddBookSubject: TComboBox
         Left = 232
-        Height = 21
+        Height = 23
         Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
         Top = 72
         Width = 100
-        ItemHeight = 13
+        ItemHeight = 15
         ItemIndex = 5
         Items.Strings = (
           'Arbeitsgemeinschaft'
@@ -23025,7 +23025,7 @@ object Form1: TForm1
           '345235353245, ghdgfsdjf'
           '72384793824, sdfdjsf'
         )
-        ItemHeight = 13
+        ItemHeight = 15
         TabOrder = 1
       end
       object LbPrintQueue: TLabel
@@ -23048,9 +23048,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabBook
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -23359,10 +23359,10 @@ object Form1: TForm1
           ClientWidth = 744
           object CBInfoRelGrade: TComboBox
             Left = 112
-            Height = 21
+            Height = 23
             Top = 8
             Width = 100
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               '5'
@@ -23402,10 +23402,10 @@ object Form1: TForm1
           end
           object CBInfoRelSubject: TComboBox
             Left = 256
-            Height = 21
+            Height = 23
             Top = 8
             Width = 100
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'
@@ -23516,11 +23516,11 @@ object Form1: TForm1
           end
           object CBInfoBooktypeSubject: TComboBox
             Left = 240
-            Height = 21
+            Height = 23
             Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
             Top = 80
             Width = 100
-            ItemHeight = 13
+            ItemHeight = 15
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'

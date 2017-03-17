@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
-  Buttons, CheckLst,db, uDBManagement, Student, Book, Rental, Booktype,LConvEncoding,uBarcodePrint ;
+  Buttons, CheckLst, DB, uDBManagement, Student, Book, Rental,
+  Booktype, LConvEncoding, uBarcodePrint;
 
 type
 
@@ -154,7 +155,7 @@ type
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
+      var Handled: boolean);
   private
     { private declarations }
   public
@@ -164,7 +165,7 @@ type
 var
   Form1: TForm1;
   management: TDBManagement;
-  PermissionLevel:CARDINAL;
+  PermissionLevel: cardinal;
 
 implementation
 
@@ -173,7 +174,7 @@ implementation
 { TForm1 }
 
 procedure TForm1.TabRetContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: Boolean);
+  var Handled: boolean);
 begin
 
 end;
@@ -182,18 +183,20 @@ end;
 
 procedure TForm1.PCInfosChange(Sender: TObject);
 begin
-   if management.isConnected then LbInfoAdminConnection.Caption := 'Datenbankverbindung hergestellt'
-   else if not (management.isConnected) then LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt'
+  if management.isConnected then
+    LbInfoAdminConnection.Caption := 'Datenbankverbindung hergestellt'
+  else if not (management.isConnected) then
+    LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt';
 end;
 
 
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
- // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
-    PermissionLevel :=1;
-    management := tdbmanagement.create();
-    //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
+  // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
+  PermissionLevel := 1;
+  management := tdbmanagement.Create();
+  //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
 
@@ -207,51 +210,60 @@ end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
-if not (Key in ['0'..'9', #8, #9]) then Key := #0;
+  if not (Key in ['0'..'9', #8, #9]) then
+    Key := #0;
 end;
 
 procedure TForm1.EdRetBookChange(Sender: TObject);
-Var book :TBook;
+var
+  book: TBook;
 begin
   LbRetError.Visible := False;
   try
-  if not (EdRetBook.text='') then
-  begin
-       book :=  management.getBookByID(STRTOINT(EdRetBook.Text));
-            if not (book=nil) then
-                LbRetBookName.Caption:= book.getISBN
-            else
-                LbRetBookname.caption := '';
-  end
-  else LbRetBookname.caption := '';
+    if not (EdRetBook.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdRetBook.Text));
+      if not (book = nil) then
+        LbRetBookName.Caption := book.getISBN
+      else
+        LbRetBookname.Caption := '';
+    end
+    else
+      LbRetBookname.Caption := '';
   except
-    On EConvertError do begin
-        LbRetError.Visible := TRUE;
-        LbRetError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbRetError.Visible := True;
+      LbRetError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
 
 procedure TForm1.EdRentBookChange(Sender: TObject);
-Var book :TBook;
+var
+  book: TBook;
 begin
-try
-  if not (EdRentBook.text='') then
-  begin
-       book :=  management.getBookByID(STRTOINT(EdRentBook.Text));
-            if not (book=nil) then
-                LbRentBookName.Caption:= book.getISBN
-            else
-                LbRentBookname.caption := '';
-  end
-  else LbRentBookname.caption := '';
+  try
+    if not (EdRentBook.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdRentBook.Text));
+      if not (book = nil) then
+        LbRentBookName.Caption := book.getISBN
+      else
+        LbRentBookname.Caption := '';
+    end
+    else
+      LbRentBookname.Caption := '';
 
-except
-  On EConvertError do begin
-      LbRentError.Visible := TRUE;
-      LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  except
+    On EConvertError do
+    begin
+      LbRentError.Visible := True;
+      LbRentError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
   end;
-end;
 end;
 
 
@@ -261,119 +273,144 @@ begin
 end;
 
 procedure TForm1.EdRetStudChange(Sender: TObject);
-Var stu :TSTUDENT;
+var
+  stu: TSTUDENT;
 begin
   LbRetError.Visible := False;
   try
-  if not (EdRetStud.text='') then
-  begin
-       stu :=  management.getStudentByID(STRTOINT(EdRetStud.Text));
-            if not (stu=nil) then
-                LbRetStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
-            else
-                LbRetStudname.caption := '';
-  end
-  else LbRetStudname.caption := '';
+    if not (EdRetStud.Text = '') then
+    begin
+      stu := management.getStudentByID(StrToInt(EdRetStud.Text));
+      if not (stu = nil) then
+        LbRetStudName.Caption := stu.getFirstName() + ' ' + stu.getLastName()
+      else
+        LbRetStudname.Caption := '';
+    end
+    else
+      LbRetStudname.Caption := '';
   except
-    On EConvertError do begin
-        LbRetError.Visible := TRUE;
-        LbRetError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbRetError.Visible := True;
+      LbRetError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
 
 procedure TForm1.EdRentStudChange(Sender: TObject);
-Var stu :TSTUDENT;
+var
+  stu: TSTUDENT;
 begin
-  LbRentError.Visible := FALSE;
+  LbRentError.Visible := False;
   try
-  if not (EdRentStud.text='') then
-  begin
-       stu :=  management.getStudentByID(STRTOINT(EdRentStud.Text));
-            if not (stu=nil) then
-                LbRentStudName.Caption:= stu.getFirstName() + ' ' + stu.getLastName()
-            else
-                LbRentStudname.caption := '';
-  end
-  else LbRentStudname.caption := '';
+    if not (EdRentStud.Text = '') then
+    begin
+      stu := management.getStudentByID(StrToInt(EdRentStud.Text));
+      if not (stu = nil) then
+        LbRentStudName.Caption := stu.getFirstName() + ' ' + stu.getLastName()
+      else
+        LbRentStudname.Caption := '';
+    end
+    else
+      LbRentStudname.Caption := '';
   except
-    On EConvertError do begin
-        LbRentError.Visible := TRUE;
-        LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbRentError.Visible := True;
+      LbRentError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
-  end;
+end;
 
 procedure TForm1.BtAddBookClick(Sender: TObject);
-var s:STRING;
-  a,b: BOOLEAN;
-  k: CARDINAL;
-  tempCode : LARGEINT;
+var
+  s: string;
+  a, b: boolean;
+  k: cardinal;
+  tempCode: LARGEINT;
 
 
-  function CheckSumISBN13(isbn:STRING): BOOLEAN;
+  function CheckSumISBN13(isbn: string): boolean;
   var
-    i,sum,check: CARDINAL;
+    i, sum, check: cardinal;
   begin
-       check:=0;
-      sum:=0;
-      i:=1;
-      while i<13 do begin
-          if (i mod 2 = 0) then sum := sum + 3*StrToInt(isbn[i])
-          else if (i mod 2 = 1) then sum := sum + StrToInt(isbn[i]);
-          INC(i);
-      end;
-      check := (10-(sum mod 10));
-      result := (check = StrToInt(isbn[13]));
+    check := 0;
+    sum := 0;
+    i := 1;
+    while i < 13 do
+    begin
+      if (i mod 2 = 0) then
+        sum := sum + 3 * StrToInt(isbn[i])
+      else if (i mod 2 = 1) then
+        sum := sum + StrToInt(isbn[i]);
+      Inc(i);
+    end;
+    check := (10 - (sum mod 10));
+    Result := (check = StrToInt(isbn[13]));
   end;
+
 begin
-     a := FALSE;
-     s := EdAddBookISBN.text;    //Beispiel: funktiuoniert bei 9780306406157
-     if not (s = '') then begin
+  a := False;
+  s := EdAddBookISBN.Text;    //Beispiel: funktiuoniert bei 9780306406157
+  if not (s = '') then
+  begin
 
-        if (length(s) = 13) then b := CheckSumISBN13(s)
-        else a:=TRUE;
-        LbAddBookError.Visible := False;
-        if not (b) then begin
-           LbAddBookError.Visible := True;
-           LbAddBookError.Caption := 'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
-           exit;
-        end;
-        if a then begin
-           LbAddBookError.Visible := True;
-           LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
-           exit;
-        end;
+    if (length(s) = 13) then
+      b := CheckSumISBN13(s)
+    else
+      a := True;
+    LbAddBookError.Visible := False;
+    if not (b) then
+    begin
+      LbAddBookError.Visible := True;
+      LbAddBookError.Caption :=
+        'Fehler 1: Die ISBN ist ungültig (falsche Prüfziffer)';
+      exit;
+    end;
+    if a then
+    begin
+      LbAddBookError.Visible := True;
+      LbAddBookError.Caption := 'Fehler 2: Die ISBN ist nicht 13 Ziffern lang';
+      exit;
+    end;
 
-      k:=1;
+    k := 1;
 
-     if not( management.BTypeCheck(s)) then management.BTypeNew(s,EdAddBookName.Text, CBAddBookSubject.Text);  //Wenn ISBN noch nicht bekannt dann füge buch hinzu
-     while (k <= SeAddBookQuantity.Value) do begin     //füge bücher hinzu
-         tempcode := management.BNew(s);
-         INC(k);
-         TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text)
-     end;
-     EdAddBookName.text := '';
-     EdAddBookISBN.text := '';
-         CBAddBookSubject.text := '';
-         SEAddBookQuantity.Value:= 0;
-     end
-     else begin
-         LbAddBookError.Visible := True;
-         LbAddBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
-         exit;
-     end;
+    if not (management.BTypeCheck(s)) then
+      management.BTypeNew(s, EdAddBookName.Text, CBAddBookSubject.Text);
+    //Wenn ISBN noch nicht bekannt dann füge buch hinzu
+    while (k <= SeAddBookQuantity.Value) do
+    begin     //füge bücher hinzu
+      tempcode := management.BNew(s);
+      Inc(k);
+      TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text);
+    end;
+    EdAddBookName.Text := '';
+    EdAddBookISBN.Text := '';
+    CBAddBookSubject.Text := '';
+    SEAddBookQuantity.Value := 0;
+  end
+  else
+  begin
+    LbAddBookError.Visible := True;
+    LbAddBookError.Caption :=
+      'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    exit;
+  end;
 end;
 
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
 begin
-  if EdInfoAdminPw.Text='h3rd3r' then begin
-     PermissionLevel:=0;
-     //EdInfoAdminPw.Text=NONE;
-     LbInfoAdminCheck.Caption := 'Sie sind Administrator';
-     BtInfoStudEdit.Enabled := True;
-     BtInfoAdminLogin.Enabled:= False;
-     BtInfoAdminLogout.Enabled:= True;
+  if EdInfoAdminPw.Text = 'h3rd3r' then
+  begin
+    PermissionLevel := 0;
+    //EdInfoAdminPw.Text=NONE;
+    LbInfoAdminCheck.Caption := 'Sie sind Administrator';
+    BtInfoStudEdit.Enabled := True;
+    BtInfoAdminLogin.Enabled := False;
+    BtInfoAdminLogout.Enabled := True;
 
   end;
   EdInfoAdminPw.Text := '';
@@ -381,220 +418,275 @@ end;
 
 procedure TForm1.BtInfoAdminLogoutClick(Sender: TObject);
 begin
-     PermissionLevel:=1;
-     LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator';
-     BtInfoStudEdit.Enabled := False;
-     BtInfoAdminLogin.Enabled:= True;
-     BtInfoAdminLogout.Enabled:= False;
+  PermissionLevel := 1;
+  LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator';
+  BtInfoStudEdit.Enabled := False;
+  BtInfoAdminLogin.Enabled := True;
+  BtInfoAdminLogout.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
-var b:TBook;
+var
+  b: TBook;
 begin
-  b := management.getBookByID(STRTOINT(EdInfoBookID.text));
+  b := management.getBookByID(StrToInt(EdInfoBookID.Text));
   management.BDel(b);
-  EdInfoBookId.text:='';
-  EdInfoBookRent.text:='';
-  TBInfoBookState.Position:=1;
+  EdInfoBookId.Text := '';
+  EdInfoBookRent.Text := '';
+  TBInfoBookState.Position := 1;
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
 begin
-  LbInfoBookError.Visible := FALSE;
-try
+  LbInfoBookError.Visible := False;
+  try
 
-except
- On EConvertError do begin
-     LbInfoBookError.Visible := TRUE;
-     LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
- end;
-end;
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 
 end;
 
 procedure TForm1.BtInfoBookPrintQClick(Sender: TObject);
-var book : TBook;
-    booktitle : STRING;
+var
+  book: TBook;
+  booktitle: string;
 begin
-  LbInfoBookError.Visible := FALSE;
-try
-   if not(EdInfoBookId.text = '') then begin
-   book:=management.getBookByID(StrToInt(EdInfoBookID.text));
-   booktitle := management.BTitleByID(StrToInt(EdInfoBookID.text));
-   TBarcodePrinter.instance.add_barcode(inttostr(book.getid), booktitle);
-   end
-   else begin
-       LbInfoBookError.Visible := TRUE;
-       LbInfoBookError.Caption := 'Fehler 5: Die Buch-Identifikationsnummer ist keinem Buch zugeordnet';
+  LbInfoBookError.Visible := False;
+  try
+    if not (EdInfoBookId.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      booktitle := management.BTitleByID(StrToInt(EdInfoBookID.Text));
+      TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
+    end
+    else
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 5: Die Buch-Identifikationsnummer ist keinem Buch zugeordnet';
     end;
-except
-  On EConvertError do begin
-      LbInfoBookError.Visible := TRUE;
-      LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
   end;
-end;
 
 end;
 
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
-var book : TBOOK;
+var
+  book: TBOOK;
 begin
-     LbInfoBookError.Visible := FALSE;
+  LbInfoBookError.Visible := False;
   try
-     if management.BIdCheck(StrToInt(EdInfoBookID.text)) and not(EdInfoBookID.text = '') then begin
-          book := management.getBookByID(StrToInt(EdInfoBookID.Text));
-          TBInfoBookState.Position := book.getcondition;
-          //SHOW RENTAL RELATION
-     end;
+    if management.BIdCheck(StrToInt(EdInfoBookID.Text)) and not
+      (EdInfoBookID.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      TBInfoBookState.Position := book.getcondition;
+      //SHOW RENTAL RELATION
+    end;
 
   except
-    On EConvertError do begin
-        LbInfoBookError.Visible := TRUE;
-        LbInfoBookError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 
 end;
 
 procedure TForm1.BtInfoBooktypeEditClick(Sender: TObject);
+var
+  booktype : TBooktype;
 begin
-  LbInfoBooktypeError.Visible := FALSE;
-try
-except
-  On EConvertError do begin
-      LbInfoBooktypeError.Visible := TRUE;
-      LbInfoBooktypeError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+  LbInfoBooktypeError.Visible := False;
+  try
+  if not(EdInfoBooktypeISBN.text = '') then
+     begin
+     booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.text);
+     if not(EdInfoBooktypeName.text = '') then
+       begin
+       booktype.setTitle(EdInfoBooktypeName.text);
+       end;
+     if not(CBInfoBooktypeSubject.text = '') then
+       begin
+       booktype.setSubject(CBInfoBooktypeSubject.text);
+       end;
+     end;
+  except
+    On EConvertError do
+    begin
+      LbInfoBooktypeError.Visible := True;
+      LbInfoBooktypeError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
   end;
-end;
 
 end;
 
 procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
+var
+  booktype: TBooktype;
 begin
-    LbInfoBooktypeError.Visible := FALSE;
+  LbInfoBooktypeError.Visible := False;
   try
-     if not(management.BTypeCheck(EdInfoBooktypeISBN.text)) then
-     begin
-     LbInfoBooktypeError.Visible := TRUE;
-     LbInfoBooktypeError.Caption := 'Fehler 4: Die ISBN ist keinem Buchtyp zugeordnet';
-     end
-     else if  management.BTypeCheck(EdInfoBooktypeISBN.text) then
-     begin
-
-     //Anfrage an uDBManagement stellen
-     end;
+    if not (management.BTypeCheck(EdInfoBooktypeISBN.Text)) then
+    begin
+      LbInfoBooktypeError.Visible := True;
+      LbInfoBooktypeError.Caption := 'Fehler 4: Die ISBN ist keinem Buchtyp zugeordnet';
+    end
+    else if management.BTypeCheck(EdInfoBooktypeISBN.Text) then
+    begin
+      booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.Text);
+      EdInfoBooktypeName.Text := booktype.gettitle;
+      CBInfoBooktypeSubject.Text := booktype.getsubject;
+    end;
   except
-    On EConvertError do begin
-        LbInfoBooktypeError.Visible := TRUE;
-        LbInfoBooktypeError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbInfoBooktypeError.Visible := True;
+      LbInfoBooktypeError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 
 end;
 
 procedure TForm1.BtInfoRelFilterClick(Sender: TObject);
-procedure printLine (s: STRING ; li : CARDINAL);
-var len,i : CARDINAL;
-begin
-     len := length(s);
-     i   := 1;
-     while i < (len+1) do
-     begin
-          if s[i]=';' then s[i]:=' ';
-          INC(i);
-     end;
-     MeInfoRel.Lines[li]:=s
-end;
 
-procedure readCSV(dataname: STRING);
-   var f : TextFile;
-    str : String;
-    cur: CARDINAL;
-   begin
-     AssignFile (f,dataname);
-     reset (f);
-     cur:=0;
-     while not EOF (f) do
-     begin
-       cur:=cur+1;
-       readln (f,str);
-       //SomeRTLRoutine(UTF8ToAnsi(str));
-       printLine(AnsiToUTF8(str),cur)
-     end;
-     CloseFile (f);
-end;
-begin;
-MeInfoRel.Clear;
-readCSV('rental_relations.csv');
-//MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
+  procedure printLine(s: string; li: cardinal);
+  var
+    len, i: cardinal;
+  begin
+    len := length(s);
+    i := 1;
+    while i < (len + 1) do
+    begin
+      if s[i] = ';' then
+        s[i] := ' ';
+      Inc(i);
+    end;
+    MeInfoRel.Lines[li] := s;
+  end;
+
+  procedure readCSV(dataname: string);
+  var
+    f: TextFile;
+    str: string;
+    cur: cardinal;
+  begin
+    AssignFile(f, dataname);
+    reset(f);
+    cur := 0;
+    while not EOF(f) do
+    begin
+      cur := cur + 1;
+      readln(f, str);
+      //SomeRTLRoutine(UTF8ToAnsi(str));
+      printLine(AnsiToUTF8(str), cur);
+    end;
+    CloseFile(f);
+  end;
+
+begin
+  ;
+  MeInfoRel.Clear;
+  readCSV('rental_relations.csv');
+  //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
 
 procedure TForm1.BtInfoStudEditClick(Sender: TObject);
-  var
-    stud : TStudent;
+var
+  stud: TStudent;
 begin
-       LbInfoStudError.Visible := FALSE;
+  LbInfoStudError.Visible := False;
   try
-       stud := management.getStudentbyID(STRTOINT(EdInfoStudID.text));
-       stud.setlastname(EdInfoStudLastName.text);
-       stud.setfirstname(EdInfoStudFirstName.text);
-       stud.setclassname(EdInfoStudGrade.text);
-       management.supdate(stud);
+    stud := management.getStudentbyID(StrToInt(EdInfoStudID.Text));
+    stud.setlastname(EdInfoStudLastName.Text);
+    stud.setfirstname(EdInfoStudFirstName.Text);
+    stud.setclassname(EdInfoStudGrade.Text);
+    management.supdate(stud);
   except
-    On EConvertError do begin
-        LbInfoStudError.Visible := TRUE;
-        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
 
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
-var stud : Tstudent;
+var
+  stud: Tstudent;
 begin
   try
-     if not(EdInfoStudID.text = '') then begin
-        stud := management.getStudentById(StrToInt(EdInfoStudID.text));
-        TBarcodePrinter.instance.add_barcode(EdInfoStudID.text, management.getSNameById(StrToInt(EdInfoStudID.text)));
-     end;
+    if not (EdInfoStudID.Text = '') then
+    begin
+      stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
+      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text,
+        management.getSNameById(StrToInt(EdInfoStudID.Text)));
+    end;
 
   except
-    On EConvertError do begin
-        LbInfoStudError.Visible := TRUE;
-        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
 
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
-function checkBD:STRING;
-var mo :CARDINAL;
-    s :STRING;
-begin
-   mo :=  SeInfoStudDay.Value;
-   if mo < 10 then s := '0';
-   s := s + IntToStr(mo);
-   mo :=  SeInfoStudMonth.Value;
-   if mo < 10 then s := '0';
-   s := s + IntToStr(mo);
-   mo :=  SeInfoStudYear.Value;
-   s := s + IntToStr(mo);
-   result := s;
-end;
+
+  function checkBD: string;
+  var
+    mo: cardinal;
+    s: string;
+  begin
+    mo := SeInfoStudDay.Value;
+    if mo < 10 then
+      s := '0';
+    s := s + IntToStr(mo);
+    mo := SeInfoStudMonth.Value;
+    if mo < 10 then
+      s := '0';
+    s := s + IntToStr(mo);
+    mo := SeInfoStudYear.Value;
+    s := s + IntToStr(mo);
+    Result := s;
+  end;
+
 var
-    birthdate: String;
-    stud : TStudent;
+  birthdate: string;
+  stud: TStudent;
 begin
-       LbInfoStudError.Visible := FALSE;
+  LbInfoStudError.Visible := False;
   try
-       birthdate:=checkBD;
-       stud := management.getStudentbyID(STRTOINT(EdInfoStudID.text));
-       EdInfoStudFirstName.text:=stud.getfirstname;
-       EdInfoStudLastName.text:=stud.getlastname;
-       EdInfoStudGrade.text:=stud.getclassname;
+    birthdate := checkBD;
+    stud := management.getStudentbyID(StrToInt(EdInfoStudID.Text));
+    EdInfoStudFirstName.Text := stud.getfirstname;
+    EdInfoStudLastName.Text := stud.getlastname;
+    EdInfoStudGrade.Text := stud.getclassname;
   except
-    On EConvertError do begin
-        LbInfoStudError.Visible := TRUE;
-        LbInfoStudError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
@@ -606,38 +698,46 @@ end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
 begin
-  LbRentError.Visible := FALSE;
+  LbRentError.Visible := False;
   try
-  if (management.BIdCheck(STRTOINT(EdRentBook.text)) and management.SIdCheck(STRTOINT(EdRentStud.text))) then begin
-     //Check if book is already rent
-     management.RNew(STRTOINT(EdRentBook.text), STRTOINT(EdRentStud.text));
-     EdRentStud.text:='';
-     EdRentBook.text:='';
-  end;
+    if (management.BIdCheck(StrToInt(EdRentBook.Text)) and
+      management.SIdCheck(StrToInt(EdRentStud.Text))) then
+    begin
+      //Check if book is already rent
+      management.RNew(StrToInt(EdRentBook.Text), StrToInt(EdRentStud.Text));
+      EdRentStud.Text := '';
+      EdRentBook.Text := '';
+    end;
 
   except
-    On EConvertError do begin
-        LbRentError.Visible := TRUE;
-        LbRentError.Caption := 'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    On EConvertError do
+    begin
+      LbRentError.Visible := True;
+      LbRentError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
 begin
-     LbRetError.Visible := FALSE;
+  LbRetError.Visible := False;
   try
-    if (management.BIdCheck(STRTOINT(EdRetBook.text)) and management.SIdCheck(STRTOINT(EdRetStud.text))) then begin
-     management.BQualiNew(STRTOINT(EdRetBook.text), TBRetBookState.Position);
-     management.BBack(STRTOINT(EdRetBook.text), STRTOINT(EdRetStud.text));
-     EdRetStud.text:='';
-     EdRetBook.text:='';
-     TBRetBookState.Position :=1;
-  end;
-      except
-    On EConvertError do begin
-        LbRetError.Visible := TRUE;
-        LbRetError.Caption := 'Error 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    if (management.BIdCheck(StrToInt(EdRetBook.Text)) and
+      management.SIdCheck(StrToInt(EdRetStud.Text))) then
+    begin
+      management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
+      management.BBack(StrToInt(EdRetBook.Text), StrToInt(EdRetStud.Text));
+      EdRetStud.Text := '';
+      EdRetBook.Text := '';
+      TBRetBookState.Position := 1;
+    end;
+  except
+    On EConvertError do
+    begin
+      LbRetError.Visible := True;
+      LbRetError.Caption :=
+        'Error 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
   //returnBook(StrToINT(EdRetStud.text),StrToINT(EdRetBook.text),TBRetBookState.Position)
@@ -645,10 +745,9 @@ end;
 
 procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
 begin
-     OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
+  OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
 end;
 
 
 
 end.
-
