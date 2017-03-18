@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
   Buttons, CheckLst, DB, uManagement, Student, Book, Rental,
-  Booktype, LConvEncoding, uBarcodePrint;
+  Booktype, LConvEncoding, uBarcodePrint, uniqueinstanceraw;
 
 type
 
@@ -222,6 +222,7 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  if InstanceRunning then halt;
   // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
   PermissionLevel := 1;
   management := tmanagement.Create();
