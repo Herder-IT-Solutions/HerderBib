@@ -56,6 +56,8 @@ type
     EdRetStud: TEdit;
     ImRentHerder: TImage;
     ImRetHerder: TImage;
+    ImAddHerder: TImage;
+    ImPrintHerder: TImage;
     LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
@@ -155,9 +157,11 @@ type
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
+
       var Handled: boolean);
   private
     { private declarations }
+    procedure addToPrintingQueueListBox(code : string; title : string);
   public
     { public declarations }
   end;
@@ -195,7 +199,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
   PermissionLevel := 1;
-  management := tdbmanagement.Create();
+  management := tmanagement.Create();
   //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
@@ -386,6 +390,7 @@ begin
       tempcode := management.BNew(s);
       Inc(k);
       TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text);
+      addToPrintingQueueListBox(IntToStr(tempcode),  EdAddBookName.Text);
     end;
     EdAddBookName.Text := '';
     EdAddBookISBN.Text := '';
@@ -464,6 +469,7 @@ begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       booktitle := management.BTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
+      addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
     end
     else
     begin
@@ -631,13 +637,15 @@ end;
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 var
   stud: Tstudent;
+  studname : String;
 begin
   try
     if not (EdInfoStudID.Text = '') then
     begin
-      stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
-      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text,
-        management.getSNameById(StrToInt(EdInfoStudID.Text)));
+      //stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
+      studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
+      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text,studname);
+      addToPrintingQueueListBox(EdInfoStudID.Text,studname);
     end;
 
   except
@@ -694,6 +702,7 @@ end;
 procedure TForm1.BtPrintClick(Sender: TObject);
 begin
   TBarcodePrinter.instance.print;
+  LiPrintQueue.Items.Clear;
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
@@ -749,5 +758,9 @@ begin
 end;
 
 
+procedure Tform1.addToPrintingQueueListBox(code : string; title : string);
+begin
+   LiPrintQueue.Items.add(code + ', ' + title);
+end;
 
 end.
