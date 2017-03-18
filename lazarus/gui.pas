@@ -143,6 +143,7 @@ type
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
+    procedure BtInfoStudExportRelClick(Sender: TObject);
     procedure BtInfoStudPrintQClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
     procedure BtInfoSuportLicenseClick(Sender: TObject);
@@ -458,18 +459,32 @@ procedure TForm1.BtInfoBookDelClick(Sender: TObject);
 var
   b: TBook;
 begin
+  try
   b := management.getBookByID(StrToInt(EdInfoBookID.Text));
   management.BDel(b);
   EdInfoBookId.Text := '';
   EdInfoBookRent.Text := '';
   TBInfoBookState.Position := 1;
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
+var book : TBook;
 begin
   LbInfoBookError.Visible := False;
   try
-
+  if not (EdInfoBookID.text = '') then begin
+    book := management.getBookByID(StrToInt(EdInfoBookID.text));
+    book.setCondition(TBInfoBookState.Position);
+    management.BUpdate(book);
+  end;
   except
     On EConvertError do
     begin
@@ -491,7 +506,7 @@ begin
     if not (EdInfoBookId.Text = '') then
     begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
-      booktitle := management.BTitleByID(StrToInt(EdInfoBookID.Text));
+      booktitle := management.getBTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
       addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
     end
@@ -515,6 +530,7 @@ end;
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
 var
   book: TBOOK;
+  stud : TSTUDENT;
 begin
   LbInfoBookError.Visible := False;
   try
@@ -523,7 +539,8 @@ begin
     begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       TBInfoBookState.Position := book.getcondition;
-      //SHOW RENTAL RELATION
+      stud := management.getStudentWhoRentedBook(book);
+      EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
     end;
 
   except
@@ -554,6 +571,7 @@ begin
       begin
         booktype.setSubject(CBInfoBooktypeSubject.Text);
       end;
+      management.BTypeUpdate(booktype);
     end;
   except
     On EConvertError do
@@ -649,6 +667,20 @@ begin
     stud.setclassname(EdInfoStudGrade.Text);
     management.supdate(stud);
   except
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+end;
+
+procedure TForm1.BtInfoStudExportRelClick(Sender: TObject);
+begin
+try
+
+except
     On EConvertError do
     begin
       LbInfoStudError.Visible := True;

@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 298
+  Left = 233
   Height = 571
-  Top = 133
+  Top = 108
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -34119,9 +34119,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabCreditsHelp
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 4
+        TabIndex = 0
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -34227,6 +34227,7 @@ object Form1: TForm1
             Width = 216
             Caption = 'Ausleihbeziehungen in Datei exportieren'
             Enabled = False
+            OnClick = BtInfoStudExportRelClick
             TabOrder = 7
           end
           object LbInfoStudError: TLabel
@@ -34427,7 +34428,7 @@ object Form1: TForm1
         end
         object TabRel: TTabSheet
           Caption = 'Ausleihbeziehungen'
-          ClientHeight = 518
+          ClientHeight = 516
           ClientWidth = 744
           object CBInfoRelGrade: TComboBox
             Left = 112
@@ -34450,25 +34451,25 @@ object Form1: TForm1
           end
           object LbInfoRelFilter: TLabel
             Left = 8
-            Height = 13
+            Height = 15
             Top = 8
-            Width = 28
+            Width = 29
             Caption = 'Filter:'
             ParentColor = False
           end
           object LbInfoRelGrade: TLabel
             Left = 48
-            Height = 13
+            Height = 15
             Top = 8
-            Width = 61
+            Width = 65
             Caption = 'Klassenstufe'
             ParentColor = False
           end
           object LbInfoRelSubj: TLabel
             Left = 224
-            Height = 13
+            Height = 15
             Top = 8
-            Width = 23
+            Width = 25
             Caption = 'Fach'
             ParentColor = False
           end
