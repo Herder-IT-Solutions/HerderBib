@@ -156,6 +156,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
+    procedure SEInfoStudMonthChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
 
       var Handled: boolean);
@@ -191,6 +192,25 @@ begin
     LbInfoAdminConnection.Caption := 'Datenbankverbindung hergestellt'
   else if not (management.isConnected) then
     LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt';
+end;
+
+
+procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
+begin
+  case SeInfoStudMonth.Value of      //This procedure limits the number of days according to the month
+  1: SeInfoStudDay.MaxValue:= 31;
+  2: SeInfoStudDay.MaxValue:= 29;
+  3: SeInfoStudDay.MaxValue:= 31;
+  4: SeInfoStudDay.MaxValue:= 30;
+  5: SeInfoStudDay.MaxValue:= 31;
+  6: SeInfoStudDay.MaxValue:= 30;
+  7: SeInfoStudDay.MaxValue:= 31;
+  8: SeInfoStudDay.MaxValue:= 31;
+  9: SeInfoStudDay.MaxValue:= 30;
+  10: SeInfoStudDay.MaxValue:= 31;
+  11: SeInfoStudDay.MaxValue:= 30;
+  12: SeInfoStudDay.MaxValue:= 31;
+  end;
 end;
 
 

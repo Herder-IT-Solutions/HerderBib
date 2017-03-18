@@ -11580,8 +11580,8 @@ object Form1: TForm1
     Height = 600
     Top = 0
     Width = 765
-    ActivePage = TabAdd
-    TabIndex = 2
+    ActivePage = TabRent
+    TabIndex = 0
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
@@ -34119,9 +34119,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabBook
+        ActivePage = TabStud
         ParentBiDiMode = False
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -34268,6 +34268,7 @@ object Form1: TForm1
             Width = 50
             MaxValue = 12
             MinValue = 1
+            OnChange = SEInfoStudMonthChange
             ParentShowHint = False
             ShowHint = True
             TabOrder = 9
