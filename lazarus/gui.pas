@@ -20,6 +20,7 @@ type
     BtInfoBooktypeShow: TButton;
     BtInfoBookShow1: TButton;
     BtInfoSuportError: TButton;
+    BtInfoSuportLicense: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
@@ -58,6 +59,7 @@ type
     ImRetHerder: TImage;
     ImAddHerder: TImage;
     ImPrintHerder: TImage;
+    LbInfoSupportLicense: TLabel;
     LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
@@ -143,10 +145,12 @@ type
     procedure BtInfoStudEditClick(Sender: TObject);
     procedure BtInfoStudPrintQClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
+    procedure BtInfoSuportLicenseClick(Sender: TObject);
+    procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure BtPrintClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
-    procedure BtInfoSuportWikiClick(Sender: TObject);
+    procedure BtInfoSuportErrorClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdRetBookChange(Sender: TObject);
     procedure EdRentBookChange(Sender: TObject);
@@ -158,11 +162,10 @@ type
     procedure PCInfosChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
-
       var Handled: boolean);
   private
     { private declarations }
-    procedure addToPrintingQueueListBox(code : string; title : string);
+    procedure addToPrintingQueueListBox(code: string; title: string);
   public
     { public declarations }
   end;
@@ -197,19 +200,20 @@ end;
 
 procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
 begin
-  case SeInfoStudMonth.Value of      //This procedure limits the number of days according to the month
-  1: SeInfoStudDay.MaxValue:= 31;
-  2: SeInfoStudDay.MaxValue:= 29;
-  3: SeInfoStudDay.MaxValue:= 31;
-  4: SeInfoStudDay.MaxValue:= 30;
-  5: SeInfoStudDay.MaxValue:= 31;
-  6: SeInfoStudDay.MaxValue:= 30;
-  7: SeInfoStudDay.MaxValue:= 31;
-  8: SeInfoStudDay.MaxValue:= 31;
-  9: SeInfoStudDay.MaxValue:= 30;
-  10: SeInfoStudDay.MaxValue:= 31;
-  11: SeInfoStudDay.MaxValue:= 30;
-  12: SeInfoStudDay.MaxValue:= 31;
+  case SeInfoStudMonth.Value of
+    //This procedure limits the number of days according to the month
+    1: SeInfoStudDay.MaxValue := 31;
+    2: SeInfoStudDay.MaxValue := 29;
+    3: SeInfoStudDay.MaxValue := 31;
+    4: SeInfoStudDay.MaxValue := 30;
+    5: SeInfoStudDay.MaxValue := 31;
+    6: SeInfoStudDay.MaxValue := 30;
+    7: SeInfoStudDay.MaxValue := 31;
+    8: SeInfoStudDay.MaxValue := 31;
+    9: SeInfoStudDay.MaxValue := 30;
+    10:SeInfoStudDay.MaxValue := 31;
+    11:SeInfoStudDay.MaxValue := 30;
+    12:SeInfoStudDay.MaxValue := 31;
   end;
 end;
 
@@ -410,7 +414,7 @@ begin
       tempcode := management.BNew(s);
       Inc(k);
       TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text);
-      addToPrintingQueueListBox(IntToStr(tempcode),  EdAddBookName.Text);
+      addToPrintingQueueListBox(IntToStr(tempcode), EdAddBookName.Text);
     end;
     EdAddBookName.Text := '';
     EdAddBookISBN.Text := '';
@@ -535,22 +539,22 @@ end;
 
 procedure TForm1.BtInfoBooktypeEditClick(Sender: TObject);
 var
-  booktype : TBooktype;
+  booktype: TBooktype;
 begin
   LbInfoBooktypeError.Visible := False;
   try
-  if not(EdInfoBooktypeISBN.text = '') then
-     begin
-     booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.text);
-     if not(EdInfoBooktypeName.text = '') then
-       begin
-       booktype.setTitle(EdInfoBooktypeName.text);
-       end;
-     if not(CBInfoBooktypeSubject.text = '') then
-       begin
-       booktype.setSubject(CBInfoBooktypeSubject.text);
-       end;
-     end;
+    if not (EdInfoBooktypeISBN.Text = '') then
+    begin
+      booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.Text);
+      if not (EdInfoBooktypeName.Text = '') then
+      begin
+        booktype.setTitle(EdInfoBooktypeName.Text);
+      end;
+      if not (CBInfoBooktypeSubject.Text = '') then
+      begin
+        booktype.setSubject(CBInfoBooktypeSubject.Text);
+      end;
+    end;
   except
     On EConvertError do
     begin
@@ -657,15 +661,15 @@ end;
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 var
   stud: Tstudent;
-  studname : String;
+  studname: string;
 begin
   try
     if not (EdInfoStudID.Text = '') then
     begin
       //stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
       studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
-      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text,studname);
-      addToPrintingQueueListBox(EdInfoStudID.Text,studname);
+      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text, studname);
+      addToPrintingQueueListBox(EdInfoStudID.Text, studname);
     end;
 
   except
@@ -717,6 +721,18 @@ begin
         'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+end;
+
+procedure TForm1.BtInfoSuportLicenseClick(Sender: TObject);
+begin
+  OpenURL('https://creativecommons.org/licenses/by-sa/4.0/');
+end;
+
+procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
+begin
+
+  OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki');
+
 end;
 
 procedure TForm1.BtPrintClick(Sender: TObject);
@@ -772,15 +788,15 @@ begin
   //returnBook(StrToINT(EdRetStud.text),StrToINT(EdRetBook.text),TBRetBookState.Position)
 end;
 
-procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
+procedure TForm1.BtInfoSuportErrorClick(Sender: TObject);
 begin
   OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
 end;
 
 
-procedure Tform1.addToPrintingQueueListBox(code : string; title : string);
+procedure Tform1.addToPrintingQueueListBox(code: string; title: string);
 begin
-   LiPrintQueue.Items.add(code + ', ' + title);
+  LiPrintQueue.Items.add(code + ', ' + title);
 end;
 
 end.

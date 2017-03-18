@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 191
+  Left = 272
   Height = 571
-  Top = 103
+  Top = 128
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -34119,9 +34119,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabStud
+        ActivePage = TabCreditsHelp
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 4
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -34725,8 +34725,25 @@ object Form1: TForm1
             Top = 200
             Width = 227
             Caption = 'Fehlerübersicht'
-            OnClick = BtInfoSuportWikiClick
+            OnClick = BtInfoSuportErrorClick
             TabOrder = 2
+          end
+          object LbInfoSupportLicense: TLabel
+            Left = 8
+            Height = 45
+            Top = 240
+            Width = 271
+            Caption = 'Dieses Projekt steht unter der CC-BY-SA-4.0  Lizenz '#13#10'(Creative Commons Attribution Share Alike 4.0). '#13#10'Mehr Informationen finden Sie hier.'
+            ParentColor = False
+          end
+          object BtInfoSuportLicense: TButton
+            Left = 8
+            Height = 25
+            Top = 296
+            Width = 227
+            Caption = 'Lizenzinformationen'
+            OnClick = BtInfoSuportLicenseClick
+            TabOrder = 3
           end
         end
         object Admnistration: TTabSheet
