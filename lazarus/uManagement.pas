@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection,
-  book, booktype, rental, dateutils;
+  book, booktype, rental, dateutils, DBConstants;
 
 type
 
@@ -153,7 +153,7 @@ type
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
     //Vor: den Vorname, Nachnamen, Klassennamen und Geburtsdatum
-    //     Geburtsdatum darf ourNil sein; cname darf '' sein, um keine Werte zu übergeben
+    //     Geburtsdatum darf SQLNull sein; cname darf '' sein, um keine Werte zu übergeben
     //Erg: Ein Array von TStudent-Objekten mit den Daten
     function getStudentsByFirstLastClassNameBirthdate(fname, lname, cname: string;
       birth: TDate): ArrayOfStudents;
@@ -198,9 +198,6 @@ type
   end;
 
 implementation
-
-const
-  ourNil = -693594;
 
 constructor TManagement.Create();
 begin
@@ -420,7 +417,7 @@ begin
       rental.setBookId(BId);
       rental.setStudentId(SId);
       rental.setRentalDate(now);
-      rental.setReturnDate(ourNil);
+      rental.setReturnDate(SQLNull);
 
       Result := uDBConn.updateinsertRental(rental);
     end
@@ -581,7 +578,7 @@ end;
 
 function TManagement.getStudentWhoRentedBook(book: TBook): TStudent;
 begin
-  Result:=uDBConn.getStudentWhoRentedBook(book);
+  Result := uDBConn.getStudentWhoRentedBook(book);
 end;
 
 function TManagement.importCSVSchueler(Dateiname: string): boolean;
