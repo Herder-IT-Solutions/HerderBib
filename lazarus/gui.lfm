@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 272
+  Left = 298
   Height = 571
-  Top = 128
+  Top = 133
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -34746,8 +34746,8 @@ object Form1: TForm1
             TabOrder = 3
           end
         end
-        object Admnistration: TTabSheet
-          Caption = 'Admnistration'
+        object Administration: TTabSheet
+          Caption = 'Administration'
           ClientHeight = 516
           ClientWidth = 744
           object BtInfoAdminLogout: TButton

@@ -127,7 +127,7 @@ type
     TabRel: TTabSheet;
     TabBooktype: TTabSheet;
     TabCreditsHelp: TTabSheet;
-    Admnistration: TTabSheet;
+    Administration: TTabSheet;
     TabPrint: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
