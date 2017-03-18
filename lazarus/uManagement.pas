@@ -158,6 +158,10 @@ type
     function getStudentsByFirstLastClassNameBirthdate(fname, lname, cname: string;
       birth: TDate): ArrayOfStudents;
 
+    //Vor: Das TBook-Objekt
+    //Erg: TStudent-Objekt des ausleihenden Schülers
+    function getStudentWhoRentedBook(book: TBook): TStudent;
+
     // Importiert die Schüler Liste als CSV Datei
     // Klasse; Name; Vorname; Geburtsdatum
     // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
@@ -573,6 +577,11 @@ begin
   end;
 
   Result := students2;
+end;
+
+function TManagement.getStudentWhoRentedBook(book: TBook): TStudent;
+begin
+  Result:=uDBConn.getStudentWhoRentedBook(book);
 end;
 
 function TManagement.importCSVSchueler(Dateiname: string): boolean;
