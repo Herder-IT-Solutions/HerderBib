@@ -58,9 +58,14 @@ type
     //Erg: Wahr wenn erfolgreich
     function BQualiNew(BId, quali: int64): boolean;
 
+    //Eff: Überschreibt die Daten des Buches mit der übergebenen Id in der
+    //     Datenbank mit den übergebenen Werten
+    //Erg: Wenn Buch nicht vorhanden wahr -> False
+    function BUpdate(var book: TBook): boolean;
+
     //Vor: Eine Buch Id
     //Erg: Gibt den Titel des Buches wieder
-    function BTitleById(BId: int64): string;
+    function getBTitleById(BId: int64): string;
 
     //Vor: Buch Id
     //Erg: Das Buch-Object mit der Id
@@ -81,9 +86,13 @@ type
     //Erg: Wahr wenn erfolgreich; Falsch wenn Fehler oder Buchtyp bereits vorhanden
     function BTypeNew(isbn, title, subject: string): boolean;
 
-    // returns the Booktype of a given ISBN
-    // parameter: ISBN (string type)
-    // result: TBooktype on success, NIL on failure
+    //Eff: Überschreibt die Daten des Buchtyps mit der übergebenen Id in der
+    //     Datenbank mit den übergebenen Werten
+    //Erg: Wenn Buchtyp nicht vorhanden wahr -> False
+    function BTypeUpdate(var Booktype: TBooktype): boolean;
+
+    //Vor: ISBM als String ohne Bindestriche
+    //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
 
 
@@ -307,7 +316,15 @@ begin
     Result := False;
 end;
 
-function TManagement.BTitleById(BId: int64): string;
+function TManagement.BUpdate(var book: TBook): boolean;
+begin
+  if not (book = nil) and self.BIdCheck(book.getId()) then
+    Result := uDBConn.updateInsertBook(book)
+  else
+    Result := False;
+end;
+
+function TManagement.getBTitleById(BId: int64): string;
 var
   book: TBook;
   booktype: TBooktype;
@@ -348,6 +365,14 @@ begin
 
     Result := uDBConn.updateinsertBooktype(booktype);
   end
+  else
+    Result := False;
+end;
+
+function TManagement.BTypeUpdate(var booktype: TBooktype): boolean;
+begin
+  if not (booktype = nil) and self.BTypeCheck(booktype.getIsbn()) then
+    Result := uDBConn.updateInsertBooktype(booktype)
   else
     Result := False;
 end;
@@ -602,11 +627,11 @@ begin
         i := i + 1;
       end;
       birthDate := StrToDate(birth, '-');
-                                    // Vergleich ob bereits vorhanden
+      // Vergleich ob bereits vorhanden
       students := self.getStudentsByFirstLastClassNameBirthdate(fname,
         lname, '', birthDate);
 
-                              //Verarbeitung
+      //Verarbeitung
       if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
@@ -690,7 +715,10 @@ end;
 
 function TManagement.SUpdate(var student: TStudent): boolean;
 begin
-  Result := uDBConn.updateinsertStudent(student);
+  if not (student = nil) and self.SIdCheck(student.getId()) then
+    Result := uDBConn.updateinsertStudent(student)
+  else
+    Result := False;
 end;
 
 end.
