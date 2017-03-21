@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 233
+  Left = 114
   Height = 571
-  Top = 108
+  Top = 122
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -11574,22 +11574,22 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000
   }
   OnCreate = FormCreate
-  LCLVersion = '1.6.2.0'
+  LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
     Left = 0
     Height = 600
     Top = 0
     Width = 765
-    ActivePage = TabRent
-    TabIndex = 0
+    ActivePage = TabInfo
+    TabIndex = 4
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object EdRentStud: TEdit
         Left = 7
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 40
         Width = 408
@@ -11600,7 +11600,7 @@ object Form1: TForm1
       end
       object EdRentBook: TEdit
         Left = 7
-        Height = 23
+        Height = 21
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Diese finden Sie im Barcode. '
         Top = 104
         Width = 408
@@ -11611,17 +11611,17 @@ object Form1: TForm1
       end
       object LbRentStudInstruct: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 16
-        Width = 447
+        Width = 400
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
       end
       object LbRentBookInstruct: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 80
-        Width = 435
+        Width = 388
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
@@ -17188,9 +17188,9 @@ object Form1: TForm1
       end
       object LbRentError: TLabel
         Left = 7
-        Height = 15
+        Height = 13
         Top = 184
-        Width = 62
+        Width = 58
         Caption = 'LbRentError'
         ParentColor = False
         Visible = False
@@ -22895,11 +22895,11 @@ object Form1: TForm1
       end
       object CBAddBookSubject: TComboBox
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
         Top = 72
         Width = 100
-        ItemHeight = 15
+        ItemHeight = 13
         ItemIndex = 5
         Items.Strings = (
           'Arbeitsgemeinschaft'
@@ -34110,7 +34110,7 @@ object Form1: TForm1
     end
     object TabInfo: TTabSheet
       Caption = 'Informationen betrachten und verändern'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object PCInfos: TPageControl
         AnchorSideLeft.Side = asrBottom
@@ -34126,11 +34126,11 @@ object Form1: TForm1
         OnChange = PCInfosChange
         object TabStud: TTabSheet
           Caption = 'Schüler'
-          ClientHeight = 516
+          ClientHeight = 518
           ClientWidth = 744
           object EdInfoStudFirstName: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 8
             Width = 488
             OnChange = EdInfoStudFirstNameChange
@@ -34138,45 +34138,45 @@ object Form1: TForm1
           end
           object EdInfoStudLastName: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 40
             Width = 488
             TabOrder = 1
           end
           object LbInfoStudFirstName: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 16
-            Width = 47
+            Width = 42
             Caption = 'Vorname'
             ParentColor = False
           end
           object LbInfoStudLastName: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 48
-            Width = 58
+            Width = 50
             Caption = 'Nachname'
             ParentColor = False
           end
           object EdInfoStudGrade: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 72
             Width = 488
             TabOrder = 2
           end
           object LbInfoStudGrade: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 80
-            Width = 32
+            Width = 30
             Caption = 'Klasse'
             ParentColor = False
           end
           object EdInfoStudID: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 104
             Width = 488
             NumbersOnly = True
@@ -34184,9 +34184,9 @@ object Form1: TForm1
           end
           object LbInfoStudID: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 112
-            Width = 118
+            Width = 104
             Caption = 'ID-Nummer (Barcode)'
             ParentColor = False
           end
@@ -34232,25 +34232,25 @@ object Form1: TForm1
           end
           object LbInfoStudError: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 224
-            Width = 83
+            Width = 77
             Caption = 'LbInfoStudError'
             ParentColor = False
             Visible = False
           end
           object LbInfoStudBD: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Hint = 'Tag,Monat,Jahr'
             Top = 144
-            Width = 76
+            Width = 68
             Caption = 'Geburtsdatum'
             ParentColor = False
           end
           object SEInfoStudDay: TSpinEdit
             Left = 240
-            Height = 23
+            Height = 21
             Hint = 'Tag'
             Top = 136
             Width = 50
@@ -34263,7 +34263,7 @@ object Form1: TForm1
           end
           object SEInfoStudMonth: TSpinEdit
             Left = 304
-            Height = 23
+            Height = 21
             Hint = 'Monat'
             Top = 136
             Width = 50
@@ -34277,7 +34277,7 @@ object Form1: TForm1
           end
           object SEInfoStudYear: TSpinEdit
             Left = 368
-            Height = 23
+            Height = 21
             Hint = 'Jahr'
             Top = 136
             Width = 88
@@ -34432,10 +34432,10 @@ object Form1: TForm1
           ClientWidth = 744
           object CBInfoRelGrade: TComboBox
             Left = 112
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 0
             Items.Strings = (
               '5'
@@ -34475,10 +34475,10 @@ object Form1: TForm1
           end
           object CBInfoRelSubject: TComboBox
             Left = 256
-            Height = 23
+            Height = 21
             Top = 8
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'
@@ -34589,11 +34589,11 @@ object Form1: TForm1
           end
           object CBInfoBooktypeSubject: TComboBox
             Left = 240
-            Height = 23
+            Height = 21
             Hint = 'Wählen Sie das Fach des Buches aus der Liste aus.'
             Top = 80
             Width = 100
-            ItemHeight = 15
+            ItemHeight = 13
             ItemIndex = 5
             Items.Strings = (
               'Arbeitsgemeinschaft'
