@@ -11576,12 +11576,12 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl
-    Left = 0
+    Left = -2
     Height = 600
     Top = 0
     Width = 765
-    ActivePage = TabInfo
-    TabIndex = 4
+    ActivePage = TabAdd
+    TabIndex = 2
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
@@ -22860,11 +22860,11 @@ object Form1: TForm1
     end
     object TabAdd: TTabSheet
       Caption = 'Einpflegen'
-      ClientHeight = 572
+      ClientHeight = 574
       ClientWidth = 757
       object EdAddBookName: TEdit
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Bitte geben Sie den Namen des Buches ein.'#13#10'Strukturieren Sie ihn wiefolgt:'#13#10'"Name Klasse, Verlag"'
         Top = 8
         Width = 512
@@ -22874,7 +22874,7 @@ object Form1: TForm1
       end
       object EdAddBookISBN: TEdit
         Left = 232
-        Height = 23
+        Height = 21
         Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 512
@@ -22887,7 +22887,7 @@ object Form1: TForm1
       end
       object SEAddBookQuantity: TSpinEdit
         Left = 232
-        Height = 23
+        Height = 21
         Top = 104
         Width = 50
         TabOrder = 2
@@ -22933,33 +22933,33 @@ object Form1: TForm1
       end
       object LbAddBookName: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 16
-        Width = 218
+        Width = 197
         Caption = 'Bitte geben Sie den Namen des Buchs ein'
         ParentColor = False
       end
       object LbAddBookISBN: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 48
-        Width = 200
+        Width = 183
         Caption = 'Bitte geben Sie die ISBN des Buchs ein'
         ParentColor = False
       end
       object LbAddBookQuantity: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 112
-        Width = 155
+        Width = 141
         Caption = 'Bitte geben Sie die Anzahl ein'
         ParentColor = False
       end
       object LbAddBookSubject: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 80
-        Width = 153
+        Width = 142
         Caption = 'Bitte wählen Sie das Fach aus'
         ParentColor = False
       end
@@ -22977,19 +22977,19 @@ object Form1: TForm1
       end
       object LbAddBookError: TLabel
         Left = 8
-        Height = 15
+        Height = 13
         Top = 176
-        Width = 64
+        Width = 59
         Caption = 'Keine Fehler'
         ParentColor = False
         Visible = False
       end
       object LbAddBookHint: TLabel
         Left = 8
-        Height = 60
+        Height = 13
         Top = 200
-        Width = 558
-        Caption = 'Wenn neue Exemplare eines bereits in der Datenbank vorhandenen Buchtypes hinzugefügt werden sollen ,'#13#10'müssen Sie nur die ISBN sowie die Anzahl eintragen und absenden,'#13#10'bei neuen Büchern weisen Sie bitte auch Name und Fach hinzu.'#13#10'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
+        Width = 432
+        Caption = 'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
         ParentColor = False
       end
       object ImAddHerder: TImage
@@ -34119,9 +34119,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabStud
+        ActivePage = TabBook
         ParentBiDiMode = False
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -34300,20 +34300,20 @@ object Form1: TForm1
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
-          ClientHeight = 516
+          ClientHeight = 518
           ClientWidth = 744
           object EdInfoBookID: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 16
             Width = 480
             TabOrder = 0
           end
           object LbInfoBookState: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 56
-            Width = 43
+            Width = 39
             Caption = 'Zustand'
             ParentColor = False
           end
@@ -34328,9 +34328,9 @@ object Form1: TForm1
           end
           object LbInfoBookID: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 24
-            Width = 153
+            Width = 133
             Caption = 'Buch-Identifikationsnummer'
             ParentColor = False
           end
@@ -34360,7 +34360,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack1: TLabel
             Left = 240
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '1'
@@ -34368,7 +34368,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack5: TLabel
             Left = 464
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '5'
@@ -34376,7 +34376,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack3: TLabel
             Left = 352
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '3'
@@ -34384,15 +34384,15 @@ object Form1: TForm1
           end
           object LbInfoBookRent: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 96
-            Width = 88
+            Width = 79
             Caption = 'Ausgeliehen von'
             ParentColor = False
           end
           object EdInfoBookRent: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 88
             Width = 480
             TabOrder = 4
@@ -34409,9 +34409,9 @@ object Form1: TForm1
           end
           object LbInfoBookError: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 240
-            Width = 86
+            Width = 78
             Caption = 'LbInfoBookError'
             ParentColor = False
             Visible = False

@@ -544,7 +544,7 @@ begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       TBInfoBookState.Position := book.getcondition;
       stud := management.getStudentWhoRentedBook(book);
-      EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
+      if stud<>nil then EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
     end;
 
   except
