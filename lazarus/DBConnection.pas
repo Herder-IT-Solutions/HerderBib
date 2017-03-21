@@ -454,8 +454,8 @@ begin
 end;
 
 function TDBConnection.getStudentsByFistLastClassNameBirthdate(
-  fname, lname, cname: string; birth: TDate): ArrayOfStudents;
-
+  fname, lname, cname: string;
+  birth: TDate): ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -700,7 +700,7 @@ begin
     on E: Exception do
     begin
       DBError := E;
-      Result := false;
+      Result := False;
       exit;
     end;
   end;
