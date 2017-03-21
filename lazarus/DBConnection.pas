@@ -14,7 +14,15 @@ type
   ArrayOfBooks = array of TBook;
   ArrayOfBooktypes = array of TBooktype;
 
-  { TForm1 }
+  ///////////////////////////////////////////////////////////
+  //         Notes for use of TDBConnection                //
+  //                                                       //
+  //  You can call every function below, but you need to   //
+  //  check if there were any errors by checking that the  //
+  //  result of TDBConnection.getError function is NIL.    //
+  //                                                       //
+  ///////////////////////////////////////////////////////////
+
   TDBConnection = class
   public
     /////////////////////////////////////////////////////////
@@ -90,6 +98,11 @@ type
     // result: array of rental objects
     function getAllRentalsByBookAndStudent(var student: TStudent;
       var book: TBook): ArrayOfRentals;
+
+    // Checks if there are unreturned rentals for a specific book
+    // parameter: book object
+    // result: true when rentals exist that match this criteria
+    function existsUnreturnedRentalByBook(var book: TBook): boolean;
 
     // updateInserts rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
@@ -440,8 +453,9 @@ begin
     Result := arr[0];
 end;
 
-function TDBConnection.getStudentsByFistLastClassNameBirthdate(fname, lname, cname: string;
-  birth: TDate): ArrayOfStudents;
+function TDBConnection.getStudentsByFistLastClassNameBirthdate(
+  fname, lname, cname: string; birth: TDate): ArrayOfStudents;
+
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -667,6 +681,32 @@ begin
   Result := nil;
 
   setRentalFields(Result, False);
+end;
+
+function TDBConnection.existsUnreturnedRentalByBook(var book: TBook): boolean;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM rental where book_id = (:book) and return_date = NULL';
+      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := false;
+      exit;
+    end;
+  end;
+
+  SQLQuery.First; //set pointer to first result row
+  Result := not EOF; //does one exist?
 end;
 
 function TDBConnection.updateInsertRental(var rental: TRental): boolean;
