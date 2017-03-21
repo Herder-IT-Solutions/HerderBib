@@ -274,13 +274,12 @@ begin
 
     hid := IntToStr(id);
     //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
+    pz := -(((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
       (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
-      StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+      StrToInt(hid[4]) + StrToInt(hid[6]))) mod 10;
     //Die Prüfziffer Teil 1
-    if pz = 10 then
-      pz := 0;
-    id := (id * 10) + (10 - pz);
+    
+    id := (id * 10) + pz;
   until BIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
