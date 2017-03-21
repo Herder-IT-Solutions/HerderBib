@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection,
-  book, booktype, rental, dateutils, DBConstants;
+  book, booktype, rental, dateutils, DBConstants, Dialogs;
 
 type
 
@@ -420,6 +420,10 @@ begin
       rental.setReturnDate(SQLNull);
 
       Result := uDBConn.updateinsertRental(rental);
+      if Result = false then
+      begin
+        ShowMessage('mgmt: ' + uDBConn.getErrorMsg);
+      end;
     end
     else
       Result := False;

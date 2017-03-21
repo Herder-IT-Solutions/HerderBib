@@ -2,16 +2,16 @@
 <CONFIG>
   <ProjectSession>
     <PathDelim Value="\"/>
-    <Version Value="9"/>
+    <Version Value="10"/>
     <BuildModes Active="Default"/>
-    <Units Count="23">
+    <Units Count="28">
       <Unit0>
         <Filename Value="herderbib.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <WindowIndex Value="1"/>
-        <CursorPos Y="20"/>
-        <UsageCount Value="60"/>
+        <CursorPos X="21" Y="6"/>
+        <UsageCount Value="62"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
@@ -20,22 +20,20 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="211"/>
-        <CursorPos X="3" Y="225"/>
-        <UsageCount Value="60"/>
+        <TopLine Value="774"/>
+        <CursorPos X="46" Y="786"/>
+        <UsageCount Value="62"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <WindowIndex Value="1"/>
         <TopLine Value="4295"/>
         <CursorPos Y="4302"/>
         <UsageCount Value="14"/>
-        <Loaded Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\lazarus\lcl\include\wincontrol.inc"/>
@@ -110,20 +108,21 @@
       </Unit11>
       <Unit12>
         <Filename Value="DBConnection.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="404"/>
-        <CursorPos X="14" Y="410"/>
-        <UsageCount Value="17"/>
+        <TopLine Value="163"/>
+        <CursorPos Y="173"/>
+        <UsageCount Value="18"/>
         <Loaded Value="True"/>
       </Unit12>
       <Unit13>
         <Filename Value="student.pas"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <WindowIndex Value="1"/>
         <TopLine Value="37"/>
         <CursorPos X="36" Y="8"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="18"/>
         <Loaded Value="True"/>
       </Unit13>
       <Unit14>
@@ -139,15 +138,16 @@
         <EditorIndex Value="9"/>
         <WindowIndex Value="1"/>
         <CursorPos X="17" Y="13"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit15>
       <Unit16>
         <Filename Value="rental.pas"/>
         <EditorIndex Value="8"/>
         <WindowIndex Value="1"/>
-        <CursorPos X="24" Y="8"/>
-        <UsageCount Value="16"/>
+        <TopLine Value="54"/>
+        <CursorPos X="14" Y="62"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit16>
       <Unit17>
@@ -155,9 +155,9 @@
         <UnitName Value="uBarcodePrint"/>
         <EditorIndex Value="7"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="106"/>
+        <TopLine Value="105"/>
         <CursorPos X="8" Y="117"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit17>
       <Unit18>
@@ -171,18 +171,18 @@
       </Unit18>
       <Unit19>
         <Filename Value="booktype.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <WindowIndex Value="1"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="13"/>
         <Loaded Value="True"/>
       </Unit19>
       <Unit20>
         <Filename Value="uManagement.pas"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="126"/>
-        <CursorPos X="61" Y="163"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="412"/>
+        <CursorPos X="51" Y="425"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit20>
       <Unit21>
@@ -192,137 +192,180 @@
         <WindowIndex Value="1"/>
         <TopLine Value="27"/>
         <CursorPos X="14" Y="49"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit21>
       <Unit22>
         <Filename Value="..\..\..\..\AppData\Local\Temp\Rar$DIa0.959\uniqueinstancebase.pas"/>
         <UnitName Value="UniqueInstanceBase"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <WindowIndex Value="1"/>
         <CursorPos X="6" Y="25"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit22>
+      <Unit23>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="202"/>
+        <CursorPos X="10" Y="216"/>
+        <UsageCount Value="10"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\sysstr.inc"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="1872"/>
+        <CursorPos X="2" Y="1872"/>
+        <UsageCount Value="10"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\datih.inc"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="115"/>
+        <CursorPos X="10" Y="128"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\dati.inc"/>
+        <EditorIndex Value="4"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="266"/>
+        <CursorPos X="3" Y="270"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\sysutilh.inc"/>
+        <EditorIndex Value="11"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="103"/>
+        <CursorPos X="17" Y="125"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit27>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="gui.pas"/>
-        <Caret Line="205" Column="22" TopLine="180"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="425" Column="10" TopLine="406"/>
       </Position1>
       <Position2>
-        <Filename Value="gui.pas"/>
-        <Caret Line="206" Column="22" TopLine="181"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="632" Column="67" TopLine="617"/>
       </Position2>
       <Position3>
-        <Filename Value="gui.pas"/>
-        <Caret Line="785" Column="3" TopLine="751"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="464" Column="30" TopLine="451"/>
       </Position3>
       <Position4>
-        <Filename Value="gui.pas"/>
-        <Caret Line="755" Column="28" TopLine="736"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="626" Column="34" TopLine="614"/>
       </Position4>
       <Position5>
-        <Filename Value="gui.pas"/>
-        <Caret Line="783" TopLine="751"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="464" Column="40" TopLine="452"/>
       </Position5>
       <Position6>
-        <Filename Value="gui.pas"/>
-        <Caret Line="791" Column="3" TopLine="757"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="626" Column="44" TopLine="614"/>
       </Position6>
       <Position7>
-        <Filename Value="gui.pas"/>
-        <Caret Line="734" Column="65" TopLine="716"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="419" Column="48" TopLine="410"/>
       </Position7>
       <Position8>
         <Filename Value="gui.pas"/>
-        <Caret Line="735" Column="65" TopLine="717"/>
       </Position8>
       <Position9>
         <Filename Value="gui.pas"/>
-        <Caret Line="734" Column="65" TopLine="716"/>
+        <Caret Line="785" Column="7" TopLine="777"/>
       </Position9>
       <Position10>
-        <Filename Value="herderbib.lpr"/>
+        <Filename Value="gui.pas"/>
+        <Caret Line="786" Column="5" TopLine="777"/>
       </Position10>
       <Position11>
-        <Filename Value="gui.pas"/>
-        <Caret Line="734" Column="65" TopLine="716"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="425" Column="34" TopLine="408"/>
       </Position11>
       <Position12>
-        <Filename Value="gui.pas"/>
-        <Caret Line="494" Column="34" TopLine="472"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="9" Column="58"/>
       </Position12>
       <Position13>
-        <Filename Value="gui.pas"/>
-        <Caret Line="557" Column="31" TopLine="535"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="425" Column="44" TopLine="412"/>
       </Position13>
       <Position14>
         <Filename Value="gui.pas"/>
-        <Caret Line="476" Column="30" TopLine="465"/>
+        <Caret Line="786" Column="5" TopLine="777"/>
       </Position14>
       <Position15>
         <Filename Value="gui.pas"/>
-        <Caret Line="473" Column="29" TopLine="451"/>
+        <Caret Line="785" Column="76" TopLine="771"/>
       </Position15>
       <Position16>
         <Filename Value="uManagement.pas"/>
-        <Caret Line="92" Column="60" TopLine="33"/>
+        <Caret Line="425" Column="32" TopLine="399"/>
       </Position16>
       <Position17>
-        <Filename Value="gui.pas"/>
-        <Caret Line="533" Column="75" TopLine="520"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="426" Column="26" TopLine="406"/>
       </Position17>
       <Position18>
-        <Filename Value="gui.pas"/>
-        <Caret Line="474" Column="9" TopLine="457"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="423" Column="43" TopLine="406"/>
       </Position18>
       <Position19>
-        <Filename Value="gui.pas"/>
-        <Caret Line="480" Column="3" TopLine="477"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1031" Column="28" TopLine="1028"/>
       </Position19>
       <Position20>
-        <Filename Value="gui.pas"/>
-        <Caret Line="503" Column="3" TopLine="498"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="178" Column="5" TopLine="166"/>
       </Position20>
       <Position21>
-        <Filename Value="gui.pas"/>
-        <Caret Line="534" Column="3" TopLine="529"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="413" Column="76" TopLine="406"/>
       </Position21>
       <Position22>
-        <Filename Value="gui.pas"/>
-        <Caret Line="513" Column="7" TopLine="498"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1036" Column="16" TopLine="1029"/>
       </Position22>
       <Position23>
-        <Filename Value="gui.pas"/>
-        <Caret Line="590" Column="3" TopLine="586"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1032" Column="17" TopLine="1019"/>
       </Position23>
       <Position24>
-        <Filename Value="gui.pas"/>
-        <Caret Line="560" Column="3" TopLine="556"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="426" Column="26" TopLine="406"/>
       </Position24>
       <Position25>
-        <Filename Value="gui.pas"/>
-        <Caret Line="488" Column="26" TopLine="477"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="427" TopLine="409"/>
       </Position25>
       <Position26>
-        <Filename Value="gui.pas"/>
-        <Caret Line="560" Column="3" TopLine="556"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1036" TopLine="1019"/>
       </Position26>
       <Position27>
-        <Filename Value="gui.pas"/>
-        <Caret Line="726" Column="3" TopLine="709"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1037" TopLine="1019"/>
       </Position27>
       <Position28>
-        <Filename Value="gui.pas"/>
-        <Caret Line="689" Column="3" TopLine="684"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1031" Column="35" TopLine="1019"/>
       </Position28>
       <Position29>
-        <Filename Value="gui.pas"/>
-        <Caret Line="11" Column="60" TopLine="175"/>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="153" Column="33" TopLine="153"/>
       </Position29>
       <Position30>
-        <Filename Value="uniqueinstanceraw.pas"/>
+        <Filename Value="uManagement.pas"/>
+        <Caret Line="407" TopLine="403"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

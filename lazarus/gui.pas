@@ -783,6 +783,8 @@ begin
     begin
       //Check if book is already rent
       management.RNew(StrToInt(EdRentBook.Text), StrToInt(EdRentStud.Text));
+
+
       EdRentStud.Text := '';
       EdRentBook.Text := '';
     end;

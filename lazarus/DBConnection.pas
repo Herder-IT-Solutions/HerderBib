@@ -150,7 +150,7 @@ type
 
     // Returns the current Error Object
     // result: Error Object (DBError, Type: Exception)
-    function getError: Exception;
+    function getErrorMsg: string;
 
     /////////////////////////////////////////////////////////
 
@@ -642,7 +642,11 @@ begin
   except
     on E: Exception do
     begin
-      DBError := E;
+      ShowMessage('conEx: ' + E.Message);
+
+      self.DBError := E;
+      ShowMessage('conErr: ' + self.DBError.Message);
+
       Result := False;
     end;
   end;
@@ -1024,9 +1028,9 @@ end;
 
 ////////////////////////////////////////////////////////
 
-function TDBConnection.getError: Exception;
+function TDBConnection.getErrorMsg: string;
 begin
-  Result := DBError;
+  Result:=self.DBError.Message;
 end;
 
 constructor TDBConnection.Create(databasePath: string);

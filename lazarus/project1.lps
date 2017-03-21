@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="10"/>
+    <BuildModes Active="Default"/>
+    <Units Count="33">
+      <Unit0>
+        <Filename Value="project1.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="15" Y="10"/>
+        <UsageCount Value="88"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <CursorPos X="46" Y="54"/>
+        <UsageCount Value="88"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="uverwaltung.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uVerwaltung"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="47"/>
+        <CursorPos X="23" Y="420"/>
+        <UsageCount Value="86"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="dbconstants.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DBConstants"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="6"/>
+        <CursorPos Y="9"/>
+        <UsageCount Value="27"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="DBConnection.pas"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="296"/>
+        <CursorPos X="51" Y="324"/>
+        <UsageCount Value="45"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="73"/>
+        <CursorPos X="17" Y="88"/>
+        <UsageCount Value="8"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="174"/>
+        <CursorPos X="23" Y="193"/>
+        <UsageCount Value="10"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="275"/>
+        <CursorPos X="9" Y="277"/>
+        <UsageCount Value="7"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="507"/>
+        <CursorPos X="15" Y="524"/>
+        <UsageCount Value="11"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="student.pas"/>
+        <EditorIndex Value="4"/>
+        <CursorPos X="52" Y="18"/>
+        <UsageCount Value="45"/>
+        <Loaded Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="book.pas"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="42" Y="11"/>
+        <UsageCount Value="45"/>
+        <Loaded Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\packages\fcl-db\src\base\db.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1656"/>
+        <CursorPos X="14" Y="1673"/>
+        <UsageCount Value="35"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\packages\fcl-db\src\base\dataset.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1783"/>
+        <CursorPos X="3" Y="1787"/>
+        <UsageCount Value="10"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="rental.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="76"/>
+        <CursorPos X="50" Y="104"/>
+        <UsageCount Value="43"/>
+        <Loaded Value="True"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="booktype.pas"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="41"/>
+        <Loaded Value="True"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1829"/>
+        <CursorPos X="14" Y="1842"/>
+        <UsageCount Value="7"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\lcl\dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="516"/>
+        <CursorPos X="11" Y="530"/>
+        <UsageCount Value="7"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\filutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="107"/>
+        <CursorPos X="10" Y="124"/>
+        <UsageCount Value="7"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\filutil.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="246"/>
+        <CursorPos X="18" Y="247"/>
+        <UsageCount Value="7"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\sysutils.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="368"/>
+        <CursorPos X="3" Y="372"/>
+        <UsageCount Value="7"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="426"/>
+        <CursorPos X="3" Y="443"/>
+        <UsageCount Value="10"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="105"/>
+        <CursorPos X="16" Y="122"/>
+        <UsageCount Value="10"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="195"/>
+        <CursorPos X="10" Y="212"/>
+        <UsageCount Value="10"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysstr.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1823"/>
+        <CursorPos X="15" Y="1835"/>
+        <UsageCount Value="10"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysutils.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="234"/>
+        <CursorPos X="7" Y="236"/>
+        <UsageCount Value="10"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\packages\fcl-db\src\base\bufdataset.pas"/>
+        <UnitName Value="BufDataset"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2365"/>
+        <CursorPos X="3" Y="2374"/>
+        <UsageCount Value="10"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\datih.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="103"/>
+        <CursorPos X="10" Y="155"/>
+        <UsageCount Value="11"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\inc\objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="185"/>
+        <CursorPos X="21" Y="202"/>
+        <UsageCount Value="10"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\inc\objpas.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="283"/>
+        <CursorPos X="12" Y="286"/>
+        <UsageCount Value="10"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\objpas\sysutils\dati.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1205"/>
+        <CursorPos Y="1219"/>
+        <UsageCount Value="10"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\rtl\inc\varianth.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="4"/>
+        <CursorPos X="4" Y="21"/>
+        <UsageCount Value="10"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\packages\rtl-objpas\src\inc\variants.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3646"/>
+        <CursorPos X="5" Y="3648"/>
+        <UsageCount Value="10"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="C:\lazarus\fpc\3.0.2\source\packages\fcl-db\src\base\db.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="22"/>
+        <CursorPos X="23" Y="41"/>
+        <UsageCount Value="11"/>
+      </Unit32>
+    </Units>
+    <JumpHistory Count="29" HistoryIndex="28">
+      <Position1>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="947" Column="52" TopLine="919"/>
+      </Position1>
+      <Position2>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="948" Column="54" TopLine="920"/>
+      </Position2>
+      <Position3>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="949" Column="55" TopLine="921"/>
+      </Position3>
+      <Position4>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="969" Column="66" TopLine="957"/>
+      </Position4>
+      <Position5>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="970" Column="56" TopLine="957"/>
+      </Position5>
+      <Position6>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="999" Column="80" TopLine="974"/>
+      </Position6>
+      <Position7>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="1024" Column="27" TopLine="996"/>
+      </Position7>
+      <Position8>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="26" Column="17" TopLine="9"/>
+      </Position8>
+      <Position9>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="68" Column="14" TopLine="41"/>
+      </Position9>
+      <Position10>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="71" Column="20" TopLine="44"/>
+      </Position10>
+      <Position11>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="93" Column="14" TopLine="66"/>
+      </Position11>
+      <Position12>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="96" Column="20" TopLine="69"/>
+      </Position12>
+      <Position13>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="98" Column="14" TopLine="71"/>
+      </Position13>
+      <Position14>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="100" Column="32" TopLine="73"/>
+      </Position14>
+      <Position15>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="101" Column="20" TopLine="74"/>
+      </Position15>
+      <Position16>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="121" Column="14" TopLine="94"/>
+      </Position16>
+      <Position17>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="124" Column="20" TopLine="97"/>
+      </Position17>
+      <Position18>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="144" Column="14" TopLine="117"/>
+      </Position18>
+      <Position19>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="147" Column="20" TopLine="120"/>
+      </Position19>
+      <Position20>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="484" Column="61" TopLine="461"/>
+      </Position20>
+      <Position21>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="652" Column="60" TopLine="626"/>
+      </Position21>
+      <Position22>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="672" Column="30" TopLine="653"/>
+      </Position22>
+      <Position23>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="677" Column="12" TopLine="653"/>
+      </Position23>
+      <Position24>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="688" Column="47" TopLine="660"/>
+      </Position24>
+      <Position25>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="694" Column="38" TopLine="666"/>
+      </Position25>
+      <Position26>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="841" Column="58" TopLine="809"/>
+      </Position26>
+      <Position27>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="969" Column="66" TopLine="937"/>
+      </Position27>
+      <Position28>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="46" Column="41" TopLine="31"/>
+      </Position28>
+      <Position29>
+        <Filename Value="DBConnection.pas"/>
+        <Caret Line="114" Column="38" TopLine="87"/>
+      </Position29>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>

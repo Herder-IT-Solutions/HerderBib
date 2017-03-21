@@ -1,0 +1,4 @@
+Probleme:
+BoolToStr gibt -1 für TRUE zurück, wir dachte es wäre false
+
+SQLITE ist scheiße!!!
