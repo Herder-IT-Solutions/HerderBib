@@ -58,8 +58,13 @@ implementation
 
   //Druckeinstellungen
   const columns = 3;
-  const column_size = 6;
+  const column_size = 8;
   const page_size = columns * column_size;
+  const barcode_width_cm = 5;
+  const barcode_height_cm = 2;
+
+  //Dient zum Ausprobieren von Einstellungen
+  const test_mode : Boolean = true;
 
   //Dateinamen und Pfade für die verwendeten Dateien
     const working_path = '.\BarcodePrinter\';
@@ -111,10 +116,13 @@ begin
      generate_latex_code;
      compile_latex_code;
 
-     //pdf ausdrucken
-     ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
-     //das Arbeitsverzeichnis wieder löschen
-     //deleteDirectory(working_path, false);
+     if test_mode <> true then
+     begin
+          //pdf ausdrucken
+          ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
+          //das Arbeitsverzeichnis wieder löschen
+          deleteDirectory(working_path, false);
+     end;
 
 end;
 
@@ -132,6 +140,7 @@ begin
      writeln(latex, '\documentclass[10pt]{article}');
      writeln(latex, '\usepackage{graphicx}', NewLine, '\usepackage{multicol}');
      writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 10mm, bottom = 10mm]{geometry}');
+     writeln(latex, '\pagestyle{empty}');
      writeln(latex, '\begin{document}', NewLine, Tab, '\begin{multicols}{', columns, '}');
 
     for i := 0 to barcodes.count - 1 do
@@ -144,15 +153,15 @@ begin
          //Die leeren Strichcodes beachten
          if barcode = '' then
          begin
-            writeln(latex, Tab, Tab,'\parbox[b][80px][t]{134px}{}\\');
+            writeln(latex, Tab, Tab,'\parbox[b][', barcode_height_cm, 'cm][t]{', barcode_width_cm, 'cm}{}\\');
             writeln(latex, Tab, Tab, '\vspace{8pt}');
-            writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{134px}{}\\');
+            writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{', barcode_width_cm, 'cm}{}\\');
          end
          else
          begin
-             writeln(latex, Tab, Tab,'\includegraphics{', barcode, '}\\');
+             writeln(latex, Tab, Tab,'\includegraphics[width = ', barcode_width_cm, 'cm, height = ', barcode_height_cm, 'cm]{', barcode, '}\\');
              writeln(latex, Tab, Tab, '\vspace{8pt}');
-             writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{134px}{\centering \Large{', title, '}}\\');
+             writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{', barcode_width_cm, 'cm}{\centering \Large{', title, '}}\\');
          end;
 
          //Am Ende einer Spalte angelangt
