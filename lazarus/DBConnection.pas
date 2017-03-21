@@ -45,20 +45,26 @@ type
     // result: student object
     function getStudentById(id: LargeInt): TStudent;
 
-    // Returns TStudent object with given birthdate
+    // Returns an array of all students object with given birthdate
     // parameter: TDate object (birthdate)
-    // result: TStudent object
+    // result: array of student objects
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
-    // Returns student object with given ldap username
+    // Returns an array of all students with given ldap username
     // parameter: student's ldap username. "%" can be used as a placeholder
-    // result: student object
+    // result: array of student objects
     function getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
 
     // Returns student who rented a book, nil if the book is not rented
     // parameter: book object
     // result: student object
     function getStudentWhoRentedBook(book: TBook): TStudent;
+
+    // Returns an array of Students matching the given parameters
+    // parameter: firstname, lastname, class, birthdate
+    // result: array of student objects
+    function getStudentsByFistLastClassNameBirthdate(fname, lname, cname: string;
+      birth: TDate): ArrayOfStudents;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -434,6 +440,69 @@ begin
     Result := arr[0];
 end;
 
+function TDBConnection.getStudentsByFirstLastClassNameBirthdate(
+  fname, lname, cname: string; birth: TDate);
+begin
+  DBError := nil;
+  SQLQuery.Close;
+
+  try
+    with SQLQuery do
+    begin
+
+      if birth = SQLNull then
+      begin
+        if cname = '' then
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+        end
+        else
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND class_name = (:cname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('cname').AsString := cname;
+        end;
+      end
+      else
+      begin
+        if cname = '' then
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('birthdate').AsDate := birth;
+        end
+        else
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate) AND cname = (:cname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('cname').AsString := cname;
+          SQLQuery.ParamByName('birthdate').AsDate := birth;
+        end;
+      end;
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  Result := nil;
+  setStudentFields(Result, False);
+end;
+
+
 function TDBConnection.updateInsertStudent(var student: TStudent): boolean;
 begin
   DBError := nil;
@@ -461,8 +530,7 @@ begin
       if student.getBirth = SQLNull then //if set to null
         FieldByName('birth').Clear
       else
-        FieldByName('birth').AsString :=
-          FormatDateTime('YYYY-MM-DD', student.getBirth);
+        FieldByName('birth').AsDateTime := student.getBirth;
 
       FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
@@ -624,14 +692,12 @@ begin
       //update object
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
-      FieldByName('rental_date').AsString :=
-        FormatDateTime('YYYY-MM-DD', rental.getRentalDate);
+      FieldByName('rental_date').AsDateTime := rental.getRentalDate;
 
       if rental.getReturnDate = SQLNull then //if set to null
         FieldByName('return_date').Clear
       else
-        FieldByName('return_date').AsString :=
-          FormatDateTime('YYYY-MM-DD', rental.getReturnDate);
+        FieldByName('return_date').AsDateTime := rental.getReturnDate;
 
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
