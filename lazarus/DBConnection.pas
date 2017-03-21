@@ -530,8 +530,7 @@ begin
       if student.getBirth = SQLNull then //if set to null
         FieldByName('birth').Clear
       else
-        FieldByName('birth').AsString :=
-          FormatDateTime('YYYY-MM-DD', student.getBirth);
+        FieldByName('birth').AsDateTime := student.getBirth;
 
       FieldByName('ldap_user').AsString := student.getLDAPUser;
       Post; //add to change buffer
@@ -693,14 +692,12 @@ begin
       //update object
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
-      FieldByName('rental_date').AsString :=
-        FormatDateTime('YYYY-MM-DD', rental.getRentalDate);
+      FieldByName('rental_date').AsDateTime := rental.getRentalDate;
 
       if rental.getReturnDate = SQLNull then //if set to null
         FieldByName('return_date').Clear
       else
-        FieldByName('return_date').AsString :=
-          FormatDateTime('YYYY-MM-DD', rental.getReturnDate);
+        FieldByName('return_date').AsDateTime := rental.getReturnDate;
 
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
