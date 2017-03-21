@@ -140,7 +140,7 @@ begin
 
      writeln(latex, '\documentclass[10pt]{article}');
      writeln(latex, '\usepackage{graphicx}', NewLine, '\usepackage{multicol}');
-     writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 10mm, bottom = 10mm]{geometry}');
+     writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 15mm, bottom = 15mm]{geometry}');
      writeln(latex, '\pagestyle{empty}');
      writeln(latex, '\begin{document}', NewLine, Tab, '\begin{multicols}{', columns, '}');
 
@@ -155,14 +155,14 @@ begin
          if barcode = '' then
          begin
             writeln(latex, Tab, Tab,'\parbox[b][', barcode_height_cm, 'cm][t]{', barcode_width_cm, 'cm}{}\\');
-            writeln(latex, Tab, Tab, '\vspace{8pt}');
-            writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{', barcode_width_cm, 'cm}{}\\');
+            writeln(latex, Tab, Tab, '\vspace{5pt}');
+            writeln(latex, Tab, Tab,'\parbox[b][0.8cm][t]{', barcode_width_cm, 'cm}{}\\');
          end
          else
          begin
              writeln(latex, Tab, Tab,'\includegraphics[width = ', barcode_width_cm, 'cm, height = ', barcode_height_cm, 'cm]{', barcode, '}\\');
-             writeln(latex, Tab, Tab, '\vspace{8pt}');
-             writeln(latex, Tab, Tab,'\parbox[b][0.5cm][t]{', barcode_width_cm, 'cm}{\centering \Large{', title, '}}\\');
+             writeln(latex, Tab, Tab, '\vspace{5pt}');
+             writeln(latex, Tab, Tab,'\parbox[b][0.8cm][t]{', barcode_width_cm, 'cm}{\centering ', title, '}\\');
          end;
 
          //Am Ende einer Spalte angelangt
@@ -171,7 +171,7 @@ begin
             writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak')
          end
          else
-             writeln(latex, Tab, Tab,'\vspace{16pt}', NewLine);
+             writeln(latex, Tab, Tab,'\vspace{8pt}', NewLine);
     end;
 
     writeln(latex, Tab, '\end{multicols}');
@@ -383,3 +383,4 @@ procedure TBarcodePrinter.create_barcode(str: string);
 
 
 end.
+
