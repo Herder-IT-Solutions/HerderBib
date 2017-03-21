@@ -69,7 +69,7 @@ type
     function getStudentWhoRentedBook(book: TBook): TStudent;
 
     // Returns an array of Students matching the given parameters
-    // parameter: firstname, lastname, class, birthdate
+    // parameter: first name, last name, class name, birthdate
     // result: array of student objects
     function getStudentsByFistLastClassNameBirthdate(fname, lname, cname: string;
       birth: TDate): ArrayOfStudents;
@@ -94,7 +94,7 @@ type
     function getRentals: ArrayOfRentals;
 
     // Returns an array of all rentals with given student and book
-    // parameter: student, book
+    // parameter: student, book objects
     // result: array of rental objects
     function getAllRentalsByBookAndStudent(var student: TStudent;
       var book: TBook): ArrayOfRentals;
@@ -115,7 +115,7 @@ type
     function deleteRental(var rental: TRental): boolean;
 
     // Deletes all returned rentals older than a certain date
-    // parameter: Date
+    // parameter: date
     // result: Amount of deleted rentals on success, -1 on error
     function deleteReturnedRentalOlderThan(date: TDate): integer;
 
@@ -146,12 +146,12 @@ type
     //             BOOKTYPE                                //
     /////////////////////////////////////////////////////////
 
-    // Returns an array of all books
+    // Returns an array of all booktypes
     // result: array of booktype objects
     function getBooktypes: ArrayOfBooktypes;
 
     // Returns the Booktype of an ISBN Number
-    // parameter: Isbn (String type)
+    // parameter: isbn
     // result: TBooktype on success, NIL on failure
     function getBooktypeByIsbn(isbn: string): TBooktype;
 
