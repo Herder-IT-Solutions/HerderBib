@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
   Buttons, CheckLst, DB, uManagement, Student, Book, Rental,
-  Booktype, LConvEncoding, uBarcodePrint;
+  Booktype, LConvEncoding, uBarcodePrint, uniqueinstanceraw;
 
 type
 
@@ -20,6 +20,7 @@ type
     BtInfoBooktypeShow: TButton;
     BtInfoBookShow1: TButton;
     BtInfoSuportError: TButton;
+    BtInfoSuportLicense: TButton;
     BtRent: TButton;
     BtRet: TButton;
     BtAddBook: TButton;
@@ -56,6 +57,9 @@ type
     EdRetStud: TEdit;
     ImRentHerder: TImage;
     ImRetHerder: TImage;
+    ImAddHerder: TImage;
+    ImPrintHerder: TImage;
+    LbInfoSupportLicense: TLabel;
     LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
     LbInfoAdminConnection: TLabel;
@@ -123,7 +127,7 @@ type
     TabRel: TTabSheet;
     TabBooktype: TTabSheet;
     TabCreditsHelp: TTabSheet;
-    Admnistration: TTabSheet;
+    Administration: TTabSheet;
     TabPrint: TTabSheet;
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
@@ -139,12 +143,15 @@ type
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
+    procedure BtInfoStudExportRelClick(Sender: TObject);
     procedure BtInfoStudPrintQClick(Sender: TObject);
     procedure BtInfoStudShowClick(Sender: TObject);
+    procedure BtInfoSuportLicenseClick(Sender: TObject);
+    procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure BtPrintClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
-    procedure BtInfoSuportWikiClick(Sender: TObject);
+    procedure BtInfoSuportErrorClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdRetBookChange(Sender: TObject);
     procedure EdRentBookChange(Sender: TObject);
@@ -154,10 +161,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
+    procedure SEInfoStudMonthChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: boolean);
   private
     { private declarations }
+    procedure addToPrintingQueueListBox(code: string; title: string);
   public
     { public declarations }
   end;
@@ -190,12 +199,34 @@ begin
 end;
 
 
+procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
+begin
+  case SeInfoStudMonth.Value of
+    //This procedure limits the number of days according to the month
+    1: SeInfoStudDay.MaxValue := 31;
+    2: SeInfoStudDay.MaxValue := 29;
+    3: SeInfoStudDay.MaxValue := 31;
+    4: SeInfoStudDay.MaxValue := 30;
+    5: SeInfoStudDay.MaxValue := 31;
+    6: SeInfoStudDay.MaxValue := 30;
+    7: SeInfoStudDay.MaxValue := 31;
+    8: SeInfoStudDay.MaxValue := 31;
+    9: SeInfoStudDay.MaxValue := 30;
+    10: SeInfoStudDay.MaxValue := 31;
+    11: SeInfoStudDay.MaxValue := 30;
+    12: SeInfoStudDay.MaxValue := 31;
+  end;
+end;
+
+
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  if InstanceRunning then
+    halt;
   // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
   PermissionLevel := 1;
-  management := tdbmanagement.Create();
+  management := tmanagement.Create();
   //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
@@ -386,6 +417,7 @@ begin
       tempcode := management.BNew(s);
       Inc(k);
       TBarcodePrinter.instance.add_barcode(IntToStr(tempcode), EdAddBookName.Text);
+      addToPrintingQueueListBox(IntToStr(tempcode), EdAddBookName.Text);
     end;
     EdAddBookName.Text := '';
     EdAddBookISBN.Text := '';
@@ -429,18 +461,34 @@ procedure TForm1.BtInfoBookDelClick(Sender: TObject);
 var
   b: TBook;
 begin
-  b := management.getBookByID(StrToInt(EdInfoBookID.Text));
-  management.BDel(b);
-  EdInfoBookId.Text := '';
-  EdInfoBookRent.Text := '';
-  TBInfoBookState.Position := 1;
+  try
+    b := management.getBookByID(StrToInt(EdInfoBookID.Text));
+    management.BDel(b);
+    EdInfoBookId.Text := '';
+    EdInfoBookRent.Text := '';
+    TBInfoBookState.Position := 1;
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
+var
+  book: TBook;
 begin
   LbInfoBookError.Visible := False;
   try
-
+    if not (EdInfoBookID.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      book.setCondition(TBInfoBookState.Position);
+      management.BUpdate(book);
+    end;
   except
     On EConvertError do
     begin
@@ -462,8 +510,9 @@ begin
     if not (EdInfoBookId.Text = '') then
     begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
-      booktitle := management.BTitleByID(StrToInt(EdInfoBookID.Text));
+      booktitle := management.getBTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
+      addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
     end
     else
     begin
@@ -485,6 +534,7 @@ end;
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
 var
   book: TBOOK;
+  stud: TSTUDENT;
 begin
   LbInfoBookError.Visible := False;
   try
@@ -493,7 +543,8 @@ begin
     begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       TBInfoBookState.Position := book.getcondition;
-      //SHOW RENTAL RELATION
+      stud := management.getStudentWhoRentedBook(book);
+      if stud<>nil then EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
     end;
 
   except
@@ -509,22 +560,25 @@ end;
 
 procedure TForm1.BtInfoBooktypeEditClick(Sender: TObject);
 var
-  booktype : TBooktype;
+  booktype: TBooktype;
 begin
   LbInfoBooktypeError.Visible := False;
   try
-  if not(EdInfoBooktypeISBN.text = '') then
-     begin
-     booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.text);
-     if not(EdInfoBooktypeName.text = '') then
-       begin
-       booktype.setTitle(EdInfoBooktypeName.text);
-       end;
-     if not(CBInfoBooktypeSubject.text = '') then
-       begin
-       booktype.setSubject(CBInfoBooktypeSubject.text);
-       end;
-     end;
+    if not (EdInfoBooktypeISBN.Text = '') then
+    begin
+      booktype := management.getBooktypeByISBN(EdInfoBooktypeISBN.Text);
+      if not (EdInfoBooktypeName.Text = '') then
+      begin
+        booktype.setTitle(EdInfoBooktypeName.Text);
+        EdinfoBooktypename.Text := '';
+      end;
+      if not (CBInfoBooktypeSubject.Text = '') then
+      begin
+        booktype.setSubject(CBInfoBooktypeSubject.Text);
+        CBInfoBooktypeSubject.Text := '';
+      end;
+      management.BTypeUpdate(booktype);
+    end;
   except
     On EConvertError do
     begin
@@ -628,16 +682,32 @@ begin
   end;
 end;
 
+procedure TForm1.BtInfoStudExportRelClick(Sender: TObject);
+begin
+  try
+
+  except
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+end;
+
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 var
   stud: Tstudent;
+  studname: string;
 begin
   try
     if not (EdInfoStudID.Text = '') then
     begin
-      stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
-      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text,
-        management.getSNameById(StrToInt(EdInfoStudID.Text)));
+      //stud := management.getStudentById(StrToInt(EdInfoStudID.Text));
+      studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
+      TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text, studname);
+      addToPrintingQueueListBox(EdInfoStudID.Text, studname);
     end;
 
   except
@@ -691,9 +761,22 @@ begin
   end;
 end;
 
+procedure TForm1.BtInfoSuportLicenseClick(Sender: TObject);
+begin
+  OpenURL('https://creativecommons.org/licenses/by-sa/4.0/');
+end;
+
+procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
+begin
+
+  OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki');
+
+end;
+
 procedure TForm1.BtPrintClick(Sender: TObject);
 begin
   TBarcodePrinter.instance.print;
+  LiPrintQueue.Items.Clear;
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
@@ -743,11 +826,15 @@ begin
   //returnBook(StrToINT(EdRetStud.text),StrToINT(EdRetBook.text),TBRetBookState.Position)
 end;
 
-procedure TForm1.BtInfoSuportWikiClick(Sender: TObject);
+procedure TForm1.BtInfoSuportErrorClick(Sender: TObject);
 begin
   OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
 end;
 
 
+procedure Tform1.addToPrintingQueueListBox(code: string; title: string);
+begin
+  LiPrintQueue.Items.add(code + ', ' + title);
+end;
 
 end.

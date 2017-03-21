@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, sqlite3conn, sqldb, student, DBConnection,
-  book, booktype, rental, dateutils;
+  book, booktype, rental, dateutils, DBConstants;
 
 type
 
@@ -58,9 +58,14 @@ type
     //Erg: Wahr wenn erfolgreich
     function BQualiNew(BId, quali: int64): boolean;
 
+    //Eff: Überschreibt die Daten des Buches mit der übergebenen Id in der
+    //     Datenbank mit den übergebenen Werten
+    //Erg: Wenn Buch nicht vorhanden wahr -> False
+    function BUpdate(var book: TBook): boolean;
+
     //Vor: Eine Buch Id
     //Erg: Gibt den Titel des Buches wieder
-    function BTitleById(BId: int64): string;
+    function getBTitleById(BId: int64): string;
 
     //Vor: Buch Id
     //Erg: Das Buch-Object mit der Id
@@ -81,9 +86,13 @@ type
     //Erg: Wahr wenn erfolgreich; Falsch wenn Fehler oder Buchtyp bereits vorhanden
     function BTypeNew(isbn, title, subject: string): boolean;
 
-    // returns the Booktype of a given ISBN
-    // parameter: ISBN (string type)
-    // result: TBooktype on success, NIL on failure
+    //Eff: Überschreibt die Daten des Buchtyps mit der übergebenen Id in der
+    //     Datenbank mit den übergebenen Werten
+    //Erg: Wenn Buchtyp nicht vorhanden wahr -> False
+    function BTypeUpdate(var Booktype: TBooktype): boolean;
+
+    //Vor: ISBM als String ohne Bindestriche
+    //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
 
 
@@ -144,10 +153,14 @@ type
     function getStudentsByLastNamePattern(lastName: string): ArrayOfStudents;
 
     //Vor: den Vorname, Nachnamen, Klassennamen und Geburtsdatum
-    //     Geburtsdatum darf ourNil sein; cname darf '' sein, um keine Werte zu übergeben
+    //     Geburtsdatum darf SQLNull sein; cname darf '' sein, um keine Werte zu übergeben
     //Erg: Ein Array von TStudent-Objekten mit den Daten
     function getStudentsByFirstLastClassNameBirthdate(fname, lname, cname: string;
       birth: TDate): ArrayOfStudents;
+
+    //Vor: Das TBook-Objekt
+    //Erg: TStudent-Objekt des ausleihenden Schülers
+    function getStudentWhoRentedBook(book: TBook): TStudent;
 
     // Importiert die Schüler Liste als CSV Datei
     // Klasse; Name; Vorname; Geburtsdatum
@@ -185,9 +198,6 @@ type
   end;
 
 implementation
-
-const
-  ourNil = -693594;
 
 constructor TManagement.Create();
 begin
@@ -264,13 +274,12 @@ begin
 
     hid := IntToStr(id);
     //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
+    pz := -(((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
       (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
-      StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+      StrToInt(hid[4]) + StrToInt(hid[6]))) mod 10;
     //Die Prüfziffer Teil 1
-    if pz = 10 then
-      pz := 0;
-    id := (id * 10) + (10 - pz);
+    
+    id := (id * 10) + pz;
   until BIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -307,7 +316,15 @@ begin
     Result := False;
 end;
 
-function TManagement.BTitleById(BId: int64): string;
+function TManagement.BUpdate(var book: TBook): boolean;
+begin
+  if not (book = nil) and self.BIdCheck(book.getId()) then
+    Result := uDBConn.updateInsertBook(book)
+  else
+    Result := False;
+end;
+
+function TManagement.getBTitleById(BId: int64): string;
 var
   book: TBook;
   booktype: TBooktype;
@@ -352,6 +369,14 @@ begin
     Result := False;
 end;
 
+function TManagement.BTypeUpdate(var booktype: TBooktype): boolean;
+begin
+  if not (booktype = nil) and self.BTypeCheck(booktype.getIsbn()) then
+    Result := uDBConn.updateInsertBooktype(booktype)
+  else
+    Result := False;
+end;
+
 function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
 begin
   Result := uDBConn.getBooktypeByISBN(isbn);
@@ -391,7 +416,7 @@ begin
       rental.setBookId(BId);
       rental.setStudentId(SId);
       rental.setRentalDate(now);
-      rental.setReturnDate(ourNil);
+      rental.setReturnDate(SQLNull);
 
       Result := uDBConn.updateinsertRental(rental);
     end
@@ -550,6 +575,11 @@ begin
   Result := students2;
 end;
 
+function TManagement.getStudentWhoRentedBook(book: TBook): TStudent;
+begin
+  Result := uDBConn.getStudentWhoRentedBook(book);
+end;
+
 function TManagement.importCSVSchueler(Dateiname: string): boolean;
 var
   Text: TextFile;
@@ -602,11 +632,11 @@ begin
         i := i + 1;
       end;
       birthDate := StrToDate(birth, '-');
-                                    // Vergleich ob bereits vorhanden
+      // Vergleich ob bereits vorhanden
       students := self.getStudentsByFirstLastClassNameBirthdate(fname,
         lname, '', birthDate);
 
-                              //Verarbeitung
+      //Verarbeitung
       if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
@@ -690,7 +720,10 @@ end;
 
 function TManagement.SUpdate(var student: TStudent): boolean;
 begin
-  Result := uDBConn.updateinsertStudent(student);
+  if not (student = nil) and self.SIdCheck(student.getId()) then
+    Result := uDBConn.updateinsertStudent(student)
+  else
+    Result := False;
 end;
 
 end.
