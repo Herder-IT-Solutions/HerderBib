@@ -41,6 +41,8 @@ type TBarcodePrinter = class
           procedure fill_empty_spaces;
 
           procedure create_barcode(str: string);
+          //Erstellen der Barcodes
+          //Erwartet die Barcodenummer als Parameter und speichert den Barcode als .png im neu erstellten Ordner 'BarcodePrinter'
 
           type TIntegerMap = specialize TFPGMap<Integer, Integer>;
           type TStringList = specialize TFPGList<String>;
@@ -329,7 +331,7 @@ procedure TBarcodePrinter.create_barcode(str: string);
       FontMgr.SearchPath:='C:\WINDOWS\Fonts';
       AFont:=TFreeTypeFont.Create;
 
-      // create an image of width 200, height 100
+      // create an image of width 134, height 80
       Img:=TFPMemoryImage.Create(134, 80);
       Img.UsePalette:=false;
       // create the canvas with the drawing operations
