@@ -212,9 +212,9 @@ begin
     7: SeInfoStudDay.MaxValue := 31;
     8: SeInfoStudDay.MaxValue := 31;
     9: SeInfoStudDay.MaxValue := 30;
-    10:SeInfoStudDay.MaxValue := 31;
-    11:SeInfoStudDay.MaxValue := 30;
-    12:SeInfoStudDay.MaxValue := 31;
+    10: SeInfoStudDay.MaxValue := 31;
+    11: SeInfoStudDay.MaxValue := 30;
+    12: SeInfoStudDay.MaxValue := 31;
   end;
 end;
 
@@ -222,7 +222,8 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  if InstanceRunning then halt;
+  if InstanceRunning then
+    halt;
   // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
   PermissionLevel := 1;
   management := tmanagement.Create();
@@ -461,11 +462,11 @@ var
   b: TBook;
 begin
   try
-  b := management.getBookByID(StrToInt(EdInfoBookID.Text));
-  management.BDel(b);
-  EdInfoBookId.Text := '';
-  EdInfoBookRent.Text := '';
-  TBInfoBookState.Position := 1;
+    b := management.getBookByID(StrToInt(EdInfoBookID.Text));
+    management.BDel(b);
+    EdInfoBookId.Text := '';
+    EdInfoBookRent.Text := '';
+    TBInfoBookState.Position := 1;
   except
     On EConvertError do
     begin
@@ -477,15 +478,17 @@ begin
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
-var book : TBook;
+var
+  book: TBook;
 begin
   LbInfoBookError.Visible := False;
   try
-  if not (EdInfoBookID.text = '') then begin
-    book := management.getBookByID(StrToInt(EdInfoBookID.text));
-    book.setCondition(TBInfoBookState.Position);
-    management.BUpdate(book);
-  end;
+    if not (EdInfoBookID.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      book.setCondition(TBInfoBookState.Position);
+      management.BUpdate(book);
+    end;
   except
     On EConvertError do
     begin
@@ -531,7 +534,7 @@ end;
 procedure TForm1.BtInfoBookShow1Click(Sender: TObject);
 var
   book: TBOOK;
-  stud : TSTUDENT;
+  stud: TSTUDENT;
 begin
   LbInfoBookError.Visible := False;
   try
@@ -567,10 +570,12 @@ begin
       if not (EdInfoBooktypeName.Text = '') then
       begin
         booktype.setTitle(EdInfoBooktypeName.Text);
+        EdinfoBooktypename.Text := '';
       end;
       if not (CBInfoBooktypeSubject.Text = '') then
       begin
         booktype.setSubject(CBInfoBooktypeSubject.Text);
+        CBInfoBooktypeSubject.Text := '';
       end;
       management.BTypeUpdate(booktype);
     end;
@@ -679,9 +684,9 @@ end;
 
 procedure TForm1.BtInfoStudExportRelClick(Sender: TObject);
 begin
-try
+  try
 
-except
+  except
     On EConvertError do
     begin
       LbInfoStudError.Visible := True;
