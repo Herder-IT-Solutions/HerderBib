@@ -41,8 +41,6 @@ type TBarcodePrinter = class
           procedure fill_empty_spaces;
 
           procedure create_barcode(str: string);
-          //Erstellen der Barcodes
-          //Erwartet die Barcodenummer als Parameter und speichert den Barcode als .png im neu erstellten Ordner 'BarcodePrinter'
 
           type TIntegerMap = specialize TFPGMap<Integer, Integer>;
           type TStringList = specialize TFPGList<String>;
@@ -66,7 +64,7 @@ implementation
   const barcode_height_cm = 2;
 
   //Dient zum Ausprobieren von Einstellungen
-  const test_mode : Boolean = true;
+  const test_mode : Boolean = false;
 
   //Dateinamen und Pfade für die verwendeten Dateien
     const working_path = '.\BarcodePrinter\';
@@ -118,10 +116,11 @@ begin
      generate_latex_code;
      compile_latex_code;
 
-     if test_mode <> true then
+     if test_mode = false then
      begin
           //pdf ausdrucken
           ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
+          sleep(5000);
           //das Arbeitsverzeichnis wieder löschen
           deleteDirectory(working_path, false);
      end;
@@ -231,7 +230,7 @@ end;
 
 procedure TBarcodePrinter.compile_latex_code;
 begin
-     run_command('cd ' + working_path + ' && pdflatex ' + latex_file);
+     run_command('cd ' + working_path + ' && K:\texlive\2014\bin\win32\pdflatex ' + latex_file);
 end;
 
 
@@ -331,7 +330,7 @@ procedure TBarcodePrinter.create_barcode(str: string);
       FontMgr.SearchPath:='C:\WINDOWS\Fonts';
       AFont:=TFreeTypeFont.Create;
 
-      // create an image of width 134, height 80
+      // create an image of width 200, height 100
       Img:=TFPMemoryImage.Create(134, 80);
       Img.UsePalette:=false;
       // create the canvas with the drawing operations
