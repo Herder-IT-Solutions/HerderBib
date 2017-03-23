@@ -10,7 +10,7 @@ uses
 
 {Diese Klasse ist als Singleton realisiert. Das bedeutet, es kann nur eine einzige Instanz von ihr geben.
  Auf diese wird über TBarcodePrinter.instance zugegriffen. Auf das zurückgegebene Objekt können
- alle im der Schnittstelle spezifizierten Methoden und Funktionen angewendet werden}
+ alle im der Schnittstelle spezifizierten Methoden angewendet werden}
 type TBarcodePrinter = class
      public
 
