@@ -123,6 +123,7 @@ begin
           sleep(5000);
           //das Arbeitsverzeichnis wieder löschen
           deleteDirectory(working_path, false);
+          clear; //Den aktuellen Druckauftrag löschen
      end;
 
 end;
@@ -138,12 +139,17 @@ begin
      AssignFile(latex, working_path + latex_file);
      rewrite(latex);
 
+     //Die Präambel
      writeln(latex, '\documentclass[10pt]{article}');
      writeln(latex, '\usepackage{graphicx}', NewLine, '\usepackage{multicol}');
+     //Papierformat
      writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 15mm, bottom = 15mm]{geometry}');
+     //keine Seitenzahlen
      writeln(latex, '\pagestyle{empty}');
+     
      writeln(latex, '\begin{document}', NewLine, Tab, '\begin{multicols}{', columns, '}');
 
+    //Latex-Code für die Platzierung der Barcodes und Beschriftungen
     for i := 0 to barcodes.count - 1 do
     begin
          barcode := barcodes.items[i];
@@ -151,6 +157,7 @@ begin
 
 
          writeln(latex, Tab, Tab, '\centering');
+         
          //Die leeren Strichcodes beachten
          if barcode = '' then
          begin
@@ -165,11 +172,9 @@ begin
              writeln(latex, Tab, Tab,'\parbox[b][0.8cm][t]{', barcode_width_cm, 'cm}{\centering ', title, '}\\');
          end;
 
-         //Am Ende einer Spalte angelangt
+         //Am Ende einer Spalte angelangt (und noch nicht beim letzten Barcode)
          if ((i + 1) mod column_size = 0) and (i < barcodes.count - 1) then
-         begin
-            writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak')
-         end
+            writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak') //neue Spalte anfangen
          else
              writeln(latex, Tab, Tab,'\vspace{8pt}', NewLine);
     end;
@@ -201,17 +206,16 @@ procedure TBarcodePrinter.fill_empty_spaces;
          for i := 0 to unused_space_on_sheets.count - 1 do
          begin
               curr_page := unused_space_on_sheets.keys[i];
-              used := unused_space_on_sheets.data[i];
-
-              //Das Listenelemente [page_size * (n - 1)] ist das erste Element auf der n-ten Seite
-
-              //Die aktuelle Seite wird nicht zum Ausdrucken benötigt
-              if page_size * (curr_page - 1) >= barcodes.count then
+              used := unused_space_on_sheets.data[i]; //Anzahl der benutzten Stellen auf der aktuellen Seite
+              
+              //Alle Barcodes passen auf die Seiten 1..curr_page-1
+              if barcodes.count <= page_size * (curr_page - 1) then
                  continue;
 
               //Am Beginn der aktuellen Seite die schon verbrauchten Plätze mit leeren Strichcodes auffüllen
               for j := 1 to used do
               begin
+                   //Der page_size * (curr_page -1) - te Strichcode befindet sich am Beginn der Seite curr_page, weil die Listenindizes bei Null starten
                    barcodes.insert(page_size * (curr_page -1), '');
                    titles.insert(page_size * (curr_page - 1), '');
               end;
@@ -234,13 +238,12 @@ begin
 end;
 
 
-//Fehlerbehandlung wenn Befehl nicht ausgeführt werden konnte
 procedure TBarcodePrinter.run_command(text : string);
 var command : TProcess;
 begin
      //Nur für Windows
      command := TProcess.create(nil);
-     command.Options := command.Options + [poWaitOnExit];// + [poNoConsole];
+     command.Options := command.Options + [poWaitOnExit] + [poNoConsole];
      command.executable := 'c:\windows\system32\cmd.exe';
      command.parameters.add('/C');
      command.parameters.add(text);
