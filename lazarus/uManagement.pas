@@ -273,13 +273,11 @@ begin
     id := Random(5000000) + 3000001; //Bereich von 3Mio1 bis 8Mio1
 
     hid := IntToStr(id);
-    //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := -(((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
-      (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
-      StrToInt(hid[4]) + StrToInt(hid[6]))) mod 10;
+    //hid ist eine Hilfsvariable zur Prüfnummererstellung  
+    pz := (3*((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) + (StrToInt(hid[7])))+StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+    if pz <> 0 then pz := 10-pz;
     //Die Prüfziffer Teil 1
-    
-    id := (id * 10) + pz;
+    id := (id * 10) + pz; 
   until BIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -696,14 +694,11 @@ begin
   repeat
     id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
 
-    hid := IntToStr(id); //hid ist eine Hilfsvariable zur Prüfnummererstellung
-
-    pz := ((StrToInt(hid[1]) * 3) + (StrToInt(hid[3]) * 3) +
-      (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
-      StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+    hid := IntToStr(id); 
+    //hid ist eine Hilfsvariable zur Prüfnummererstellung
+    pz := (3*((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) + (StrToInt(hid[7])))+StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
+    if pz <> 0 then pz := 10-pz;
     //Die Prüfziffer Teil 1
-    if pz = 10 then
-      pz := 0;
     id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
   until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
