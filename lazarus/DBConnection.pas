@@ -693,10 +693,13 @@ begin
   try
     with SQLQuery do
     begin
-      SQLQuery.SQL.Text :=
+      SQL.Text :=
         'SELECT * FROM rental where book_id = (:book) and return_date = NULL';
-      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
-      SQLQuery.Open;
+      ParamByName('book').AsLargeInt := book.getId;
+      Open;
+
+      First; //set pointer to first result row
+      Result := not EOF; //does one exist?
     end;
 
   except
@@ -707,9 +710,6 @@ begin
       exit;
     end;
   end;
-
-  SQLQuery.First; //set pointer to first result row
-  Result := not EOF; //does one exist?
 end;
 
 function TDBConnection.updateInsertRental(var rental: TRental): boolean;
