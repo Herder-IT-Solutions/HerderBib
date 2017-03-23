@@ -240,10 +240,15 @@ begin
   if not ((book = nil) and (student = nil)) then
   begin
     aoR := uDBConn.getAllRentalsByBookAndStudent(student, book);
-    rental := aoR[0];
-    rental.setReturnDate(now);
+    if (length(aoR) > 0) then
+    begin
+      rental := aoR[0];
+      rental.setReturnDate(now);
 
-    Result := uDBConn.updateInsertRental(rental);
+      Result := uDBConn.updateInsertRental(rental);
+    end
+    else
+      Result := False;
   end
   else
     Result := False;
