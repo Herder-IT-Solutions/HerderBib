@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ComCtrls,
   StdCtrls, Spin, ExtCtrls, Grids, Menus, types, sqldb, sqlite3conn, lclintf,
   Buttons, CheckLst, DB, uManagement, Student, Book, Rental,
-  Booktype, LConvEncoding, uBarcodePrint, uniqueinstanceraw;
+  Booktype, LConvEncoding, uBarcodePrint, uniqueinstanceraw, dateutils;
 
 type
 
@@ -680,13 +680,21 @@ end;
 procedure TForm1.BtInfoStudEditClick(Sender: TObject);
 var
   stud: TStudent;
+  birth:TDate;
+  YY,MM,DD : Word;
 begin
   LbInfoStudError.Visible := False;
   try
+    DD:=SeInfoStudDay.Value;
+    MM:=SeInfoStudMonth.Value;
+    YY:=SeInfoStudYear.Value;
+    birth:=EncodeDate(YY,MM,DD);
+
     stud := management.getStudentbyID(StrToInt(EdInfoStudID.Text));
     stud.setlastname(EdInfoStudLastName.Text);
     stud.setfirstname(EdInfoStudFirstName.Text);
     stud.setclassname(EdInfoStudGrade.Text);
+    stud.setBirth(birth);
     management.supdate(stud);
   except
     On EConvertError do
@@ -738,7 +746,7 @@ end;
 
 procedure TForm1.BtInfoStudShowClick(Sender: TObject);
 
-  function checkBD: string;
+ { function checkBD: string;
   var
     mo: cardinal;
     s: string;
@@ -754,19 +762,27 @@ procedure TForm1.BtInfoStudShowClick(Sender: TObject);
     mo := SeInfoStudYear.Value;
     s := s + IntToStr(mo);
     Result := s;
-  end;
+  end;    }
 
 var
-  birthdate: string;
+  //birthdate: string;
+  birth: TDate;
   stud: TStudent;
+  YY,MM,DD : Word;
 begin
   LbInfoStudError.Visible := False;
   try
-    birthdate := checkBD;
+    //birthdate := checkBD;
     stud := management.getStudentbyID(StrToInt(EdInfoStudID.Text));
     EdInfoStudFirstName.Text := stud.getfirstname;
     EdInfoStudLastName.Text := stud.getlastname;
     EdInfoStudGrade.Text := stud.getclassname;
+
+    birth:=stud.getBirth();
+    DecodeDate(birth, YY, MM, DD);
+    SeInfoStudDay.Value:=DD;
+    SeInfoStudMonth.Value:=MM;
+    SeInfoStudYear.Value:=YY;
   except
     On EConvertError do
     begin
