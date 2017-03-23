@@ -100,6 +100,11 @@ type
 
     //RENTAL                                              --------------------
 
+    //Vor: Buch Objekt
+    //Eff: Überprüft, ob ein Buch gerade Verliehen ist
+    //Erg: Wahr, wenn Buch ausgeliehen
+    function RCheckByBook(var book:TBook):Boolean;
+
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
     //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
     //Erg: Anzahl der gelöschten Objekte; -1 bei einem Fehler
@@ -278,7 +283,7 @@ begin
       (StrToInt(hid[5]) * 3) + (StrToInt(hid[7]) * 3) + StrToInt(hid[2]) +
       StrToInt(hid[4]) + StrToInt(hid[6]))) mod 10;
     //Die Prüfziffer Teil 1
-    
+
     id := (id * 10) + pz;
   until BIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
@@ -384,6 +389,12 @@ end;
 
 //---------------------------------------------------------------RENTAL-----
 
+function TManagement.RCheckByBook(var book:TBook):Boolean;
+begin
+  if ((not (book= nil)) and (self.BIdCheck(book.getId()))) then Result:=uDBConn.existsUnreturnedRentalByBook(book)
+  else Result:=false;
+end;
+
 function TManagement.RDel(datum: TDate): integer;
 begin
   Result := uDBConn.deleteReturnedRentalOlderThan(datum);
@@ -406,22 +417,17 @@ var
 begin
   book := self.getBookByID(BID);
   student := self.getStudentById(SId);
-  if not ((book = nil) and (student = nil)) then
+  if not ((book = nil) or (student = nil)) then
   begin
-    rentals := uDBConn.getAllRentalsByBookAndStudent(student, book);
-    if (length(rentals) = 0) then
-    begin
-      rental := TRental.Create;
+    rental := TRental.Create;
 
-      rental.setBookId(BId);
-      rental.setStudentId(SId);
-      rental.setRentalDate(now);
-      rental.setReturnDate(SQLNull);
+    rental.setBookId(BId);
+    rental.setStudentId(SId);
+    rental.setRentalDate(now);
+    rental.setReturnDate(SQLNull);
 
-      Result := uDBConn.updateinsertRental(rental);
-    end
-    else
-      Result := False;
+    Result := uDBConn.updateinsertRental(rental);
+
   end
   else
     Result := False;
