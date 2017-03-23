@@ -439,11 +439,14 @@ begin
 end;
 
 procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
-var B : boolean;
+var
+  B: boolean;
 begin
-    b := management.importCSVSchueler(LEInfoAdminCSV.Text);
-    if b then   ShowMessage('Import erfolgreich!')
-    else   ShowMessage('Import nicht erfolgreich.');
+  b := management.importCSVSchueler(LEInfoAdminCSV.Text);
+  if b then
+    ShowMessage('Import erfolgreich!')
+  else
+    ShowMessage('Import nicht erfolgreich.');
 end;
 
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
@@ -459,7 +462,7 @@ begin
     //ENABLE ADMIN POWERS
     BtInfoStudEdit.Enabled := True;
     LeInfoAdminCSV.Enabled := True;
-    BtInfoAdminCSV.Enabled := TRUE;
+    BtInfoAdminCSV.Enabled := True;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -472,9 +475,9 @@ begin
   BtInfoAdminLogout.Enabled := False;
 
   //DISABLE ADMIN POWERS
-  BtInfoStudEdit.Enabled := FALSE;
-  LeInfoAdminCSV.Enabled := FALSE;
-  BtInfoAdminCSV.Enabled := FALSE;
+  BtInfoStudEdit.Enabled := False;
+  LeInfoAdminCSV.Enabled := False;
+  BtInfoAdminCSV.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
@@ -564,7 +567,8 @@ begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       TBInfoBookState.Position := book.getcondition;
       stud := management.getStudentWhoRentedBook(book);
-      if stud<>nil then EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
+      if stud <> nil then
+        EdInfoBookRent.Text := (stud.getFirstName + ' ' + stud.getLastName);
     end;
 
   except
@@ -613,7 +617,7 @@ end;
 procedure TForm1.BtInfoBooktypeShowAllClick(Sender: TObject);
 begin
 
-   MeInfoBooktypeShowAll.Lines.Clear;
+  MeInfoBooktypeShowAll.Lines.Clear;
 end;
 
 procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
@@ -689,15 +693,15 @@ end;
 procedure TForm1.BtInfoStudEditClick(Sender: TObject);
 var
   stud: TStudent;
-  birth:TDate;
-  YY,MM,DD : Word;
+  birth: TDate;
+  YY, MM, DD: word;
 begin
   LbInfoStudError.Visible := False;
   try
-    DD:=SeInfoStudDay.Value;
-    MM:=SeInfoStudMonth.Value;
-    YY:=SeInfoStudYear.Value;
-    birth:=EncodeDate(YY,MM,DD);
+    DD := SeInfoStudDay.Value;
+    MM := SeInfoStudMonth.Value;
+    YY := SeInfoStudYear.Value;
+    birth := EncodeDate(YY, MM, DD);
 
     stud := management.getStudentbyID(StrToInt(EdInfoStudID.Text));
     stud.setlastname(EdInfoStudLastName.Text);
@@ -777,7 +781,7 @@ var
   //birthdate: string;
   birth: TDate;
   stud: TStudent;
-  YY,MM,DD : Word;
+  YY, MM, DD: word;
 begin
   LbInfoStudError.Visible := False;
   try
@@ -787,11 +791,11 @@ begin
     EdInfoStudLastName.Text := stud.getlastname;
     EdInfoStudGrade.Text := stud.getclassname;
 
-    birth:=stud.getBirth();
+    birth := stud.getBirth();
     DecodeDate(birth, YY, MM, DD);
-    SeInfoStudDay.Value:=DD;
-    SeInfoStudMonth.Value:=MM;
-    SeInfoStudYear.Value:=YY;
+    SeInfoStudDay.Value := DD;
+    SeInfoStudMonth.Value := MM;
+    SeInfoStudYear.Value := YY;
   except
     On EConvertError do
     begin
@@ -821,16 +825,27 @@ begin
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
+var
+  book: TBOOK;
 begin
   LbRentError.Visible := False;
   try
     if (management.BIdCheck(StrToInt(EdRentBook.Text)) and
       management.SIdCheck(StrToInt(EdRentStud.Text))) then
     begin
-      //if management.RCheckByBook(StrToInt(EdRentBook.Text)then
-      management.RNew(StrToInt(EdRentBook.Text), StrToInt(EdRentStud.Text));
-      EdRentStud.Text := '';
-      EdRentBook.Text := '';
+      book := management.getBookByID(StrToInt(EdRentBook.Text));
+      if not (management.RCheckByBook(book)) then     //Check if book is already rented
+      begin
+        management.RNew(StrToInt(EdRentBook.Text), StrToInt(EdRentStud.Text));
+        EdRentStud.Text := '';
+        EdRentBook.Text := '';
+      end
+      else
+      begin
+        LbRentError.Visible := True;
+        LbRentError.Caption :=
+          'Fehler 6: Das Buch ist bereits ausgeliehen.';
+      end;
     end;
 
   except
