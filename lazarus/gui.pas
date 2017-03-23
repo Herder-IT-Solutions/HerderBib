@@ -36,6 +36,7 @@ type
     BtInfoStudPrintQ: TButton;
     BtInfoBookPrintQ: TButton;
     BtPrint: TButton;
+    BtInfoAdminCSV: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -59,6 +60,8 @@ type
     ImRetHerder: TImage;
     ImAddHerder: TImage;
     ImPrintHerder: TImage;
+    LEInfoAdminCSV: TLabeledEdit;
+    LbInfoAdminCSV: TLabel;
     LbInfoSupportLicense: TLabel;
     LbInfoSupportError: TLabel;
     LbInfoBooktypeSubject: TLabel;
@@ -133,6 +136,7 @@ type
     TBInfoBookState: TTrackBar;
     TBRetBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
+    procedure BtInfoAdminCSVClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookDelClick(Sender: TObject);
@@ -236,8 +240,6 @@ procedure TForm1.LbRetStudNameClick(Sender: TObject);
 begin
 
 end;
-
-
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
 begin
@@ -433,6 +435,14 @@ begin
   end;
 end;
 
+procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
+var B : boolean;
+begin
+    b := management.importCSVSchueler(LEInfoAdminCSV.Text);
+    if b then   ShowMessage('Import erfolgreich!')
+    else   ShowMessage('Import nicht erfolgreich.');
+end;
+
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
 begin
   if EdInfoAdminPw.Text = 'h3rd3r' then
@@ -440,10 +450,13 @@ begin
     PermissionLevel := 0;
     //EdInfoAdminPw.Text=NONE;
     LbInfoAdminCheck.Caption := 'Sie sind Administrator';
-    BtInfoStudEdit.Enabled := True;
     BtInfoAdminLogin.Enabled := False;
     BtInfoAdminLogout.Enabled := True;
 
+    //ENABLE ADMIN POWERS
+    BtInfoStudEdit.Enabled := True;
+    LeInfoAdminCSV.Enabled := True;
+    BtInfoAdminCSV.Enabled := TRUE;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -452,9 +465,13 @@ procedure TForm1.BtInfoAdminLogoutClick(Sender: TObject);
 begin
   PermissionLevel := 1;
   LbInfoAdminCheck.Caption := 'Sie sind nicht Administrator';
-  BtInfoStudEdit.Enabled := False;
   BtInfoAdminLogin.Enabled := True;
   BtInfoAdminLogout.Enabled := False;
+
+  //DISABLE ADMIN POWERS
+  BtInfoStudEdit.Enabled := FALSE;
+  LeInfoAdminCSV.Enabled := FALSE;
+  BtInfoAdminCSV.Enabled := FALSE;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
@@ -655,7 +672,6 @@ procedure TForm1.BtInfoRelFilterClick(Sender: TObject);
   end;
 
 begin
-  ;
   MeInfoRel.Clear;
   readCSV('rental_relations.csv');
   //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
