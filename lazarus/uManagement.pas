@@ -103,7 +103,7 @@ type
     //Vor: Buch Objekt
     //Eff: Überprüft, ob ein Buch gerade Verliehen ist
     //Erg: Wahr, wenn Buch ausgeliehen
-    function RCheckByBook(var book:TBook):Boolean;
+    function RCheckByBook(var book: TBook): boolean;
 
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
     //Eff: Löscht jeden Verleih, welches Rückgabedatum kleiner gleich ist als das Datum
@@ -279,10 +279,13 @@ begin
 
     hid := IntToStr(id);
     //hid ist eine Hilfsvariable zur Prüfnummererstellung  
-    pz := (3*((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) + (StrToInt(hid[7])))+StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
-    if pz <> 0 then pz := 10-pz;
+    pz := (3 * ((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) +
+      (StrToInt(hid[7]))) + StrToInt(hid[2]) + StrToInt(hid[4]) +
+      StrToInt(hid[6])) mod 10;
+    if pz <> 0 then
+      pz := 10 - pz;
     //Die Prüfziffer Teil 1
-    id := (id * 10) + pz; 
+    id := (id * 10) + pz;
   until BIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
 
   book := TBook.Create;
@@ -387,10 +390,12 @@ end;
 
 //---------------------------------------------------------------RENTAL-----
 
-function TManagement.RCheckByBook(var book:TBook):Boolean;
+function TManagement.RCheckByBook(var book: TBook): boolean;
 begin
-  if ((not (book= nil)) and (self.BIdCheck(book.getId()))) then Result:=uDBConn.existsUnreturnedRentalByBook(book)
-  else Result:=false;
+  if ((not (book = nil)) and (self.BIdCheck(book.getId()))) then
+    Result := uDBConn.existsUnreturnedRentalByBook(book)
+  else
+    Result := False;
 end;
 
 function TManagement.RDel(datum: TDate): integer;
@@ -475,7 +480,7 @@ end;
 
 function TManagement.getStudentsByFirstLastClassNameBirthdate(
   fname, lname, cname: string; birth: TDate): ArrayOfStudents;
-var
+{var
   students, students2, students3: array of TStudent;
   indexS3, j, k, id: integer;
 begin
@@ -576,7 +581,10 @@ begin
       students2 := students;
   end;
 
-  Result := students2;
+  Result := students2;}
+begin
+  Result := uDBConn.getStudentsByFistLastClassNameBirthdate(fname, lname, cname, birth);
+
 end;
 
 function TManagement.getStudentWhoRentedBook(book: TBook): TStudent;
@@ -593,10 +601,6 @@ var
   students: array of TStudent;
 begin
   str := '';
-  fname := '';
-  lname := '';
-  cname := '';
-  birth := '';
 
   AssignFile(Text, Dateiname);
 
@@ -607,6 +611,12 @@ begin
     while not EOF(Text) do                //Schüler zeilenweise einlesen
     begin
       readln(Text, str);
+
+
+      fname := '';
+      lname := '';
+      cname := '';
+      birth := '';
 
       i := 1;
       while not (str[i] = ';') do        //Klassennamen einlesen
@@ -700,10 +710,13 @@ begin
   repeat
     id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
 
-    hid := IntToStr(id); 
+    hid := IntToStr(id);
     //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := (3*((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) + (StrToInt(hid[7])))+StrToInt(hid[2]) + StrToInt(hid[4]) + StrToInt(hid[6])) mod 10;
-    if pz <> 0 then pz := 10-pz;
+    pz := (3 * ((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) +
+      (StrToInt(hid[7]))) + StrToInt(hid[2]) + StrToInt(hid[4]) +
+      StrToInt(hid[6])) mod 10;
+    if pz <> 0 then
+      pz := 10 - pz;
     //Die Prüfziffer Teil 1
     id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
   until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
@@ -714,6 +727,7 @@ begin
   student.setLastName(lastN);
   student.setClassName(classN);
   student.setBirth(birth);
+  student.setLDAPUser('');
 
   self.SUpdate(student);
   Result := id;
@@ -721,7 +735,7 @@ end;
 
 function TManagement.SUpdate(var student: TStudent): boolean;
 begin
-  if not (student = nil) and self.SIdCheck(student.getId()) then
+  if not (student = nil) then
     Result := uDBConn.updateinsertStudent(student)
   else
     Result := False;
