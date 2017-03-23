@@ -454,8 +454,7 @@ begin
 end;
 
 function TDBConnection.getStudentsByFistLastClassNameBirthdate(
-  fname, lname, cname: string;
-  birth: TDate): ArrayOfStudents;
+  fname, lname, cname: string; birth: TDate): ArrayOfStudents;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -546,7 +545,11 @@ begin
       else
         FieldByName('birth').AsDateTime := student.getBirth;
 
-      FieldByName('ldap_user').AsString := student.getLDAPUser;
+      if student.getLDAPUser = '' then //if set to empty string meaning null
+        FieldByName('ldap_user').Clear
+      else
+        FieldByName('ldap_user').AsString := student.getLDAPUser;
+
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
