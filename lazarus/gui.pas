@@ -37,6 +37,7 @@ type
     BtInfoBookPrintQ: TButton;
     BtPrint: TButton;
     BtInfoAdminCSV: TButton;
+    BtInfoBooktypeShowAll: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -116,6 +117,7 @@ type
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
     MeInfoRel: TMemo;
+    MeInfoBooktypeShowAll: TMemo;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
     SEAddBookQuantity: TSpinEdit;
@@ -144,6 +146,7 @@ type
     procedure BtInfoBookPrintQClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
     procedure BtInfoBooktypeEditClick(Sender: TObject);
+    procedure BtInfoBooktypeShowAllClick(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
@@ -607,6 +610,12 @@ begin
 
 end;
 
+procedure TForm1.BtInfoBooktypeShowAllClick(Sender: TObject);
+begin
+
+   MeInfoBooktypeShowAll.Lines.Clear;
+end;
+
 procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
 var
   booktype: TBooktype;
@@ -818,7 +827,7 @@ begin
     if (management.BIdCheck(StrToInt(EdRentBook.Text)) and
       management.SIdCheck(StrToInt(EdRentStud.Text))) then
     begin
-      //Check if book is already rent
+      //if management.RCheckByBook(StrToInt(EdRentBook.Text)then
       management.RNew(StrToInt(EdRentBook.Text), StrToInt(EdRentStud.Text));
       EdRentStud.Text := '';
       EdRentBook.Text := '';
