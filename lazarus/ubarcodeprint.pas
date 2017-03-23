@@ -5,12 +5,12 @@ unit uBarcodePrint;
 interface
 
 uses
-  Classes, SysUtils, fgl, Process, fileutil, FPImage, FPCanvas, FPImgCanv,ShellApi,
+  Classes, SysUtils, fgl, Process, fileutil, FPImage, FPCanvas, FPImgCanv,ShellApi, ftFont,
      FPWritePNG;
 
 {Diese Klasse ist als Singleton realisiert. Das bedeutet, es kann nur eine einzige Instanz von ihr geben.
  Auf diese wird über TBarcodePrinter.instance zugegriffen. Auf das zurückgegebene Objekt können
- alle im der Schnittstelle spezifizierten Methoden und Funktionen angewendet werden}
+ alle im der Schnittstelle spezifizierten Methoden angewendet werden}
 type TBarcodePrinter = class
      public
 
@@ -60,6 +60,11 @@ implementation
   const columns = 3;
   const column_size = 8;
   const page_size = columns * column_size;
+  const barcode_width_cm = 5;
+  const barcode_height_cm = 2;
+
+  //Dient zum Ausprobieren von Einstellungen
+  const test_mode : Boolean = false;
 
   //Dateinamen und Pfade für die verwendeten Dateien
     const working_path = '.\BarcodePrinter\';
@@ -111,10 +116,15 @@ begin
      generate_latex_code;
      compile_latex_code;
 
-     //pdf ausdrucken
-     ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
-     //das Arbeitsverzeichnis wieder löschen
-     //deleteDirectory(working_path, false);
+     if test_mode = false then
+     begin
+          //pdf ausdrucken
+          ShellExecute(0, 'print', PChar(working_path + latex_output), nil, nil, 0);
+          sleep(5000);
+          //das Arbeitsverzeichnis wieder löschen
+          deleteDirectory(working_path, false);
+          clear; //Den aktuellen Druckauftrag löschen
+     end;
 
 end;
 
@@ -129,11 +139,17 @@ begin
      AssignFile(latex, working_path + latex_file);
      rewrite(latex);
 
+     //Die Präambel
      writeln(latex, '\documentclass[10pt]{article}');
      writeln(latex, '\usepackage{graphicx}', NewLine, '\usepackage{multicol}');
-     writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 5mm, bottom = 5mm]{geometry}');
+     //Papierformat
+     writeln(latex, '\usepackage[paper = a4paper, left = 5mm, right = 5mm, top = 15mm, bottom = 15mm]{geometry}');
+     //keine Seitenzahlen
+     writeln(latex, '\pagestyle{empty}');
+     
      writeln(latex, '\begin{document}', NewLine, Tab, '\begin{multicols}{', columns, '}');
 
+    //Latex-Code für die Platzierung der Barcodes und Beschriftungen
     for i := 0 to barcodes.count - 1 do
     begin
          barcode := barcodes.items[i];
@@ -141,27 +157,26 @@ begin
 
 
          writeln(latex, Tab, Tab, '\centering');
+         
          //Die leeren Strichcodes beachten
          if barcode = '' then
          begin
-            writeln(latex, Tab, Tab,'\parbox[b][50px][t]{134px}{}\\');
-            writeln(latex, Tab, Tab, '\vspace{3pt}');
-            writeln(latex, Tab, Tab,'\parbox[b][0.88cm][t]{134px}{}\\');
+            writeln(latex, Tab, Tab,'\parbox[b][', barcode_height_cm, 'cm][t]{', barcode_width_cm, 'cm}{}\\');
+            writeln(latex, Tab, Tab, '\vspace{5pt}');
+            writeln(latex, Tab, Tab,'\parbox[b][0.8cm][t]{', barcode_width_cm, 'cm}{}\\');
          end
          else
          begin
-             writeln(latex, Tab, Tab,'\includegraphics{', barcode, '}\\');
-             writeln(latex, Tab, Tab, '\vspace{3pt}');
-             writeln(latex, Tab, Tab,'\parbox[b][0.88cm][t]{134px}{\centering \Large{', barcode, '}\\\Large{', title, '}}\\');
+             writeln(latex, Tab, Tab,'\includegraphics[width = ', barcode_width_cm, 'cm, height = ', barcode_height_cm, 'cm]{', barcode, '}\\');
+             writeln(latex, Tab, Tab, '\vspace{5pt}');
+             writeln(latex, Tab, Tab,'\parbox[b][0.8cm][t]{', barcode_width_cm, 'cm}{\centering ', title, '}\\');
          end;
 
-         //Am Ende einer Spalte angelangt
+         //Am Ende einer Spalte angelangt (und noch nicht beim letzten Barcode)
          if ((i + 1) mod column_size = 0) and (i < barcodes.count - 1) then
-         begin
-            writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak')
-         end
+            writeln(latex, Tab, Tab, '\vfill', NewLine,  Tab, Tab, '\columnbreak') //neue Spalte anfangen
          else
-             writeln(latex, Tab, Tab,'\vspace{14pt}', NewLine);
+             writeln(latex, Tab, Tab,'\vspace{8pt}', NewLine);
     end;
 
     writeln(latex, Tab, '\end{multicols}');
@@ -191,17 +206,16 @@ procedure TBarcodePrinter.fill_empty_spaces;
          for i := 0 to unused_space_on_sheets.count - 1 do
          begin
               curr_page := unused_space_on_sheets.keys[i];
-              used := unused_space_on_sheets.data[i];
-
-              //Das Listenelemente [page_size * (n - 1)] ist das erste Element auf der n-ten Seite
-
-              //Die aktuelle Seite wird nicht zum Ausdrucken benötigt
-              if page_size * (curr_page - 1) >= barcodes.count then
+              used := unused_space_on_sheets.data[i]; //Anzahl der benutzten Stellen auf der aktuellen Seite
+              
+              //Alle Barcodes passen auf die Seiten 1..curr_page-1
+              if barcodes.count <= page_size * (curr_page - 1) then
                  continue;
 
               //Am Beginn der aktuellen Seite die schon verbrauchten Plätze mit leeren Strichcodes auffüllen
               for j := 1 to used do
               begin
+                   //Der page_size * (curr_page -1) - te Strichcode befindet sich am Beginn der Seite curr_page, weil die Listenindizes bei Null starten
                    barcodes.insert(page_size * (curr_page -1), '');
                    titles.insert(page_size * (curr_page - 1), '');
               end;
@@ -220,17 +234,16 @@ end;
 
 procedure TBarcodePrinter.compile_latex_code;
 begin
-     run_command('cd ' + working_path + ' && pdflatex ' + latex_file);
+     run_command('cd ' + working_path + ' && K:\texlive\2014\bin\win32\pdflatex ' + latex_file);
 end;
 
 
-//Fehlerbehandlung wenn Befehl nicht ausgeführt werden konnte
 procedure TBarcodePrinter.run_command(text : string);
 var command : TProcess;
 begin
      //Nur für Windows
      command := TProcess.create(nil);
-     command.Options := command.Options + [poWaitOnExit];// + [poNoConsole];
+     command.Options := command.Options + [poWaitOnExit] + [poNoConsole];
      command.executable := 'c:\windows\system32\cmd.exe';
      command.parameters.add('/C');
      command.parameters.add(text);
@@ -245,80 +258,131 @@ begin
 end;
 
 procedure TBarcodePrinter.create_barcode(str: string);
-const
-    lCodes: array[0 .. 9, 0 .. 6] of boolean = ((False,False,False,True,True,False,True),
-                                                (False,False,True,True,False,False,True),
-                                                (False,False,True,False,False,True,True),
-                                                (False,True,True,True,True,False,True),
-                                                (False,True,False,False,False,True,True),
-                                                (False,True,True,False,False,False,True),
-                                                (False,True,False,True,True,True,True),
-                                                (False,True,True,True,False,True,True),
-                                                (False,True,True,False,True,True,True),
-                                                (False,False,False,True,False,True,True));
-    rCodes: array[0 .. 9, 0 .. 6] of boolean = ((True,True,True,False,False,True,False),
-                                                (True,True,False,False,True,True,False),
-                                                (True,True,False,True,True,False,False),
-                                                (True,False,False,False,False,True,False),
-                                                (True,False,True,True,True,False,False),
-                                                (True,False,False,True,True,True,False),
-                                                (True,False,True,False,False,False,False),
-                                                (True,False,False,False,True,False,False),
-                                                (True,False,False,True,False,False,False),
-                                                (True,True,True,False,True,False,False));
+  const
+      lCodes: array[0 .. 9, 0 .. 6] of boolean = ((False,False,False,True,True,False,True),
+                                                  (False,False,True,True,False,False,True),
+                                                  (False,False,True,False,False,True,True),
+                                                  (False,True,True,True,True,False,True),
+                                                  (False,True,False,False,False,True,True),
+                                                  (False,True,True,False,False,False,True),
+                                                  (False,True,False,True,True,True,True),
+                                                  (False,True,True,True,False,True,True),
+                                                  (False,True,True,False,True,True,True),
+                                                  (False,False,False,True,False,True,True));
+      rCodes: array[0 .. 9, 0 .. 6] of boolean = ((True,True,True,False,False,True,False),
+                                                  (True,True,False,False,True,True,False),
+                                                  (True,True,False,True,True,False,False),
+                                                  (True,False,False,False,False,True,False),
+                                                  (True,False,True,True,True,False,False),
+                                                  (True,False,False,True,True,True,False),
+                                                  (True,False,True,False,False,False,False),
+                                                  (True,False,False,False,True,False,False),
+                                                  (True,False,False,True,False,False,False),
+                                                  (True,True,True,False,True,False,False));
 
-    type TBarcode = array[0..66] of boolean;
+      type TBarcode = array[0..66] of boolean;
+  var
+    Img: TFPMemoryImage;
+    Writer: TFPWriterPNG;
+    ms: TMemoryStream;
+    ImgCanvas: TFPImageCanvas;
+    fs: TFileStream;
+    AFont: TFreeTypeFont;
 
-
-var
-    canvas : TFPCustomCanvas;
-    image : TFPCustomImage;
-    writer : TFPCustomImageWriter;
     barcode: TBarcode;
-    i,j: cardinal;
-begin
-    image := TFPMemoryImage.Create (134, 50);
-    canvas := TFPImageCanvas.Create (image);
-    writer := TFPWriterPNG.Create;
+    i,j,k: cardinal;
 
-    barcode[0] := True;
-    barcode[1] := False;
-    barcode[2] := True;
+  begin
+    Img:=nil;
+    ImgCanvas:=nil;
+    Writer:=nil;
+    ms:=nil;
+    fs:=nil;
+    AFont:=nil;
 
-    for i := 0 to 3 do
-    begin
-      for j := 0 to 6 do
-        barcode[7*i + j + 3] := lCodes[StrToInt(str[i + 1])][j]
+      barcode[0] := True;
+      barcode[1] := False;
+      barcode[2] := True;
+
+      for i := 0 to 3 do
+      begin
+        for j := 0 to 6 do
+          barcode[7*i + j + 3] := lCodes[StrToInt(str[i + 1])][j]
+      end;
+
+      barcode[31] := False;
+      barcode[32] := True;
+      barcode[33] := False;
+      barcode[34] := True;
+      barcode[35] := False;
+
+      for i := 4 to 7 do
+      begin
+        for j := 0 to 6 do
+          barcode[7*i + j + 8] := rCodes[StrToInt(str[i + 1])][j]
+      end;
+
+      barcode[64] := True;
+      barcode[65] := False;
+      barcode[66] := True;
+
+
+
+      // initialize free type font manager
+      ftfont.InitEngine;
+      FontMgr.SearchPath:='C:\WINDOWS\Fonts';
+      AFont:=TFreeTypeFont.Create;
+
+      // create an image of width 200, height 100
+      Img:=TFPMemoryImage.Create(134, 80);
+      Img.UsePalette:=false;
+      // create the canvas with the drawing operations
+      ImgCanvas:=TFPImageCanvas.create(Img);
+
+      // paint white background
+      ImgCanvas.Brush.FPColor:=colWhite;
+      ImgCanvas.Brush.Style:=bsSolid;
+      ImgCanvas.Rectangle(-1,-1,Img.Width,Img.Height);
+
+      // paint text
+      ImgCanvas.Font:=AFont;
+      ImgCanvas.Font.Name:='COURBD';
+      ImgCanvas.Font.Size:=8;
+
+      k := 0;
+      for k := 1 to 8 do
+      begin
+        if k < 5 then ImgCanvas.TextOut(9 + (k-1)*15, 78, str[k])
+        else ImgCanvas.TextOut(74 + (k-5)*15, 78, str[k]);
+      end;
+
+      imgcanvas.Brush.FPColor:=colBlack;
+      for i := 0 to 66 do
+      begin
+        if barcode[i] then
+          if ((3>i) or ((30<i) and (i<36)) or (i>63)) then
+            imgcanvas.Rectangle(2*i,0,2*i+1,80)
+          else
+            imgcanvas.Rectangle(2*i,0,2*i+1,68)
+      end;
+
+      // write image as png to memory stream
+      Writer:=TFPWriterPNG.create;
+      ms:=TMemoryStream.Create;
+      writer.ImageWrite(ms,Img);
+      // write memory stream to file
+      ms.Position:=0;
+      fs:=TFileStream.Create(working_path + str + '.png',fmCreate);
+      fs.CopyFrom(ms,ms.Size);
+
+      AFont.Free;
+      ms.Free;
+      fs.Free;
+      Writer.Free;
+      ImgCanvas.Free;
+      Img.Free;
+
     end;
-
-    barcode[31] := False;
-    barcode[32] := True;
-    barcode[33] := False;
-    barcode[34] := True;
-    barcode[35] := False;
-
-    for i := 4 to 7 do
-    begin
-      for j := 0 to 6 do
-        barcode[7*i + j + 8] := rCodes[StrToInt(str[i + 1])][j]
-    end;
-
-    barcode[64] := True;
-    barcode[65] := False;
-    barcode[66] := True;
-
-    canvas.Brush.FPColor:=colWhite;
-    canvas.Rectangle(0,-1,image.Width,image.Height);
-    canvas.Brush.FPColor:=colBlack;
-
-    for i := 0 to 66 do
-    begin
-      if barcode[i] then
-        canvas.Rectangle(2*i,0,2*i+1,50);
-    end;
-  image.SaveToFile(working_path + str + '.png', writer);
-  image.free;
-end;
 
 
 end.

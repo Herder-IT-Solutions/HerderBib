@@ -14,7 +14,15 @@ type
   ArrayOfBooks = array of TBook;
   ArrayOfBooktypes = array of TBooktype;
 
-  { TForm1 }
+  ///////////////////////////////////////////////////////////
+  //         Notes for use of TDBConnection                //
+  //                                                       //
+  //  You can call every function below, but you need to   //
+  //  check if there were any errors by checking that the  //
+  //  result of TDBConnection.getError function is NIL.    //
+  //                                                       //
+  ///////////////////////////////////////////////////////////
+
   TDBConnection = class
   public
     /////////////////////////////////////////////////////////
@@ -43,17 +51,28 @@ type
     // Returns student object with given id
     // parameter: student id
     // result: student object
-    function getStudentById(id: longint): TStudent;
+    function getStudentById(id: LargeInt): TStudent;
 
-    // Returns TStudent object with given birthdate
+    // Returns an array of all students object with given birthdate
     // parameter: TDate object (birthdate)
-    // result: TStudent object
+    // result: array of student objects
     function getStudentsByBirthdate(birthdate: TDate): ArrayOfStudents;
 
-    // Returns student object with given ldap username
+    // Returns an array of all students with given ldap username
     // parameter: student's ldap username. "%" can be used as a placeholder
-    // result: student object
+    // result: array of student objects
     function getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfStudents;
+
+    // Returns student who rented a book, nil if the book is not rented
+    // parameter: book object
+    // result: student object
+    function getStudentWhoRentedBook(book: TBook): TStudent;
+
+    // Returns an array of Students matching the given parameters
+    // parameter: first name, last name, class name, birthdate
+    // result: array of student objects
+    function getStudentsByFistLastClassNameBirthdate(fname, lname, cname: string;
+      birth: TDate): ArrayOfStudents;
 
     // updateInserts student object into database. Either updates an existing one or inserts a new one
     // parameter: student object
@@ -75,10 +94,15 @@ type
     function getRentals: ArrayOfRentals;
 
     // Returns an array of all rentals with given student and book
-    // parameter: student, book
+    // parameter: student, book objects
     // result: array of rental objects
     function getAllRentalsByBookAndStudent(var student: TStudent;
       var book: TBook): ArrayOfRentals;
+
+    // Checks if there are unreturned rentals for a specific book
+    // parameter: book object
+    // result: true when rentals exist that match this criteria
+    function existsUnreturnedRentalByBook(var book: TBook): boolean;
 
     // updateInserts rental object into database. Either updates an existing one or inserts a new one
     // parameter: rental object
@@ -91,7 +115,7 @@ type
     function deleteRental(var rental: TRental): boolean;
 
     // Deletes all returned rentals older than a certain date
-    // parameter: Date
+    // parameter: date
     // result: Amount of deleted rentals on success, -1 on error
     function deleteReturnedRentalOlderThan(date: TDate): integer;
 
@@ -106,7 +130,7 @@ type
     // Returns the book object by given book id or NIL if the book does not exist
     // parameter: book id
     // result: book object | nil
-    function getBookById(id: longint): TBook;
+    function getBookById(id: LargeInt): TBook;
 
     // updateInserts book object into database. Either updates an existing one or inserts a new one
     // parameter: book object
@@ -122,12 +146,12 @@ type
     //             BOOKTYPE                                //
     /////////////////////////////////////////////////////////
 
-    // Returns an array of all books
+    // Returns an array of all booktypes
     // result: array of booktype objects
     function getBooktypes: ArrayOfBooktypes;
 
     // Returns the Booktype of an ISBN Number
-    // parameter: Isbn (String type)
+    // parameter: isbn
     // result: TBooktype on success, NIL on failure
     function getBooktypeByIsbn(isbn: string): TBooktype;
 
@@ -247,7 +271,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE first_name LIKE (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(first_name) LIKE LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := firstName;
       SQLQuery.Open;
     end;
@@ -273,7 +298,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE last_name LIKE (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(last_name) LIKE LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := lastName;
       SQLQuery.Open;
     end;
@@ -298,7 +324,8 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE class_name = (:name)';
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM student WHERE LOWER(class_name) = LOWER(:name)';
       SQLQuery.ParamByName('name').AsString := classN;
       SQLQuery.Open;
     end;
@@ -316,7 +343,7 @@ begin
   setStudentFields(Result, False);
 end;
 
-function TDBConnection.getStudentById(id: longint): TStudent;
+function TDBConnection.getStudentById(id: LargeInt): TStudent;
 var
   arr: ArrayOfStudents;
 begin
@@ -325,7 +352,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+      SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id) LIMIT 1';
       SQLQuery.ParamByName('id').AsInteger := id;
       SQLQuery.Open;
     end;
@@ -375,7 +402,7 @@ function TDBConnection.getStudentsByLDAPUserPattern(ldap_user: string): ArrayOfS
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT FROM student WHERE ldap_user LIKE (:ldap_user)';
+  SQLQuery.SQL.Text := 'SELECT FROM student WHERE LOWER(ldap_user) LIKE LOWER(:ldap_user)';
   SQLQuery.ParamByName('ldap_user').AsString := ldap_user;
 
   try
@@ -396,11 +423,104 @@ begin
   setStudentFields(Result, False);
 end;
 
+function TDBConnection.getStudentWhoRentedBook(book: TBook): TStudent;
+var
+  arr: ArrayOfStudents;
+begin
+  DBError := nil;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text :=
+        'SELECT r.student_id, r.return_date, s.* FROM rental r JOIN student s ON r.student_id = s.id WHERE r.book_id = (:book_id) AND r.return_date IS NULL LIMIT 1';
+      SQLQuery.ParamByName('book_id').AsLargeInt := book.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  setStudentFields(arr, True);
+
+  Result := nil;
+  if (length(arr) = 1) then
+    Result := arr[0];
+end;
+
+function TDBConnection.getStudentsByFistLastClassNameBirthdate(
+  fname, lname, cname: string; birth: TDate): ArrayOfStudents;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+
+  try
+    with SQLQuery do
+    begin
+
+      if birth = SQLNull then
+      begin
+        if cname = '' then
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+        end
+        else
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND class_name = (:cname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('cname').AsString := cname;
+        end;
+      end
+      else
+      begin
+        if cname = '' then
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('birthdate').AsDate := birth;
+        end
+        else
+        begin
+          SQLQuery.SQL.Text :=
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate) AND cname = (:cname)';
+          SQLQuery.ParamByName('fname').AsString := fname;
+          SQLQuery.ParamByName('lname').AsString := lname;
+          SQLQuery.ParamByName('cname').AsString := cname;
+          SQLQuery.ParamByName('birthdate').AsDate := birth;
+        end;
+      end;
+      SQLQuery.Open;
+    end;
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+  Result := nil;
+  setStudentFields(Result, False);
+end;
+
+
 function TDBConnection.updateInsertStudent(var student: TStudent): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id)';
+  SQLQuery.SQL.Text := 'SELECT * FROM student WHERE id = (:id) LIMIT 1';
   SQLQuery.ParamByName('id').AsInteger := student.getId;
   SQLQuery.Open;
 
@@ -423,10 +543,13 @@ begin
       if student.getBirth = SQLNull then //if set to null
         FieldByName('birth').Clear
       else
-        FieldByName('birth').AsString :=
-          FormatDateTime('YYYY-MM-DD', student.getBirth);
+        FieldByName('birth').AsDateTime := student.getBirth;
 
-      FieldByName('ldap_user').AsString := student.getLDAPUser;
+      if student.getLDAPUser = '' then //if set to empty string meaning null
+        FieldByName('ldap_user').Clear
+      else
+        FieldByName('ldap_user').AsString := student.getLDAPUser;
+
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
       SQLTransaction.commit;
@@ -563,12 +686,38 @@ begin
   setRentalFields(Result, False);
 end;
 
+function TDBConnection.existsUnreturnedRentalByBook(var book: TBook): boolean;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM rental where book_id = (:book) and return_date = NULL';
+      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := False;
+      exit;
+    end;
+  end;
+
+  SQLQuery.First; //set pointer to first result row
+  Result := not EOF; //does one exist?
+end;
+
 function TDBConnection.updateInsertRental(var rental: TRental): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
   //get object from database if exists
-  SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = (:id)';
+  SQLQuery.SQL.Text := 'SELECT * FROM rental WHERE id = (:id) LIMIT 1';
   SQLQuery.ParamByName('id').AsInteger := rental.getId;
   SQLQuery.Open;
 
@@ -586,14 +735,12 @@ begin
       //update object
       FieldByName('student_id').AsLargeInt := rental.getStudentId;
       FieldByName('book_id').AsLargeInt := rental.getBookId;
-      FieldByName('rental_date').AsString :=
-        FormatDateTime('YYYY-MM-DD', rental.getRentalDate);
+      FieldByName('rental_date').AsDateTime := rental.getRentalDate;
 
       if rental.getReturnDate = SQLNull then //if set to null
         FieldByName('return_date').Clear
       else
-        FieldByName('return_date').AsString :=
-          FormatDateTime('YYYY-MM-DD', rental.getReturnDate);
+        FieldByName('return_date').AsDateTime := rental.getReturnDate;
 
       Post; //add to change buffer
       ApplyUpdates; //commit change buffer to db
@@ -731,7 +878,7 @@ begin
   setBookFields(Result, False);
 end;
 
-function TDBConnection.getBookById(id: longint): TBook;
+function TDBConnection.getBookById(id: LargeInt): TBook;
 var
   arr: ArrayOfBooks;
 begin
@@ -740,7 +887,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+      SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id) LIMIT 1';
       SQLQuery.ParamByName('id').AsInteger := id;
       SQLQuery.Open;
     end;
@@ -765,7 +912,7 @@ function TDBConnection.updateInsertBook(var book: TBook): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id)';
+  SQLQuery.SQL.Text := 'SELECT * FROM book WHERE id = (:id) LIMIT 1';
   SQLQuery.ParamByName('id').AsInteger := book.getId;
   SQLQuery.Open;
 
@@ -892,7 +1039,7 @@ function TDBConnection.updateInsertBooktype(var booktype: TBooktype): boolean;
 begin
   DBError := nil;
   SQLQuery.Close;
-  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
+  SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn) LIMIT 1';
   SQLQuery.ParamByName('isbn').AsString := booktype.getIsbn;
   SQLQuery.Open;
 
@@ -961,7 +1108,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.Close;
-      SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn)';
+      SQLQuery.SQL.Text := 'SELECT * FROM booktype WHERE isbn = (:isbn) LIMIT 1';
       SQLQuery.ParamByName('isbn').AsString := isbn;
       SQLQuery.Open;
     end;
@@ -980,7 +1127,7 @@ begin
   Result := nil;
 
   if (length(arr) = 1) then
-  Result := arr[0];
+    Result := arr[0];
 
 end;
 
