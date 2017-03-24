@@ -43,6 +43,7 @@ type
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
+    CBInfoRelFilter: TCheckBox;
     EdRentBook: TEdit;
     EdRetBook: TEdit;
     EdAddBookName: TEdit;
