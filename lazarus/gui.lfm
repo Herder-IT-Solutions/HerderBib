@@ -34669,7 +34669,7 @@ object Form1: TForm1
             Left = 424
             Height = 536
             Top = 8
-            Width = 312
+            Width = 336
             Lines.Strings = (
               'Informatik-LK am Herder-Gymnasium '
               'HERDER-IT-SOLUTIONS'
@@ -34711,7 +34711,6 @@ object Form1: TForm1
               'Icon: https://icons8.com/'
             )
             ReadOnly = True
-            ScrollBars = ssAutoVertical
             TabOrder = 0
           end
           object LbInfoSupport: TLabel
@@ -34778,6 +34777,27 @@ object Form1: TForm1
           Caption = 'Administration'
           ClientHeight = 550
           ClientWidth = 768
+          object ShInfoAdminDBPath: TShape
+            Left = 8
+            Height = 97
+            Top = 376
+            Width = 336
+            Brush.Color = clForm
+          end
+          object ShInfoAdminCSV: TShape
+            Left = 8
+            Height = 104
+            Top = 144
+            Width = 336
+            Brush.Color = clForm
+          end
+          object ShInfoAdminTestmode: TShape
+            Left = 8
+            Height = 97
+            Top = 264
+            Width = 336
+            Brush.Color = clForm
+          end
           object BtInfoAdminLogout: TButton
             Left = 8
             Height = 25
@@ -34823,17 +34843,17 @@ object Form1: TForm1
             ParentColor = False
           end
           object LEInfoAdminDBName: TLabeledEdit
-            Left = 8
+            Left = 16
             Height = 21
-            Top = 258
+            Top = 400
             Width = 312
             EditLabel.AnchorSideLeft.Control = LEInfoAdminDBName
             EditLabel.AnchorSideRight.Control = LEInfoAdminDBName
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = LEInfoAdminDBName
-            EditLabel.Left = 8
+            EditLabel.Left = 16
             EditLabel.Height = 13
-            EditLabel.Top = 242
+            EditLabel.Top = 384
             EditLabel.Width = 312
             EditLabel.Caption = 'Bitte bennenen Sie den Datenbankpfad'
             EditLabel.ParentColor = False
@@ -34842,9 +34862,9 @@ object Form1: TForm1
             Text = 'buchverleih.sqlite'
           end
           object BtInfoAdminSendDBName: TButton
-            Left = 8
+            Left = 16
             Height = 25
-            Top = 288
+            Top = 432
             Width = 75
             Caption = 'Absenden'
             Enabled = False
@@ -34859,9 +34879,9 @@ object Form1: TForm1
             ParentColor = False
           end
           object BtInfoAdminCSV: TButton
-            Left = 456
+            Left = 16
             Height = 25
-            Top = 288
+            Top = 208
             Width = 75
             Caption = 'Importieren'
             Enabled = False
@@ -34869,25 +34889,25 @@ object Form1: TForm1
             TabOrder = 5
           end
           object LbInfoAdminCSV: TLabel
-            Left = 456
+            Left = 16
             Height = 13
-            Top = 216
+            Top = 152
             Width = 251
             Caption = 'Importieren Sie eine Schülerliste aus einer CSV-Datei'
             ParentColor = False
           end
           object LEInfoAdminCSV: TLabeledEdit
-            Left = 456
+            Left = 16
             Height = 21
-            Top = 258
+            Top = 184
             Width = 274
             EditLabel.AnchorSideLeft.Control = LEInfoAdminCSV
             EditLabel.AnchorSideRight.Control = LEInfoAdminCSV
             EditLabel.AnchorSideRight.Side = asrBottom
             EditLabel.AnchorSideBottom.Control = LEInfoAdminCSV
-            EditLabel.Left = 456
+            EditLabel.Left = 16
             EditLabel.Height = 13
-            EditLabel.Top = 242
+            EditLabel.Top = 168
             EditLabel.Width = 274
             EditLabel.Caption = 'Bitte geben Sie den Dateinamen an'
             EditLabel.ParentColor = False
@@ -34896,28 +34916,32 @@ object Form1: TForm1
             Text = 'student_list.csv'
           end
           object LbInfoAdminTestmode: TLabel
-            Left = 456
+            Left = 16
             Height = 13
-            Top = 336
+            Top = 272
             Width = 58
             Caption = 'Druckmodus'
             ParentColor = False
           end
           object RBInfoAdminTestmodeDF: TRadioButton
-            Left = 456
+            Left = 16
             Height = 17
-            Top = 360
+            Top = 296
             Width = 156
             Caption = 'Standardmodus (empfohlen)'
-            TabOrder = 7
+            Checked = True
+            Enabled = False
+            TabOrder = 8
+            TabStop = True
           end
           object RBInfoAdminTestmodeTM: TRadioButton
-            Left = 456
+            Left = 16
             Height = 17
-            Top = 384
+            Top = 320
             Width = 72
             Caption = 'Testmodus'
-            TabOrder = 8
+            Enabled = False
+            TabOrder = 7
           end
         end
       end

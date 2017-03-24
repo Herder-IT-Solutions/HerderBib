@@ -128,6 +128,9 @@ type
     SEInfoStudDay: TSpinEdit;
     SEInfoStudMonth: TSpinEdit;
     SEInfoStudYear: TSpinEdit;
+    ShInfoAdminTestmode: TShape;
+    ShInfoAdminCSV: TShape;
+    ShInfoAdminDBPath: TShape;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
     TabAdd: TTabSheet;
@@ -469,6 +472,8 @@ begin
     BtInfoStudEdit.Enabled := True;
     LeInfoAdminCSV.Enabled := True;
     BtInfoAdminCSV.Enabled := True;
+    RBInfoAdminTestmodeDF.Enabled := TRUE;
+    RBInfoAdminTestmodeTM.Enabled := TRUE;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -484,6 +489,8 @@ begin
   BtInfoStudEdit.Enabled := False;
   LeInfoAdminCSV.Enabled := False;
   BtInfoAdminCSV.Enabled := False;
+  RBInfoAdminTestmodeDF.Enabled := False;
+  RBInfoAdminTestmodeTM.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
