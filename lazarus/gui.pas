@@ -39,6 +39,7 @@ type
     BtInfoAdminCSV: TButton;
     BtInfoBooktypeShowAll: TButton;
     BtPrintDelete: TButton;
+    BtInfoAdminDeleteRentals: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -127,11 +128,15 @@ type
     RBInfoAdminTestmodeTM: TRadioButton;
     SEAddBookQuantity: TSpinEdit;
     SEInfoStudDay: TSpinEdit;
+    SEInfoAdminDeleteRentalsDay: TSpinEdit;
     SEInfoStudMonth: TSpinEdit;
+    SEInfoAdminDeleteRentalsMonth: TSpinEdit;
     SEInfoStudYear: TSpinEdit;
+    SEInfoAdminDeleteRentalsYear: TSpinEdit;
     ShInfoAdminTestmode: TShape;
     ShInfoAdminCSV: TShape;
     ShInfoAdminDBPath: TShape;
+    ShInfoAdminDeleteRentals: TShape;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
     TabAdd: TTabSheet;
@@ -147,6 +152,7 @@ type
     TBRetBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminCSVClick(Sender: TObject);
+    procedure BtInfoAdminDeleteRentalsClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookDelClick(Sender: TObject);
@@ -178,6 +184,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
+    procedure SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: boolean);
@@ -215,6 +222,24 @@ begin
     LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt';
 end;
 
+procedure TForm1.SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
+begin
+  //This procedure limits the number of days according to the month
+  case SEInfoAdminDeleteRentalsMonth.Value of
+    1: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    2: SEInfoAdminDeleteRentalsDay.MaxValue := 29;
+    3: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    4: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    5: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    6: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    7: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    8: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    9: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    10: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    11: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    12: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+  end;
+end;
 
 procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
 begin
@@ -459,6 +484,24 @@ begin
     ShowMessage('Import nicht erfolgreich.');
 end;
 
+procedure TForm1.BtInfoAdminDeleteRentalsClick(Sender: TObject);
+var
+  deletions: cardinal;
+  date: TDate;
+  YY, MM, DD: word;
+begin
+  DD := SEInfoAdminDeleteRentalsDay.Value;
+  MM := SEInfoAdminDeleteRentalsMonth.Value;
+  YY := SEInfoAdminDeleteRentalsYear.Value;
+  date := EncodeDate(YY, MM, DD);
+
+  deletions := management.RDel(date);
+  if deletions > 0 then
+    ShowMessage(IntToStr(deletions) + ' erfolgreich gelöschte Ausleihbeziehungen')
+  else
+    ShowMessage('Fehler, es gibt im Zeitraum keine zu löschenden Ausleihbeziehungen!');
+end;
+
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
 begin
   if EdInfoAdminPw.Text = 'h3rd3r' then
@@ -473,8 +516,12 @@ begin
     BtInfoStudEdit.Enabled := True;
     LeInfoAdminCSV.Enabled := True;
     BtInfoAdminCSV.Enabled := True;
-    RBInfoAdminTestmodeDF.Enabled := TRUE;
-    RBInfoAdminTestmodeTM.Enabled := TRUE;
+    RBInfoAdminTestmodeDF.Enabled := True;
+    RBInfoAdminTestmodeTM.Enabled := True;
+    SEInfoAdminDeleteRentalsDay.Enabled := True;
+    SEInfoAdminDeleteRentalsMonth.Enabled := True;
+    SEInfoAdminDeleteRentalsYear.Enabled := True;
+    BtInfoAdminDeleteRentals.Enabled := True;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -492,6 +539,10 @@ begin
   BtInfoAdminCSV.Enabled := False;
   RBInfoAdminTestmodeDF.Enabled := False;
   RBInfoAdminTestmodeTM.Enabled := False;
+  SEInfoAdminDeleteRentalsDay.Enabled := False;
+  SEInfoAdminDeleteRentalsMonth.Enabled := False;
+  SEInfoAdminDeleteRentalsYear.Enabled := False;
+  BtInfoAdminDeleteRentals.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
@@ -550,7 +601,8 @@ begin
       booktitle := management.getBTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
       addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
-      ShowMessage('Schüler ID ' + EdInfoBookID.Text + ' erfolgreich zur Druckwarteschlange hinzugefügt');
+      ShowMessage('Schüler ID ' + EdInfoBookID.Text +
+        ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end
     else
     begin
@@ -760,7 +812,8 @@ begin
       studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
       TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text, studname);
       addToPrintingQueueListBox(EdInfoStudID.Text, studname);
-      ShowMessage('Schüler ID ' + EdInfoStudID.Text + ' erfolgreich zur Druckwarteschlange hinzugefügt');
+      ShowMessage('Schüler ID ' + EdInfoStudID.Text +
+        ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end;
 
   except
@@ -836,17 +889,18 @@ end;
 
 procedure TForm1.BtPrintClick(Sender: TObject);
 begin
-  if not (LiPrintQueue.Items.Count = 0) then begin
-      TBarcodePrinter.instance.print;
-  LiPrintQueue.Items.Clear;
-  ShowMessage('Druckauftrag erfolgreich!');
+  if not (LiPrintQueue.Items.Count = 0) then
+  begin
+    TBarcodePrinter.instance.print;
+    LiPrintQueue.Items.Clear;
+    ShowMessage('Druckauftrag erfolgreich!');
   end;
   ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
 end;
 
 procedure TForm1.BtPrintDeleteClick(Sender: TObject);
 begin
-  TBarcodePrinter.instance.clear;
+  TBarcodePrinter.instance.Clear;
   LiPrintQueue.Items.Clear;
 end;
 

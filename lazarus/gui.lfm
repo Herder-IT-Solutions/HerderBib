@@ -34952,6 +34952,66 @@ object Form1: TForm1
             Enabled = False
             TabOrder = 7
           end
+          object ShInfoAdminDeleteRentals: TShape
+            Left = 360
+            Height = 104
+            Top = 144
+            Width = 400
+            Brush.Color = clForm
+          end
+          object BtInfoAdminDeleteRentals: TButton
+            Left = 368
+            Height = 25
+            Top = 208
+            Width = 384
+            Caption = 'Alle abgeschlossenen Ausleihbeziehungen vor diesem Datum löschen'
+            Enabled = False
+            OnClick = BtInfoAdminDeleteRentalsClick
+            TabOrder = 9
+          end
+          object SEInfoAdminDeleteRentalsDay: TSpinEdit
+            Left = 376
+            Height = 23
+            Hint = 'Tag'
+            Top = 160
+            Width = 50
+            Enabled = False
+            MaxValue = 31
+            MinValue = 1
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 10
+            Value = 1
+          end
+          object SEInfoAdminDeleteRentalsMonth: TSpinEdit
+            Left = 440
+            Height = 23
+            Hint = 'Monat'
+            Top = 160
+            Width = 50
+            Enabled = False
+            MaxValue = 12
+            MinValue = 1
+            OnChange = SEInfoAdminDeleteRentalsMonthChange
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 11
+            Value = 1
+          end
+          object SEInfoAdminDeleteRentalsYear: TSpinEdit
+            Left = 504
+            Height = 23
+            Hint = 'Jahr'
+            Top = 160
+            Width = 88
+            Enabled = False
+            MaxValue = 2020
+            MinValue = 1990
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 12
+            Value = 2000
+          end
         end
       end
     end
