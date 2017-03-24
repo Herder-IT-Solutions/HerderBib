@@ -38,6 +38,7 @@ type
     BtPrint: TButton;
     BtInfoAdminCSV: TButton;
     BtInfoBooktypeShowAll: TButton;
+    BtPrintDelete: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -61,6 +62,7 @@ type
     ImRetHerder: TImage;
     ImAddHerder: TImage;
     ImPrintHerder: TImage;
+    LbInfoAdminTestmode: TLabel;
     LEInfoAdminCSV: TLabeledEdit;
     LbInfoAdminCSV: TLabel;
     LbInfoSupportLicense: TLabel;
@@ -120,6 +122,8 @@ type
     MeInfoBooktypeShowAll: TMemo;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
+    RBInfoAdminTestmodeDF: TRadioButton;
+    RBInfoAdminTestmodeTM: TRadioButton;
     SEAddBookQuantity: TSpinEdit;
     SEInfoStudDay: TSpinEdit;
     SEInfoStudMonth: TSpinEdit;
@@ -156,9 +160,11 @@ type
     procedure BtInfoSuportLicenseClick(Sender: TObject);
     procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure BtPrintClick(Sender: TObject);
+    procedure BtPrintDeleteClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportErrorClick(Sender: TObject);
+    procedure BtClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdRetBookChange(Sender: TObject);
     procedure EdRentBookChange(Sender: TObject);
@@ -830,6 +836,12 @@ begin
   ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
 end;
 
+procedure TForm1.BtPrintDeleteClick(Sender: TObject);
+begin
+  TBarcodePrinter.instance.clear;
+  LiPrintQueue.Items.Clear;
+end;
+
 procedure TForm1.BtRentClick(Sender: TObject);
 var
   book: TBOOK;
@@ -891,6 +903,11 @@ end;
 procedure TForm1.BtInfoSuportErrorClick(Sender: TObject);
 begin
   OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
+end;
+
+procedure TForm1.BtClick(Sender: TObject);
+begin
+
 end;
 
 
