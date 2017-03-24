@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 261
+  Left = 901
   Height = 571
-  Top = 123
+  Top = 142
   Width = 763
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 571
@@ -11580,8 +11580,8 @@ object Form1: TForm1
     Height = 600
     Top = 0
     Width = 765
-    ActivePage = TabRent
-    TabIndex = 0
+    ActivePage = TabPrint
+    TabIndex = 3
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
@@ -34119,9 +34119,9 @@ object Form1: TForm1
         Height = 544
         Top = 0
         Width = 752
-        ActivePage = TabBook
+        ActivePage = Administration
         ParentBiDiMode = False
-        TabIndex = 1
+        TabIndex = 5
         TabOrder = 0
         OnChange = PCInfosChange
         object TabStud: TTabSheet
@@ -34829,7 +34829,7 @@ object Form1: TForm1
             EditLabel.ParentColor = False
             Enabled = False
             TabOrder = 3
-            Text = '../buchverleih/sqlite'
+            Text = 'buchverleih.sqlite'
           end
           object BtInfoAdminSendDBName: TButton
             Left = 8
@@ -34841,11 +34841,11 @@ object Form1: TForm1
             TabOrder = 4
           end
           object LbInfoAdminConnection: TLabel
-            Left = 8
+            Left = 568
             Height = 15
-            Top = 216
-            Width = 132
-            Caption = 'LbInfoAdminConnection'
+            Top = 64
+            Width = 173
+            Caption = 'Geben Sie die Datenbankdatei an'
             ParentColor = False
           end
           object BtInfoAdminCSV: TButton

@@ -536,6 +536,7 @@ begin
       booktitle := management.getBTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
       addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
+      ShowMessage('Schüler ID ' + EdInfoBookID.Text + ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end
     else
     begin
@@ -735,7 +736,7 @@ end;
 
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 var
-  stud: Tstudent;
+  //stud: Tstudent;
   studname: string;
 begin
   try
@@ -745,6 +746,7 @@ begin
       studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
       TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text, studname);
       addToPrintingQueueListBox(EdInfoStudID.Text, studname);
+      ShowMessage('Schüler ID ' + EdInfoStudID.Text + ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end;
 
   except
@@ -820,8 +822,12 @@ end;
 
 procedure TForm1.BtPrintClick(Sender: TObject);
 begin
-  TBarcodePrinter.instance.print;
+  if not (LiPrintQueue.Items.Count = 0) then begin
+      TBarcodePrinter.instance.print;
   LiPrintQueue.Items.Clear;
+  ShowMessage('Druckauftrag erfolgreich!');
+  end;
+  ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
 end;
 
 procedure TForm1.BtRentClick(Sender: TObject);
