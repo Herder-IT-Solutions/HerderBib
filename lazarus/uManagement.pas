@@ -95,6 +95,9 @@ type
     //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
 
+    //Erg: Alle Buchtypen in der Datenbank
+    function getBooktypes: ArrayOfBooktypes;
+
 
 
 
@@ -392,6 +395,11 @@ end;
 function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
 begin
   Result := uDBConn.getBooktypeByISBN(isbn);
+end;
+
+function TManagement.getBooktypes: ArrayOfBooktypes;
+begin
+  Result:=uDBConn.getBooktypes;
 end;
 
 //---------------------------------------------------------------RENTAL-----
