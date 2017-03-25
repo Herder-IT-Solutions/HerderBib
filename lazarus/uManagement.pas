@@ -95,6 +95,9 @@ type
     //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
 
+    //Erg: Alle Buchtypen in der Datenbank
+    function getBooktypes: ArrayOfBooktypes;
+
 
 
 
@@ -184,9 +187,10 @@ type
     function SIdCheck(SId: int64): boolean;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
+    //     Falls vorhanden ldap_user, ansonsten '' übergeben
     //Eff: Neuen Schüler erstellen
-    //Erg: Die Schüler Id
-    function SNew(lastN, firstN, classN: string; birth: TDate): int64;
+    //Erg: Die Schüler Id; -1 bei einem Fehler
+    function SNew(lastN, firstN, classN, ldap_user: string; birth: TDate): int64;
 
     //Eff: Überschreibt die Daten des Schülers mit der übergebenen Id in der
     //     Datenbank mit dem Übergebenen Schüler
@@ -393,6 +397,11 @@ begin
   Result := uDBConn.getBooktypeByISBN(isbn);
 end;
 
+function TManagement.getBooktypes: ArrayOfBooktypes;
+begin
+  Result:=uDBConn.getBooktypes;
+end;
+
 //---------------------------------------------------------------RENTAL-----
 
 function TManagement.RCheckByBook(var book: TBook): boolean;
@@ -418,7 +427,6 @@ end;
 
 function TManagement.RNew(BId, SId: int64): boolean;
 var
-  rentals: array of TRental;
   rental: TRental;
   book: TBook;
   student: TStudent;
@@ -485,111 +493,8 @@ end;
 
 function TManagement.getStudentsByFirstLastClassNameBirthdate(
   fname, lname, cname: string; birth: TDate): ArrayOfStudents;
-{var
-  students, students2, students3: array of TStudent;
-  indexS3, j, k, id: integer;
-begin
-  indexS3 := 0;
-  students := uDBConn.getStudentsByFirstNamePattern(fname);   // Nach Vorname
-
-  students2 := uDBConn.getStudentsByLastNamePattern(lname);   //Name
-
-  if not (length(students) = 0) and not (length(students2) = 0) then
-  begin
-    j := 0;
-    while length(students) > j + 1 do
-    begin
-      id := students[j].getId;
-
-      k := 0;
-      while length(students2) > k + 1 do
-      begin
-        if id = students2[k].getId then
-        begin
-          students3[indexS3] := students2[k];
-          indexS3 := indexS3 + 1;
-        end;
-
-        k := k + 1;
-      end;
-      j := j + 1;
-    end;
-  end
-  else if (length(students) = 0) then
-    students3 := students2
-  else if (length(students2) = 0) then
-    students3 := students;
-
-
-  if not (birth = -693594) then
-  begin
-    students := uDBConn.getStudentsByBirthdate(birth);        //Geburtsdatum
-    indexS3 := 0;
-
-    if not (length(students) = 0) and not (length(students3) = 0) then
-    begin
-      j := 0;
-      while length(students) > j + 1 do
-      begin
-        id := students[j].getId;
-        k := 0;
-        while length(students3) > k + 1 do
-        begin
-          if id = students3[k].getId then
-          begin
-            students2[indexS3] := students3[k];
-            indexS3 := indexS3 + 1;
-          end;
-          k := k + 1;
-        end;
-        j := j + 1;
-      end;
-    end
-    else if (length(students) = 0) then
-      students2 := students3
-    else if (length(students3) = 0) then
-      students2 := students;
-  end
-  else
-  begin
-    students2 := students3;
-  end;
-
-  if not (cname = '') then
-  begin
-    students := uDBConn.getStudentsByClassName(cname);     //Klassenname
-    indexS3 := 0;
-
-    if not (length(students) = 0) and not (length(students2) = 0) then
-    begin
-      j := 0;
-      while length(students) > j + 1 do
-      begin
-        id := students[j].getId;
-        k := 0;
-        while length(students2) > k + 1 do
-        begin
-          if id = students2[k].getId then
-          begin
-            students3[indexS3] := students2[k];
-            indexS3 := indexS3 + 1;
-          end;
-          k := k + 1;
-        end;
-        j := j + 1;
-      end;
-      students2 := students3;
-    end
-    else if (length(students) = 0) then
-      students2 := students3
-    else if (length(students3) = 0) then
-      students2 := students;
-  end;
-
-  Result := students2;}
 begin
   Result := uDBConn.getStudentsByFistLastClassNameBirthdate(fname, lname, cname, birth);
-
 end;
 
 function TManagement.getStudentWhoRentedBook(book: TBook): TStudent;
@@ -659,7 +564,7 @@ begin
       if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
-        self.SNew(lname, fname, cname, birthDate);
+        self.SNew(lname, fname, cname, '', birthDate);
         Result := True;
 
       end
@@ -702,15 +607,13 @@ begin
     Result := True;
 end;
 
-function TManagement.SNew(lastN, firstN, classN: string; birth: TDate): int64;
+function TManagement.SNew(lastN, firstN, classN, ldap_user: string; birth: TDate): int64;
 var
   id, pz: int64;
   hid: string;
   student: TStudent;
 begin
   pz := 0;
-
-  //if (self.getStudentsByFirstLastClassNameBirthdate(firstN, lastN, birth)
 
   repeat
     id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
@@ -728,14 +631,18 @@ begin
 
   student := TStudent.Create;
   student.setId(id);
-  student.setFirstName(firstN);
-  student.setLastName(lastN);
-  student.setClassName(classN);
-  student.setBirth(birth);
-  student.setLDAPUser('');
-
-  self.SUpdate(student);
-  Result := id;
+  if (student.setFirstName(firstN) and student.setLastName(lastN) and
+    student.setClassName(classN) and student.setBirth(birth) and
+    student.setLDAPUser(ldap_user)) then
+  begin
+    self.SUpdate(student);
+    Result := id;
+  end
+  else
+  begin
+    student.Destroy;
+    Result := -1;
+  end;
 end;
 
 function TManagement.SUpdate(var student: TStudent): boolean;
