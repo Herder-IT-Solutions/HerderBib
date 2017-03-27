@@ -170,11 +170,12 @@ type
     //Erg: TStudent-Objekt des ausleihenden Schülers
     function getStudentWhoRentedBook(book: TBook): TStudent;
 
-    // Importiert die Schüler Liste als CSV Datei
-    // Klasse; Name; Vorname; Geburtsdatum
-    // Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
-    // Wahr wenn erfolgreich
-    function importCSVSchueler(Dateiname: string): boolean;
+    //Vor: CSV-Format: Klasse; Name; Vorname; Geburtsdatum
+    //     Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
+    //     RnOld = True, wenn alle, die nicht in der Liste sind als Klasse 'old' bekommen sollen
+    //Eff: Importiert die Schüler Liste als CSV Datei
+    //Erg: Wahr wenn erfolgreich
+    function importCSVSchueler(Dateiname: string; RnOld: boolean): boolean;
 
     //Vor: Eine Schüler mittels TStudent-Objekt
     //Eff: Löscht einen Schüler
@@ -399,7 +400,7 @@ end;
 
 function TManagement.getBooktypes: ArrayOfBooktypes;
 begin
-  Result:=uDBConn.getBooktypes;
+  Result := uDBConn.getBooktypes;
 end;
 
 //---------------------------------------------------------------RENTAL-----
@@ -502,15 +503,69 @@ begin
   Result := uDBConn.getStudentWhoRentedBook(book);
 end;
 
-function TManagement.importCSVSchueler(Dateiname: string): boolean;
+function TManagement.importCSVSchueler(Dateiname: string; RnOld: boolean): boolean;
+
+  //Vor: Array von TStudent-Objekten
+  //Eff: Benennt den Klassennamen von allen Schülern, die nicht in der Liste,
+  //     aber in der Datenbank sind, um in 'old'
+  //Erg: Wahr, wenn erfolgreich
+  function renameOld(allStu: ArrayOfStudents): boolean;
+  var
+    allDBStu, oldDBStu: ArrayOfStudents;
+    i, j, ioldDB, DBid, lAll, lAllDB: integer;
+    inside: boolean;
+
+  begin
+    ioldDB := 0;
+    Result := True;
+
+    //Schüler ermitteln, die nur in der Datenbank sind, nicht aber in dem übergebenen Array
+    allDBStu := uDBConn.getStudents;
+    lAll := length(allStu);
+    lAllDB := length(allDBStu);
+
+    for i := 0 to (lAllDB - 1) do
+    begin
+      DBid := allDBStu[i].getId();
+      inside := False;
+      for j := 0 to (lAll - 1) do
+      begin
+        if (DBid = allStu[j].getId) then
+        begin
+          inside := True;
+          break;
+        end;
+      end;
+      if not (inside) then
+      begin
+        ioldDB := ioldDB + 1;
+        SetLength(oldDBStu, ioldDB);
+        oldDBStu[ioldDB - 1] := allDBStu[i];
+      end;
+    end;
+
+    //Klassennamen der Schüler zu 'old' ändern
+    for i := 0 to (ioldDB - 1) do
+    begin
+      oldDBStu[i].setClassName('old');
+      if not (uDBConn.updateInsertStudent(oldDBStu[i])) then
+      begin
+        Result := False;
+        Break;
+      end;
+    end;
+  end;
+
 var
   Text: TextFile;
   str, fname, lname, cname, birth: string;
   birthDate: TDate;
-  i: integer;
-  students: array of TStudent;
+  i, id, iAllStu: integer;
+  students, allStu: ArrayOfStudents;
 begin
   str := '';
+  iAllStu := 0;
+  Result := True;
 
   AssignFile(Text, Dateiname);
 
@@ -521,7 +576,6 @@ begin
     while not EOF(Text) do                //Schüler zeilenweise einlesen
     begin
       readln(Text, str);
-
 
       fname := '';
       lname := '';
@@ -564,15 +618,37 @@ begin
       if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
-        self.SNew(lname, fname, cname, '', birthDate);
-        Result := True;
-
+        id := self.SNew(lname, fname, cname, '', birthDate);
+        if not (id = -1) then
+        begin
+          if (RnOld) then
+          begin
+            iAllStu := iAllStu + 1;
+            SetLength(allStu, iAllStu);
+            allStu[iAllStu - 1] := uDBConn.getStudentById(id);
+          end;
+        end
+        else
+          Result := False;
       end
       else if (length(students) = 1) then
       begin                 //Fall Klasse überschreiben
 
         students[0].setClassName(cname);
-        Result := uDBConn.updateinsertStudent(students[0]);
+        if (uDBConn.updateinsertStudent(students[0])) then
+        begin
+          if (RnOld) then
+          begin
+            iAllStu := iAllStu + 1;
+            SetLength(allStu, iAllStu);
+            allStu[iAllStu - 1] := students[0];
+          end;
+        end
+        else
+        begin
+          Result := False;
+          Break;
+        end;
 
       end
       else
@@ -582,6 +658,8 @@ begin
       end;
 
     end;
+    if (RnOld and Result) then
+      Result := renameOld(allStu);
   except
     on E: Exception do
       Result := False;
