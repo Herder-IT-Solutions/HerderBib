@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 409
+  Left = 426
   Height = 603
-  Top = 175
+  Top = 164
   Width = 780
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 603
@@ -17195,6 +17195,15 @@ object Form1: TForm1
         ParentColor = False
         Visible = False
       end
+      object BtRentUndo: TButton
+        Left = 8
+        Height = 25
+        Top = 528
+        Width = 215
+        Caption = 'Letztes Ausleihen rückgängig machen'
+        Enabled = False
+        TabOrder = 3
+      end
     end
     object TabRet: TTabSheet
       Caption = 'Zurückgeben'
@@ -28533,13 +28542,13 @@ object Form1: TForm1
     end
     object TabPrint: TTabSheet
       Caption = 'Druckauftrag'
-      ClientHeight = 574
+      ClientHeight = 572
       ClientWidth = 774
       object LbPrintInfo: TLabel
         Left = 8
-        Height = 26
+        Height = 30
         Top = 8
-        Width = 510
+        Width = 561
         Caption = 'Hier können Sie alle Strichcodes (Schüler/Bücher) drucken, die sich zur Zeit in der Warteschlange befinden.'#13#10'Dadurch werden alle Elemente aus der Warteschlange entfernt.'
         ParentColor = False
       end
@@ -28563,9 +28572,9 @@ object Form1: TForm1
       end
       object LbPrintQueue: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 192
-        Width = 117
+        Width = 127
         Caption = 'Gesamte Warteschlange'
         ParentColor = False
       end
@@ -34310,20 +34319,20 @@ object Form1: TForm1
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
-          ClientHeight = 550
+          ClientHeight = 548
           ClientWidth = 768
           object EdInfoBookID: TEdit
             Left = 240
-            Height = 21
+            Height = 23
             Top = 16
             Width = 480
             TabOrder = 0
           end
           object LbInfoBookState: TLabel
             Left = 16
-            Height = 13
+            Height = 15
             Top = 56
-            Width = 39
+            Width = 43
             Caption = 'Zustand'
             ParentColor = False
           end
@@ -34338,9 +34347,9 @@ object Form1: TForm1
           end
           object LbInfoBookID: TLabel
             Left = 16
-            Height = 13
+            Height = 15
             Top = 24
-            Width = 133
+            Width = 153
             Caption = 'Buch-Identifikationsnummer'
             ParentColor = False
           end
@@ -34370,7 +34379,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack1: TLabel
             Left = 240
-            Height = 13
+            Height = 15
             Top = 72
             Width = 6
             Caption = '1'
@@ -34378,7 +34387,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack5: TLabel
             Left = 464
-            Height = 13
+            Height = 15
             Top = 72
             Width = 6
             Caption = '5'
@@ -34386,7 +34395,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack3: TLabel
             Left = 352
-            Height = 13
+            Height = 15
             Top = 72
             Width = 6
             Caption = '3'
@@ -34394,15 +34403,15 @@ object Form1: TForm1
           end
           object LbInfoBookRent: TLabel
             Left = 16
-            Height = 13
+            Height = 15
             Top = 96
-            Width = 79
+            Width = 88
             Caption = 'Ausgeliehen von'
             ParentColor = False
           end
           object EdInfoBookRent: TEdit
             Left = 240
-            Height = 21
+            Height = 23
             Top = 88
             Width = 480
             Enabled = False
@@ -34420,9 +34429,9 @@ object Form1: TForm1
           end
           object LbInfoBookError: TLabel
             Left = 16
-            Height = 13
+            Height = 15
             Top = 240
-            Width = 78
+            Width = 86
             Caption = 'LbInfoBookError'
             ParentColor = False
             Visible = False
@@ -34435,6 +34444,16 @@ object Form1: TForm1
             Caption = 'Zur Druckwarteschlange hinzufügen'
             OnClick = BtInfoBookPrintQClick
             TabOrder = 6
+          end
+          object BtInfoBookDelRentals: TButton
+            Left = 536
+            Height = 25
+            Top = 144
+            Width = 184
+            Caption = 'Ausleihbeziehung auflösen'
+            Enabled = False
+            OnClick = BtInfoBookDelRentalsClick
+            TabOrder = 7
           end
         end
         object TabRel: TTabSheet

@@ -40,6 +40,8 @@ type
     BtInfoBooktypeShowAll: TButton;
     BtPrintDelete: TButton;
     BtInfoAdminDeleteRentals: TButton;
+    BtInfoBookDelRentals: TButton;
+    BtRentUndo: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -156,6 +158,7 @@ type
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookDelClick(Sender: TObject);
+    procedure BtInfoBookDelRentalsClick(Sender: TObject);
     procedure BtInfoBookEditClick(Sender: TObject);
     procedure BtInfoBookPrintQClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
@@ -477,7 +480,7 @@ procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
 var
   B: boolean;
 begin
-  b := management.importCSVSchueler(LEInfoAdminCSV.Text);
+  b := management.importCSVSchueler(LEInfoAdminCSV.Text,true);
   if b then
     ShowMessage('Import erfolgreich!')
   else
@@ -563,6 +566,33 @@ begin
         'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+end;
+
+procedure TForm1.BtInfoBookDelRentalsClick(Sender: TObject);
+var
+  book: TBOOK;
+  stud: TSTUDENT;
+begin
+  LbInfoBookError.Visible := False;
+  try
+    if management.BIdCheck(StrToInt(EdInfoBookID.Text)) and not
+      (EdInfoBookID.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      stud := management.getStudentWhoRentedBook(book);
+      if stud <> nil then
+        //management.deleteRentalRelationByBook(book);
+    end;
+
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
@@ -894,8 +924,8 @@ begin
     TBarcodePrinter.instance.print;
     LiPrintQueue.Items.Clear;
     ShowMessage('Druckauftrag erfolgreich!');
-  end;
-  ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
+  end
+  else ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
 end;
 
 procedure TForm1.BtPrintDeleteClick(Sender: TObject);
