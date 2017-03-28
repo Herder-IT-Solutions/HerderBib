@@ -42,6 +42,7 @@ type
     BtInfoAdminDeleteRentals: TButton;
     BtInfoBookDelRentals: TButton;
     BtRentUndo: TButton;
+    BtInfoStudCreate: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
@@ -166,6 +167,7 @@ type
     procedure BtInfoBooktypeShowAllClick(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
+    procedure BtInfoStudCreateClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
     procedure BtInfoStudExportRelClick(Sender: TObject);
     procedure BtInfoStudPrintQClick(Sender: TObject);
@@ -785,6 +787,22 @@ begin
   MeInfoRel.Clear;
   readCSV('rental_relations.csv');
   //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
+end;
+
+procedure TForm1.BtInfoStudCreateClick(Sender: TObject);           //sollte nur dem admin möglich sein
+begin
+  try
+    if (EdInfoStudFirstName.text <> '') and (EdInfoStudLastName.text <> '') and (EdInfoStudGrade.text <> '') then begin
+    //management.createStudent(EdInfoStudName.text,EdInfoStudLastName.text,EdInfoStudGrade.text)
+    end;
+  except
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
 end;
 
 procedure TForm1.BtInfoStudEditClick(Sender: TObject);

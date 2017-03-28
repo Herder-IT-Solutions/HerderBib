@@ -34316,6 +34316,16 @@ object Form1: TForm1
             OnClick = BtInfoStudPrintQClick
             TabOrder = 11
           end
+          object BtInfoStudCreate: TButton
+            Left = 544
+            Height = 25
+            Top = 224
+            Width = 211
+            Caption = 'Schüler hinzufügen'
+            Enabled = False
+            OnClick = BtInfoStudCreateClick
+            TabOrder = 12
+          end
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
