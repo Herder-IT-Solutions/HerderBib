@@ -38,10 +38,16 @@ type
     BtPrint: TButton;
     BtInfoAdminCSV: TButton;
     BtInfoBooktypeShowAll: TButton;
+    BtPrintDelete: TButton;
+    BtInfoAdminDeleteRentals: TButton;
+    BtInfoBookDelRentals: TButton;
+    BtRentUndo: TButton;
+    BtInfoStudCreate: TButton;
     CBAddBookSubject: TComboBox;
     CBInfoBooktypeSubject: TComboBox;
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
+    CBInfoRelFilter: TCheckBox;
     EdRentBook: TEdit;
     EdRetBook: TEdit;
     EdAddBookName: TEdit;
@@ -61,6 +67,7 @@ type
     ImRetHerder: TImage;
     ImAddHerder: TImage;
     ImPrintHerder: TImage;
+    LbInfoAdminTestmode: TLabel;
     LEInfoAdminCSV: TLabeledEdit;
     LbInfoAdminCSV: TLabel;
     LbInfoSupportLicense: TLabel;
@@ -120,10 +127,19 @@ type
     MeInfoBooktypeShowAll: TMemo;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
+    RBInfoAdminTestmodeDF: TRadioButton;
+    RBInfoAdminTestmodeTM: TRadioButton;
     SEAddBookQuantity: TSpinEdit;
     SEInfoStudDay: TSpinEdit;
+    SEInfoAdminDeleteRentalsDay: TSpinEdit;
     SEInfoStudMonth: TSpinEdit;
+    SEInfoAdminDeleteRentalsMonth: TSpinEdit;
     SEInfoStudYear: TSpinEdit;
+    SEInfoAdminDeleteRentalsYear: TSpinEdit;
+    ShInfoAdminTestmode: TShape;
+    ShInfoAdminCSV: TShape;
+    ShInfoAdminDBPath: TShape;
+    ShInfoAdminDeleteRentals: TShape;
     TabRent: TTabSheet;
     TabRet: TTabSheet;
     TabAdd: TTabSheet;
@@ -139,9 +155,11 @@ type
     TBRetBookState: TTrackBar;
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminCSVClick(Sender: TObject);
+    procedure BtInfoAdminDeleteRentalsClick(Sender: TObject);
     procedure BtInfoAdminLoginClick(Sender: TObject);
     procedure BtInfoAdminLogoutClick(Sender: TObject);
     procedure BtInfoBookDelClick(Sender: TObject);
+    procedure BtInfoBookDelRentalsClick(Sender: TObject);
     procedure BtInfoBookEditClick(Sender: TObject);
     procedure BtInfoBookPrintQClick(Sender: TObject);
     procedure BtInfoBookShow1Click(Sender: TObject);
@@ -149,6 +167,7 @@ type
     procedure BtInfoBooktypeShowAllClick(Sender: TObject);
     procedure BtInfoBooktypeShowClick(Sender: TObject);
     procedure BtInfoRelFilterClick(Sender: TObject);
+    procedure BtInfoStudCreateClick(Sender: TObject);
     procedure BtInfoStudEditClick(Sender: TObject);
     procedure BtInfoStudExportRelClick(Sender: TObject);
     procedure BtInfoStudPrintQClick(Sender: TObject);
@@ -156,9 +175,11 @@ type
     procedure BtInfoSuportLicenseClick(Sender: TObject);
     procedure BtInfoSuportWikiClick(Sender: TObject);
     procedure BtPrintClick(Sender: TObject);
+    procedure BtPrintDeleteClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportErrorClick(Sender: TObject);
+    procedure BtClick(Sender: TObject);
     procedure confirmNumbers(Sender: TObject; var Key: char);
     procedure EdRetBookChange(Sender: TObject);
     procedure EdRentBookChange(Sender: TObject);
@@ -168,6 +189,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
+    procedure SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: boolean);
@@ -205,6 +227,24 @@ begin
     LbInfoAdminConnection.Caption := 'Datenbankverbindung nicht hergestellt';
 end;
 
+procedure TForm1.SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
+begin
+  //This procedure limits the number of days according to the month
+  case SEInfoAdminDeleteRentalsMonth.Value of
+    1: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    2: SEInfoAdminDeleteRentalsDay.MaxValue := 29;
+    3: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    4: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    5: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    6: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    7: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    8: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    9: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    10: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+    11: SEInfoAdminDeleteRentalsDay.MaxValue := 30;
+    12: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
+  end;
+end;
 
 procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
 begin
@@ -442,11 +482,29 @@ procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
 var
   B: boolean;
 begin
-  b := management.importCSVSchueler(LEInfoAdminCSV.Text);
+  b := management.importCSVSchueler(LEInfoAdminCSV.Text, True);
   if b then
     ShowMessage('Import erfolgreich!')
   else
     ShowMessage('Import nicht erfolgreich.');
+end;
+
+procedure TForm1.BtInfoAdminDeleteRentalsClick(Sender: TObject);
+var
+  deletions: cardinal;
+  date: TDate;
+  YY, MM, DD: word;
+begin
+  DD := SEInfoAdminDeleteRentalsDay.Value;
+  MM := SEInfoAdminDeleteRentalsMonth.Value;
+  YY := SEInfoAdminDeleteRentalsYear.Value;
+  date := EncodeDate(YY, MM, DD);
+
+  deletions := management.RDel(date);
+  if deletions > 0 then
+    ShowMessage(IntToStr(deletions) + ' erfolgreich gelöschte Ausleihbeziehungen')
+  else
+    ShowMessage('Fehler, es gibt im Zeitraum keine zu löschenden Ausleihbeziehungen!');
 end;
 
 procedure TForm1.BtInfoAdminLoginClick(Sender: TObject);
@@ -463,6 +521,13 @@ begin
     BtInfoStudEdit.Enabled := True;
     LeInfoAdminCSV.Enabled := True;
     BtInfoAdminCSV.Enabled := True;
+    RBInfoAdminTestmodeDF.Enabled := True;
+    RBInfoAdminTestmodeTM.Enabled := True;
+    SEInfoAdminDeleteRentalsDay.Enabled := True;
+    SEInfoAdminDeleteRentalsMonth.Enabled := True;
+    SEInfoAdminDeleteRentalsYear.Enabled := True;
+    BtInfoAdminDeleteRentals.Enabled := True;
+    BtInfoStudCreate.Enabled := True;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -478,6 +543,13 @@ begin
   BtInfoStudEdit.Enabled := False;
   LeInfoAdminCSV.Enabled := False;
   BtInfoAdminCSV.Enabled := False;
+  RBInfoAdminTestmodeDF.Enabled := False;
+  RBInfoAdminTestmodeTM.Enabled := False;
+  SEInfoAdminDeleteRentalsDay.Enabled := False;
+  SEInfoAdminDeleteRentalsMonth.Enabled := False;
+  SEInfoAdminDeleteRentalsYear.Enabled := False;
+  BtInfoAdminDeleteRentals.Enabled := False;
+  BtInfoStudCreate.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
@@ -498,6 +570,33 @@ begin
         'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+end;
+
+procedure TForm1.BtInfoBookDelRentalsClick(Sender: TObject);
+var
+  book: TBOOK;
+  stud: TSTUDENT;
+begin
+  LbInfoBookError.Visible := False;
+  try
+    if management.BIdCheck(StrToInt(EdInfoBookID.Text)) and not
+      (EdInfoBookID.Text = '') then
+    begin
+      book := management.getBookByID(StrToInt(EdInfoBookID.Text));
+      stud := management.getStudentWhoRentedBook(book);
+      if stud <> nil then;
+        //management.deleteRentalRelationByBook(book);
+    end;
+
+  except
+    On EConvertError do
+    begin
+      LbInfoBookError.Visible := True;
+      LbInfoBookError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+
 end;
 
 procedure TForm1.BtInfoBookEditClick(Sender: TObject);
@@ -536,6 +635,8 @@ begin
       booktitle := management.getBTitleByID(StrToInt(EdInfoBookID.Text));
       TBarcodePrinter.instance.add_barcode(IntToStr(book.getid), booktitle);
       addToPrintingQueueListBox(IntToStr(book.getid), booktitle);
+      ShowMessage('Schüler ID ' + EdInfoBookID.Text +
+        ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end
     else
     begin
@@ -690,6 +791,33 @@ begin
   //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
 
+procedure TForm1.BtInfoStudCreateClick(Sender: TObject);
+//sollte nur dem admin möglich sein
+var
+   YY, MM, DD: word;
+  birth: TDate;
+begin
+  try
+    if (EdInfoStudFirstName.Text <> '') and (EdInfoStudLastName.Text <> '') and
+      (EdInfoStudGrade.Text <> '') then
+    begin
+      DD := SeInfoStudDay.Value;
+      MM := SeInfoStudMonth.Value;
+      YY := SeInfoStudYear.Value;
+      birth := EncodeDate(YY, MM, DD);
+      EdinfoStudID.Text := IntToStr(management.SNew(EdinfoStudLastName.Text,
+        EdinfoStudFirstName.Text, EdInfoStudGrade.Text, '', birth));
+    end;
+  except
+    On EConvertError do
+    begin
+      LbInfoStudError.Visible := True;
+      LbInfoStudError.Caption :=
+        'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
+    end;
+  end;
+end;
+
 procedure TForm1.BtInfoStudEditClick(Sender: TObject);
 var
   stud: TStudent;
@@ -735,7 +863,7 @@ end;
 
 procedure TForm1.BtInfoStudPrintQClick(Sender: TObject);
 var
-  stud: Tstudent;
+  //stud: Tstudent;
   studname: string;
 begin
   try
@@ -745,6 +873,8 @@ begin
       studname := management.getSNameById(StrToInt(EdInfoStudID.Text));
       TBarcodePrinter.instance.add_barcode(EdInfoStudID.Text, studname);
       addToPrintingQueueListBox(EdInfoStudID.Text, studname);
+      ShowMessage('Schüler ID ' + EdInfoStudID.Text +
+        ' erfolgreich zur Druckwarteschlange hinzugefügt');
     end;
 
   except
@@ -820,7 +950,19 @@ end;
 
 procedure TForm1.BtPrintClick(Sender: TObject);
 begin
-  TBarcodePrinter.instance.print;
+  if not (LiPrintQueue.Items.Count = 0) then
+  begin
+    TBarcodePrinter.instance.print;
+    LiPrintQueue.Items.Clear;
+    ShowMessage('Druckauftrag erfolgreich!');
+  end
+  else
+    ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
+end;
+
+procedure TForm1.BtPrintDeleteClick(Sender: TObject);
+begin
+  TBarcodePrinter.instance.Clear;
   LiPrintQueue.Items.Clear;
 end;
 
@@ -859,17 +1001,22 @@ begin
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
+var book : TBook;
 begin
   LbRetError.Visible := False;
   try
     if (management.BIdCheck(StrToInt(EdRetBook.Text)) and
       management.SIdCheck(StrToInt(EdRetStud.Text))) then
     begin
-      management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
-      management.BBack(StrToInt(EdRetBook.Text), StrToInt(EdRetStud.Text));
-      EdRetStud.Text := '';
-      EdRetBook.Text := '';
-      TBRetBookState.Position := 1;
+      book := management.getBookByID(StrToInt(EdRentBook.Text));
+      if management.RCheckByBook(book) then
+      begin
+        management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
+        management.BBack(StrToInt(EdRetBook.Text), StrToInt(EdRetStud.Text));
+        EdRetStud.Text := '';
+        EdRetBook.Text := '';
+        TBRetBookState.Position := 1;
+      end;
     end;
   except
     On EConvertError do
@@ -885,6 +1032,11 @@ end;
 procedure TForm1.BtInfoSuportErrorClick(Sender: TObject);
 begin
   OpenURL('https://github.com/Herder-IT-Solutions/HerderBib/wiki/Fehler');
+end;
+
+procedure TForm1.BtClick(Sender: TObject);
+begin
+
 end;
 
 

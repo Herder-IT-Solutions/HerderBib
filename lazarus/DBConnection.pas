@@ -707,7 +707,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.SQL.Text :=
-        'SELECT * FROM rental where book_id = (:book) and student_id = (:student) WHERE return_date = NULL';
+        'SELECT * FROM rental where book_id = (:book) and student_id = (:student) WHERE ISNULL(return_date)';
       SQLQuery.ParamByName('book').AsLargeInt := book.getId;
       SQLQuery.ParamByName('student').AsLargeInt := student.getId;
       SQLQuery.Open;
@@ -735,12 +735,12 @@ begin
     with SQLQuery do
     begin
       SQL.Text :=
-        'SELECT * FROM rental where book_id = (:book) and return_date = NULL';
+        'SELECT COUNT(*) as count FROM rental where book_id = (:book) and WHERE ISNULL(return_date)';
       ParamByName('book').AsLargeInt := book.getId;
       Open;
 
       First; //set pointer to first result row
-      Result := not EOF; //does one exist?
+      Result := FieldByName('count').AsLargeInt > 0; //does one exist?
     end;
 
   except
