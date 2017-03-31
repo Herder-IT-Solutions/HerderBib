@@ -170,7 +170,7 @@ type
     //Erg: TStudent-Objekt des ausleihenden Schülers
     function getStudentWhoRentedBook(book: TBook): TStudent;
 
-    //Vor: CSV-Format: Klasse; Name; Vorname; Geburtsdatum
+    //Vor: CSV-Format: Klasse; Name; Vorname; Benutzername; Geburtsdatum
     //     Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
     //     RnOld = True, wenn alle, die nicht in der Liste sind als Klasse 'Alt' bekommen sollen
     //Eff: Importiert die Schüler Liste als CSV Datei
@@ -186,6 +186,10 @@ type
     //Eff: Überprüft, ob eine Schüler Id bereits vergeben ist
     //Erg: Wahr, wenn vergeben
     function SIdCheck(SId: int64): boolean;
+
+    //Vor: Ein Student-Objekt, welches ein Namen und Vornamen besitzt
+    //Erg: Den ldap-user name
+    function SLdapNew(student:TStudent): String;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //     Falls vorhanden ldap_user, ansonsten '' übergeben
@@ -244,8 +248,8 @@ begin
   student := self.getStudentById(SId);
   if not ((book = nil) and (student = nil)) then
   begin
-    aoR := uDBConn.getAllRentalsByBookAndStudent(student, book);
-    if (length(aoR) > 0) then
+    aoR := uDBConn.getAllUnreturnedRentalsByBookAndStudent(student, book);
+    if (length(aoR) = 1) then
     begin
       rental := aoR[0];
       rental.setReturnDate(now);
@@ -544,7 +548,7 @@ function TManagement.importCSVSchueler(Dateiname: string; RnOld: boolean): boole
       end;
     end;
 
-    //Klassennamen der Schüler zu 'old' ändern
+    //Klassennamen der Schüler zu 'Alt' ändern
     for i := 0 to (ioldDB - 1) do
     begin
       oldDBStu[i].setClassName('Alt');
@@ -558,7 +562,7 @@ function TManagement.importCSVSchueler(Dateiname: string; RnOld: boolean): boole
 
 var
   Text: TextFile;
-  str, fname, lname, cname, birth: string;
+  str, fname, lname, cname, ldap, birth: string;
   birthDate: TDate;
   i, id, iAllStu: integer;
   students, allStu: ArrayOfStudents;
@@ -581,6 +585,7 @@ begin
       lname := '';
       cname := '';
       birth := '';
+      ldap:='';
 
       i := 1;
       while not (str[i] = ';') do        //Klassennamen einlesen
@@ -600,6 +605,13 @@ begin
       while not (str[i] = ';') do     //Vornamen einlesen
       begin
         fname := fname + str[i];
+        i := i + 1;
+      end;
+
+      i := i + 1;
+      while not (str[i] = ';') do     //Benutzernamen einlesen
+      begin
+        ldap := ldap + str[i];
         i := i + 1;
       end;
 
@@ -683,6 +695,29 @@ begin
     Result := False
   else
     Result := True;
+end;
+
+function TManagement.SLdapNew(student:TStudent): String;
+Var fName, lName, ldap :String;
+    i : Integer;
+begin
+  fName:=student.getFirstName();
+  lName:=student.getLastName();
+  ldap:='';
+
+  for i:=0 to 5 do                  //6 Zeichen des Nachnamens, falls vorhanden
+  begin
+    if (i<lName.Length) then ldap:=ldap+lName.Chars[i];
+    else break;
+  end;
+
+  for i:=0 to 1 do                 //2 Zeichen des Vornamens, falls vorhanden
+  begin
+    if (i<fName.Length) then ldap:=ldap+fName.Chars[i];
+    else break;
+  end;
+
+  Result:=ldap;
 end;
 
 function TManagement.SNew(lastN, firstN, classN, ldap_user: string; birth: TDate): int64;
