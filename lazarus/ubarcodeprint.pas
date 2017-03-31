@@ -20,6 +20,8 @@ type TBarcodePrinter = class
             procedure add_used_sheet(n : Cardinal; used: Cardinal);
 
             procedure add_barcode(code: String; title: String);
+            function delete_barcode(code: String): Boolean;
+
 
             procedure print;  //Alle hinzugefügten Barcodes drucken
 
@@ -102,7 +104,15 @@ begin
      titles.add(title);
 end;
 
-
+function TBarcodePrinter.delete_barcode(code: String): Boolean;
+var pos: Integer;
+begin
+     pos := barcodes.IndexOf(code);
+     if pos = -1 then exit(false);
+     barcodes.delete(pos);
+     titles.delete(pos);
+     Result := true;
+end;
 
 procedure TBarcodePrinter.print;
     var curr_page, i, j, empty : Integer;
