@@ -161,6 +161,11 @@ type
     // result: TBooktype on success, NIL on failure
     function getBooktypeByIsbn(isbn: string): TBooktype;
 
+    // Returns an Array of Booktypes with name patterns in it
+    // parameter: name
+    // result: array of Booktypes
+    function getBooktypeByTitlePattern(title: string): ArrayOfBooktypes;
+
     // updateInserts booktype object into database. Either updates an existing one or inserts a new one
     // parameter: booktype object
     // result: TRUE on success
@@ -693,8 +698,8 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.getAllUnreturnedRentalsByBookAndStudent(var student: TStudent;
-  var book: TBook): ArrayOfRentals;
+function TDBConnection.getAllUnreturnedRentalsByBookAndStudent(
+  var student: TStudent; var book: TBook): ArrayOfRentals;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -1166,6 +1171,35 @@ begin
   if (length(arr) = 1) then
     Result := arr[0];
 
+end;
+
+////////////////////////////////////////////////////////
+
+function TDBConnection.getBooktypeByTitlePattern(title: string): ArrayOfBooktypes;
+begin
+  DBError := nil;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM booktype WHERE LOWER(title) LIKE LOWER(:title)';
+      SQLQuery.ParamByName('title').AsString := title;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+
+  Result := nil;
+
+  setBooktypeFields(Result, False);
 end;
 
 ////////////////////////////////////////////////////////
