@@ -536,6 +536,7 @@ begin
         Edit; //update mode
 
       //update object
+      FieldByName('id').AsLargeInt := student.getId;
       FieldByName('last_name').AsString := student.getLastName;
       FieldByName('first_name').AsString := student.getFirstName;
       FieldByName('class_name').AsString := student.getClassName;
