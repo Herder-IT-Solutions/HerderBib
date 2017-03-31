@@ -482,7 +482,7 @@ procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
 var
   B: boolean;
 begin
-  b := management.importCSVSchueler(LEInfoAdminCSV.Text,true);
+  b := management.importCSVSchueler(LEInfoAdminCSV.Text, True);
   if b then
     ShowMessage('Import erfolgreich!')
   else
@@ -527,6 +527,7 @@ begin
     SEInfoAdminDeleteRentalsMonth.Enabled := True;
     SEInfoAdminDeleteRentalsYear.Enabled := True;
     BtInfoAdminDeleteRentals.Enabled := True;
+    BtInfoStudCreate.Enabled := True;
   end;
   EdInfoAdminPw.Text := '';
 end;
@@ -548,6 +549,7 @@ begin
   SEInfoAdminDeleteRentalsMonth.Enabled := False;
   SEInfoAdminDeleteRentalsYear.Enabled := False;
   BtInfoAdminDeleteRentals.Enabled := False;
+  BtInfoStudCreate.Enabled := False;
 end;
 
 procedure TForm1.BtInfoBookDelClick(Sender: TObject);
@@ -582,7 +584,7 @@ begin
     begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       stud := management.getStudentWhoRentedBook(book);
-      if stud <> nil then
+      if stud <> nil then;
         //management.deleteRentalRelationByBook(book);
     end;
 
@@ -789,11 +791,22 @@ begin
   //MeInfoRel.Lines.Text := ConvertEncoding(MeInfoRel.Lines.Text, GuessEncoding(MeInfoRel.Lines.Text), EncodingUTF8);
 end;
 
-procedure TForm1.BtInfoStudCreateClick(Sender: TObject);           //sollte nur dem admin möglich sein
+procedure TForm1.BtInfoStudCreateClick(Sender: TObject);
+//sollte nur dem admin möglich sein
+var
+   YY, MM, DD: word;
+  birth: TDate;
 begin
   try
-    if (EdInfoStudFirstName.text <> '') and (EdInfoStudLastName.text <> '') and (EdInfoStudGrade.text <> '') then begin
-    //management.createStudent(EdInfoStudName.text,EdInfoStudLastName.text,EdInfoStudGrade.text)
+    if (EdInfoStudFirstName.Text <> '') and (EdInfoStudLastName.Text <> '') and
+      (EdInfoStudGrade.Text <> '') then
+    begin
+      DD := SeInfoStudDay.Value;
+      MM := SeInfoStudMonth.Value;
+      YY := SeInfoStudYear.Value;
+      birth := EncodeDate(YY, MM, DD);
+      EdinfoStudID.Text := IntToStr(management.SNew(EdinfoStudLastName.Text,
+        EdinfoStudFirstName.Text, EdInfoStudGrade.Text, '', birth));
     end;
   except
     On EConvertError do
@@ -943,7 +956,8 @@ begin
     LiPrintQueue.Items.Clear;
     ShowMessage('Druckauftrag erfolgreich!');
   end
-  else ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
+  else
+    ShowMessage('Fügen Sie zum Drucken mindestens ein Barcode ein!');
 end;
 
 procedure TForm1.BtPrintDeleteClick(Sender: TObject);
@@ -987,17 +1001,22 @@ begin
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
+var book : TBook;
 begin
   LbRetError.Visible := False;
   try
     if (management.BIdCheck(StrToInt(EdRetBook.Text)) and
       management.SIdCheck(StrToInt(EdRetStud.Text))) then
     begin
-      management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
-      management.BBack(StrToInt(EdRetBook.Text), StrToInt(EdRetStud.Text));
-      EdRetStud.Text := '';
-      EdRetBook.Text := '';
-      TBRetBookState.Position := 1;
+      book := management.getBookByID(StrToInt(EdRentBook.Text));
+      if management.RCheckByBook(book) then
+      begin
+        management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
+        management.BBack(StrToInt(EdRetBook.Text), StrToInt(EdRetStud.Text));
+        EdRetStud.Text := '';
+        EdRetBook.Text := '';
+        TBRetBookState.Position := 1;
+      end;
     end;
   except
     On EConvertError do
