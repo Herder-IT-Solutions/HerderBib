@@ -105,7 +105,7 @@ type
 
     //Vor: Buch Objekt
     //Eff: Überprüft, ob ein Buch gerade Verliehen ist
-    //Erg: Wahr, wenn Buch ausgeliehen
+    //Erg: Wahr, wenn Buch ausgeliehen oder Buch nicht existent
     function RCheckByBook(var book: TBook): boolean;
 
     //Vor: Eine Datum, bis wohin der Verlauf des Verleihs gelöscht werden soll
@@ -172,7 +172,7 @@ type
 
     //Vor: CSV-Format: Klasse; Name; Vorname; Geburtsdatum
     //     Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
-    //     RnOld = True, wenn alle, die nicht in der Liste sind als Klasse 'old' bekommen sollen
+    //     RnOld = True, wenn alle, die nicht in der Liste sind als Klasse 'Alt' bekommen sollen
     //Eff: Importiert die Schüler Liste als CSV Datei
     //Erg: Wahr wenn erfolgreich
     function importCSVSchueler(Dateiname: string; RnOld: boolean): boolean;
@@ -410,7 +410,7 @@ begin
   if ((not (book = nil)) and (self.BIdCheck(book.getId()))) then
     Result := uDBConn.existsUnreturnedRentalByBook(book)
   else
-    Result := False;
+    Result := True;
 end;
 
 function TManagement.RDel(datum: TDate): integer;
@@ -547,7 +547,7 @@ function TManagement.importCSVSchueler(Dateiname: string; RnOld: boolean): boole
     //Klassennamen der Schüler zu 'old' ändern
     for i := 0 to (ioldDB - 1) do
     begin
-      oldDBStu[i].setClassName('old');
+      oldDBStu[i].setClassName('Alt');
       if not (uDBConn.updateInsertStudent(oldDBStu[i])) then
       begin
         Result := False;
@@ -690,37 +690,45 @@ var
   id, pz: int64;
   hid: string;
   student: TStudent;
+  students: ArrayOfStudents;
 begin
-  pz := 0;
-
-  repeat
-    id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
-
-    hid := IntToStr(id);
-    //hid ist eine Hilfsvariable zur Prüfnummererstellung
-    pz := (3 * ((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) +
-      (StrToInt(hid[7]))) + StrToInt(hid[2]) + StrToInt(hid[4]) +
-      StrToInt(hid[6])) mod 10;
-    if pz <> 0 then
-      pz := 10 - pz;
-    //Die Prüfziffer Teil 1
-    id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
-  until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
-
-  student := TStudent.Create;
-  student.setId(id);
-  if (student.setFirstName(firstN) and student.setLastName(lastN) and
-    student.setClassName(classN) and student.setBirth(birth) and
-    student.setLDAPUser(ldap_user)) then
+  students := self.getStudentsByFirstLastClassNameBirthdate(firstN, lastN, classN, birth);
+  if (length(students) = 0) then
   begin
-    self.SUpdate(student);
-    Result := id;
+    pz := 0;
+
+    repeat
+      id := Random(2000000) + 1000000; //Bereich von 1Mio bis 3 Mio
+
+      hid := IntToStr(id);
+      //hid ist eine Hilfsvariable zur Prüfnummererstellung
+      pz := (3 * ((StrToInt(hid[1])) + (StrToInt(hid[3])) + (StrToInt(hid[5])) +
+        (StrToInt(hid[7]))) + StrToInt(hid[2]) + StrToInt(hid[4]) +
+        StrToInt(hid[6])) mod 10;
+      if pz <> 0 then
+        pz := 10 - pz;
+      //Die Prüfziffer Teil 1
+      id := (id * 10) + pz;                  //Die Prüfziffer wird hinten angehangen
+    until SIdCheck(id) = False;            //Wiederholung bis id nicht vergeben
+
+    student := TStudent.Create;
+    student.setId(id);
+    if (student.setFirstName(firstN) and student.setLastName(lastN) and
+      student.setClassName(classN) and student.setBirth(birth) and
+      student.setLDAPUser(ldap_user)) then
+    begin
+      self.SUpdate(student);
+      Result := id;
+    end
+    else
+    begin
+      student.Destroy;
+      Result := -1;
+    end;
+
   end
   else
-  begin
-    student.Destroy;
     Result := -1;
-  end;
 end;
 
 function TManagement.SUpdate(var student: TStudent): boolean;
