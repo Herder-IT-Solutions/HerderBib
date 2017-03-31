@@ -693,8 +693,8 @@ begin
   setRentalFields(Result, False);
 end;
 
-function TDBConnection.getAllUnreturnedRentalsByBookAndStudent(var student: TStudent;
-  var book: TBook): ArrayOfRentals;
+function TDBConnection.getAllUnreturnedRentalsByBookAndStudent(
+  var student: TStudent; var book: TBook): ArrayOfRentals;
 begin
   DBError := nil;
   SQLQuery.Close;
@@ -730,12 +730,12 @@ begin
     with SQLQuery do
     begin
       SQL.Text :=
-        'SELECT * FROM rental where book_id = (:book) and return_date = NULL';
+        'SELECT COUNT(*) as count FROM rental where book_id = (:book) and return_date = NULL';
       ParamByName('book').AsLargeInt := book.getId;
       Open;
 
       First; //set pointer to first result row
-      Result := not EOF; //does one exist?
+      Result := FieldByName('count').AsLargeInt > 0; //does one exist?
     end;
 
   except
