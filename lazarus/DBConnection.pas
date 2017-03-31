@@ -99,6 +99,12 @@ type
     function getAllRentalsByBookAndStudent(var student: TStudent;
       var book: TBook): ArrayOfRentals;
 
+    // Returns an array of all rentals with given student and book that are not returned
+    // parameter: student, book objects
+    // result: array of rental objects
+    function getAllUnreturnedRentalsByBookAndStudent(var student: TStudent;
+      var book: TBook): ArrayOfRentals;
+
     // Checks if there are unreturned rentals for a specific book
     // parameter: book object
     // result: true when rentals exist that match this criteria
@@ -668,6 +674,35 @@ begin
     begin
       SQLQuery.SQL.Text :=
         'SELECT * FROM rental where book_id = (:book) and student_id = (:student)';
+      SQLQuery.ParamByName('book').AsLargeInt := book.getId;
+      SQLQuery.ParamByName('student').AsLargeInt := student.getId;
+      SQLQuery.Open;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DBError := E;
+      Result := nil;
+      exit;
+    end;
+  end;
+
+  Result := nil;
+
+  setRentalFields(Result, False);
+end;
+
+function TDBConnection.getAllUnreturnedRentalsByBookAndStudent(
+  var student: TStudent; var book: TBook): ArrayOfRentals;
+begin
+  DBError := nil;
+  SQLQuery.Close;
+  try
+    with SQLQuery do
+    begin
+      SQLQuery.SQL.Text :=
+        'SELECT * FROM rental where book_id = (:book) and student_id = (:student) WHERE return_date = NULL';
       SQLQuery.ParamByName('book').AsLargeInt := book.getId;
       SQLQuery.ParamByName('student').AsLargeInt := student.getId;
       SQLQuery.Open;
