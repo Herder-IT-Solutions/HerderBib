@@ -91,6 +91,11 @@ type
     //Erg: Wenn Buchtyp nicht vorhanden wahr -> False
     function BTypeUpdate(var Booktype: TBooktype): boolean;
 
+    //Vor: Titel eines Buchetypes darf % Zeichen für eine Anzahl unbekannter Zeichen enthalten
+    //Erg: Gibt ein Array aller Buchtypobjete die den Vorgegebenen Titel haben,
+    //     gibt Nil zurück, wenn der Bucktitel '' ist
+    function getBTypeByTitlePattern(title: string): ArrayOfBooktypes;
+
     //Vor: ISBM als String ohne Bindestriche
     //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
@@ -397,6 +402,14 @@ begin
     Result := False;
 end;
 
+function TManagement.getBTypeByTitlePattern(title: string): ArrayOfBooktypes;
+begin
+  if (title = '') then
+    Result := nil
+  else
+    Result := uDBConn.getBooktypeByTitlePattern(title);
+end;
+
 function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
 begin
   Result := uDBConn.getBooktypeByISBN(isbn);
@@ -621,13 +634,13 @@ begin
         i := i + 1;
       end;
 
+      i := i + 1;
       while (not (str[i] = ';') and (length(str) >= i + 1)) do
       begin                          //Geburtsdatum einlesen
         birth := birth + str[i];
         i := i + 1;
       end;
       birthDate := StrToDate(birth, '-');
-
       // Vergleich ob bereits vorhanden
       students := self.getStudentsByFirstLastClassNameBirthdate(fname,
         lname, '', birthDate);    //TODO: waiting for a function from Connection
@@ -739,7 +752,7 @@ var
   students: ArrayOfStudents;
 begin
   students := self.getStudentsByFirstLastClassNameBirthdate(firstN,
-    lastN, classN, birth);     //TODO waiting for a function from connection
+    lastN, classN, birth); //TODO waiting for a function from connection
   if (length(students) = 0) then
   begin
     pz := 0;
