@@ -505,7 +505,7 @@ begin
         else
         begin
           SQLQuery.SQL.Text :=
-            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate) AND cname = (:cname)';
+            'SELECT * FROM student WHERE first_name = (:fname) AND last_name = (:lname) AND birth = (:birthdate) AND class_name = (:cname)';
           SQLQuery.ParamByName('fname').AsString := fname;
           SQLQuery.ParamByName('lname').AsString := lname;
           SQLQuery.ParamByName('cname').AsString := cname;
