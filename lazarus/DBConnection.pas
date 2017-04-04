@@ -707,7 +707,7 @@ begin
     with SQLQuery do
     begin
       SQLQuery.SQL.Text :=
-        'SELECT * FROM rental where book_id = (:book) and student_id = (:student) WHERE ISNULL(return_date)';
+        'SELECT * FROM rental where book_id = (:book) AND student_id = (:student) AND return_date IS NULL';
       SQLQuery.ParamByName('book').AsLargeInt := book.getId;
       SQLQuery.ParamByName('student').AsLargeInt := student.getId;
       SQLQuery.Open;
