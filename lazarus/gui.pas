@@ -465,7 +465,8 @@ begin
     if (length(s) = 13) then
       b := CheckSumISBN13(s)
     else
-      a := True;
+      if (length(s) = 10) then s := convert(s)
+      else a := True;
     LbAddBookError.Visible := False;
     if not (b) then
     begin
