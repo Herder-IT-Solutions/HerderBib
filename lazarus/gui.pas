@@ -153,6 +153,8 @@ type
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBRetBookState: TTrackBar;
+    procedure AdministrationContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminCSVClick(Sender: TObject);
     procedure BtInfoAdminDeleteRentalsClick(Sender: TObject);
@@ -191,8 +193,7 @@ type
     procedure PCInfosChange(Sender: TObject);
     procedure SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
-    procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: boolean);
+
   private
     { private declarations }
     procedure addToPrintingQueueListBox(code: string; title: string);
@@ -211,11 +212,6 @@ implementation
 
 { TForm1 }
 
-procedure TForm1.TabRetContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: boolean);
-begin
-
-end;
 
 
 
@@ -264,6 +260,7 @@ begin
     12: SeInfoStudDay.MaxValue := 31;
   end;
 end;
+
 
 
 
@@ -476,6 +473,12 @@ begin
       'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     exit;
   end;
+end;
+
+procedure TForm1.AdministrationContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
 end;
 
 procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
@@ -1003,12 +1006,12 @@ end;
 procedure TForm1.BtRetClick(Sender: TObject);
 var book : TBook;
 begin
-  LbRetError.Visible := False;
+LbRetError.Visible := False;
   try
     if (management.BIdCheck(StrToInt(EdRetBook.Text)) and
       management.SIdCheck(StrToInt(EdRetStud.Text))) then
     begin
-      book := management.getBookByID(StrToInt(EdRentBook.Text));
+      book := management.getBookByID(StrToInt(EdRetBook.Text));
       if management.RCheckByBook(book) then
       begin
         management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);

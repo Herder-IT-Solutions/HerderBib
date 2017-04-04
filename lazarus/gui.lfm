@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 108
+  Left = 236
   Height = 603
-  Top = 82
+  Top = 57
   Width = 780
   Caption = 'HerderBib - die praktische Bibliothekssoftware-Komplettlösung'
   ClientHeight = 603
@@ -11580,8 +11580,8 @@ object Form1: TForm1
     Height = 600
     Top = 0
     Width = 782
-    ActivePage = TabInfo
-    TabIndex = 4
+    ActivePage = TabRet
+    TabIndex = 1
     TabOrder = 0
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
@@ -17209,7 +17209,6 @@ object Form1: TForm1
       Caption = 'Zurückgeben'
       ClientHeight = 574
       ClientWidth = 774
-      OnContextPopup = TabRetContextPopup
       object EdRetStud: TEdit
         Left = 8
         Height = 21
@@ -34329,20 +34328,20 @@ object Form1: TForm1
         end
         object TabBook: TTabSheet
           Caption = 'Bücher'
-          ClientHeight = 548
+          ClientHeight = 550
           ClientWidth = 768
           object EdInfoBookID: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 16
             Width = 480
             TabOrder = 0
           end
           object LbInfoBookState: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 56
-            Width = 43
+            Width = 39
             Caption = 'Zustand'
             ParentColor = False
           end
@@ -34357,9 +34356,9 @@ object Form1: TForm1
           end
           object LbInfoBookID: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 24
-            Width = 153
+            Width = 133
             Caption = 'Buch-Identifikationsnummer'
             ParentColor = False
           end
@@ -34389,7 +34388,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack1: TLabel
             Left = 240
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '1'
@@ -34397,7 +34396,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack5: TLabel
             Left = 464
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '5'
@@ -34405,7 +34404,7 @@ object Form1: TForm1
           end
           object LbInfoBookTrack3: TLabel
             Left = 352
-            Height = 15
+            Height = 13
             Top = 72
             Width = 6
             Caption = '3'
@@ -34413,15 +34412,15 @@ object Form1: TForm1
           end
           object LbInfoBookRent: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 96
-            Width = 88
+            Width = 79
             Caption = 'Ausgeliehen von'
             ParentColor = False
           end
           object EdInfoBookRent: TEdit
             Left = 240
-            Height = 23
+            Height = 21
             Top = 88
             Width = 480
             Enabled = False
@@ -34439,9 +34438,9 @@ object Form1: TForm1
           end
           object LbInfoBookError: TLabel
             Left = 16
-            Height = 15
+            Height = 13
             Top = 240
-            Width = 86
+            Width = 78
             Caption = 'LbInfoBookError'
             ParentColor = False
             Visible = False
@@ -34815,6 +34814,7 @@ object Form1: TForm1
           Caption = 'Administration'
           ClientHeight = 550
           ClientWidth = 768
+          OnContextPopup = AdministrationContextPopup
           object ShInfoAdminDBPath: TShape
             Left = 8
             Height = 97
@@ -34947,7 +34947,7 @@ object Form1: TForm1
             EditLabel.Height = 13
             EditLabel.Top = 168
             EditLabel.Width = 274
-            EditLabel.Caption = 'Bitte geben Sie den Dateinamen an'
+            EditLabel.Caption = 'Bitte geben Sie den Dateipfad an'
             EditLabel.ParentColor = False
             Enabled = False
             TabOrder = 6
