@@ -91,6 +91,11 @@ type
     //Erg: Wenn Buchtyp nicht vorhanden wahr -> False
     function BTypeUpdate(var Booktype: TBooktype): boolean;
 
+    //Vor: Titel eines Buchetypes darf % Zeichen für eine Anzahl unbekannter Zeichen enthalten
+    //Erg: Gibt ein Array aller Buchtypobjete die den Vorgegebenen Titel haben,
+    //     gibt Nil zurück, wenn der Bucktitel '' ist
+    function getBTypeByTitlePattern (title: string): ArrayOfBooktypes;
+
     //Vor: ISBM als String ohne Bindestriche
     //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
@@ -395,6 +400,12 @@ begin
     Result := uDBConn.updateInsertBooktype(booktype)
   else
     Result := False;
+end;
+
+function TManagement.getBTypeByTitlePattern (title: string): ArrayOfBooktypes;
+begin
+  if (title ='') then Result:= nil
+  else Result := uDBConn.getBooktypeByTitlePattern(title);
 end;
 
 function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
@@ -707,13 +718,13 @@ begin
 
   for i:=0 to 5 do                  //6 Zeichen des Nachnamens, falls vorhanden
   begin
-    if (i<lName.Length) then ldap:=ldap+lName.Chars[i];
+    if (i<lName.Length) then ldap:=ldap+lName.Chars[i]
     else break;
   end;
 
   for i:=0 to 1 do                 //2 Zeichen des Vornamens, falls vorhanden
   begin
-    if (i<fName.Length) then ldap:=ldap+fName.Chars[i];
+    if (i<fName.Length) then ldap:=ldap+fName.Chars[i]
     else break;
   end;
 
