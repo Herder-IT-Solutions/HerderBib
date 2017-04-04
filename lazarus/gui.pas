@@ -125,8 +125,10 @@ type
     MeInfoStudRel: TMemo;
     MeInfoRel: TMemo;
     MeInfoBooktypeShowAll: TMemo;
+    MenuItem1: TMenuItem;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
+    LiPrintQueueMenue: TPopupMenu;
     RBInfoAdminTestmodeDF: TRadioButton;
     RBInfoAdminTestmodeTM: TRadioButton;
     SEAddBookQuantity: TSpinEdit;
@@ -153,8 +155,6 @@ type
     TabStud: TTabSheet;
     TBInfoBookState: TTrackBar;
     TBRetBookState: TTrackBar;
-    procedure AdministrationContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
     procedure BtAddBookClick(Sender: TObject);
     procedure BtInfoAdminCSVClick(Sender: TObject);
     procedure BtInfoAdminDeleteRentalsClick(Sender: TObject);
@@ -190,10 +190,12 @@ type
     procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
     procedure SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
-
+    procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: boolean);
   private
     { private declarations }
     procedure addToPrintingQueueListBox(code: string; title: string);
@@ -212,6 +214,11 @@ implementation
 
 { TForm1 }
 
+procedure TForm1.TabRetContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: boolean);
+begin
+
+end;
 
 
 
@@ -263,7 +270,6 @@ end;
 
 
 
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   if InstanceRunning then
@@ -279,6 +285,21 @@ end;
 procedure TForm1.LbRetStudNameClick(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.MenuItem1Click(Sender: TObject);
+    var i, selected : Integer;
+    var item, barcode : string;
+begin
+     selected := LiPrintQueue.ItemIndex;
+     if selected = -1 then exit;
+
+     item := LiPrintQueue.Items[selected];
+     ShowMessage(item);
+     barcode := copy(item, 1, 8);
+     showMessage(barcode);
+     TBarcodePrinter.instance.delete_barcode(barcode);
+     LiPrintQueue.items.Delete(selected);
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -473,12 +494,6 @@ begin
       'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     exit;
   end;
-end;
-
-procedure TForm1.AdministrationContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: Boolean);
-begin
-
 end;
 
 procedure TForm1.BtInfoAdminCSVClick(Sender: TObject);
@@ -1006,12 +1021,12 @@ end;
 procedure TForm1.BtRetClick(Sender: TObject);
 var book : TBook;
 begin
-LbRetError.Visible := False;
+  LbRetError.Visible := False;
   try
     if (management.BIdCheck(StrToInt(EdRetBook.Text)) and
       management.SIdCheck(StrToInt(EdRetStud.Text))) then
     begin
-      book := management.getBookByID(StrToInt(EdRetBook.Text));
+      book := management.getBookByID(StrToInt(EdRentBook.Text));
       if management.RCheckByBook(book) then
       begin
         management.BQualiNew(StrToInt(EdRetBook.Text), TBRetBookState.Position);
