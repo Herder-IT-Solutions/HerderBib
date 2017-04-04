@@ -288,18 +288,23 @@ begin
 end;
 
 procedure TForm1.MenuItem1Click(Sender: TObject);
-    var i, selected : Integer;
+    var i : Integer;
     var item, barcode : string;
 begin
-     selected := LiPrintQueue.ItemIndex;
-     if selected = -1 then exit;
+    if LiPrintQueue.SelCount = 0 then exit;
 
-     item := LiPrintQueue.Items[selected];
-     ShowMessage(item);
-     barcode := copy(item, 1, 8);
-     showMessage(barcode);
-     TBarcodePrinter.instance.delete_barcode(barcode);
-     LiPrintQueue.items.Delete(selected);
+     for i := LiPrintQueue.Items.Count - 1 downto 0 do
+     begin
+       if not LiPrintQueue.Selected[i] then
+         continue;
+
+       item := LiPrintQueue.Items[i];
+       //ShowMessage(item);
+       barcode := copy(item, 1, 8);
+       //showMessage(barcode);
+       TBarcodePrinter.instance.delete_barcode(barcode);
+       LiPrintQueue.Items.delete(i);
+     end;
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -444,29 +449,17 @@ var
     check := (10 - (sum mod 10));
     Result := (check = StrToInt(isbn[13]));
   end;
-  
-  //convert ISBN10 to ISBN13
-  function convert(isbn: string): string;
-  var temp: Cardinal;
-  begin
-    setLength(isbn, 9);
-    isbn := '978' + isbn;
-    temp := (3*(strtoint(isbn[2])+strtoint(isbn[4])+strtoint(isbn[6])+strtoint(isbn[8])+strtoint(isbn[10])+strtoint(isbn[12]))+(strtoint(isbn[1])+strtoint(isbn[3])+strtoint(isbn[5])+strtoint(isbn[7])+strtoint(isbn[9])+strtoint(isbn[11]))) mod 10;
-    if temp <> 0 then temp := 10 - temp;
-    Result := isbn + inttostr(temp);
-  end;
 
 begin
   a := False;
-  s := EdAddBookISBN.Text;    //Beispiel: funktioniert bei 9780306406157
+  s := EdAddBookISBN.Text;    //Beispiel: funktiuoniert bei 9780306406157
   if not (s = '') then
   begin
 
     if (length(s) = 13) then
       b := CheckSumISBN13(s)
     else
-      if (length(s) = 10) then s := convert(s)
-      else a := True;
+      a := True;
     LbAddBookError.Visible := False;
     if not (b) then
     begin

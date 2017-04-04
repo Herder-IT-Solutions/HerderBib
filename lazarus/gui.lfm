@@ -28568,6 +28568,7 @@ object Form1: TForm1
         Width = 296
         Columns = 1
         ItemHeight = 0
+        MultiSelect = True
         PopupMenu = LiPrintQueueMenue
         TabOrder = 1
       end
