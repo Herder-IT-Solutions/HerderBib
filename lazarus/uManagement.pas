@@ -91,11 +91,6 @@ type
     //Erg: Wenn Buchtyp nicht vorhanden wahr -> False
     function BTypeUpdate(var Booktype: TBooktype): boolean;
 
-    //Vor: Titel eines Buchetypes darf % Zeichen für eine Anzahl unbekannter Zeichen enthalten
-    //Erg: Gibt ein Array aller Buchtypobjete die den Vorgegebenen Titel haben,
-    //     gibt Nil zurück, wenn der Bucktitel '' ist
-    function getBTypeByTitlePattern (title: string): ArrayOfBooktypes;
-
     //Vor: ISBM als String ohne Bindestriche
     //Erg: Das Booktype-Objekt mit der übergebenen ISBN; Nil wenn nicht vorhanden
     function getBooktypeByISBN(isbn: string): TBooktype;
@@ -176,7 +171,7 @@ type
     function getStudentWhoRentedBook(book: TBook): TStudent;
 
     //Vor: CSV-Format: Klasse; Name; Vorname; Benutzername; Geburtsdatum
-    //     Datei mit dem Namen Dateiname muss im UNterverzeichnis liegen
+    //     Statt des Dateinamens kann auch der Pfad (+Dateiname) übergeben werden
     //     RnOld = True, wenn alle, die nicht in der Liste sind als Klasse 'Alt' bekommen sollen
     //Eff: Importiert die Schüler Liste als CSV Datei
     //Erg: Wahr wenn erfolgreich
@@ -194,7 +189,7 @@ type
 
     //Vor: Ein Student-Objekt, welches ein Namen und Vornamen besitzt
     //Erg: Den ldap-user name
-    function SLdapNew(student:TStudent): String;
+    function SLdapNew(student: TStudent): string;
 
     //Vor: Nachname, Vorname und Klassenname, Geburtsdatum als TDate
     //     Falls vorhanden ldap_user, ansonsten '' übergeben
@@ -402,12 +397,6 @@ begin
     Result := False;
 end;
 
-function TManagement.getBTypeByTitlePattern (title: string): ArrayOfBooktypes;
-begin
-  if (title ='') then Result:= nil
-  else Result := uDBConn.getBooktypeByTitlePattern(title);
-end;
-
 function TManagement.getBooktypeByISBN(isbn: string): TBooktype;
 begin
   Result := uDBConn.getBooktypeByISBN(isbn);
@@ -596,7 +585,7 @@ begin
       lname := '';
       cname := '';
       birth := '';
-      ldap:='';
+      ldap := '';
 
       i := 1;
       while not (str[i] = ';') do        //Klassennamen einlesen
@@ -619,29 +608,35 @@ begin
         i := i + 1;
       end;
 
-      i := i + 1;
-      while not (str[i] = ';') do     //Benutzernamen einlesen
+      i := i + 1;             //Prüfung ob ldap vorhanden
+      //nicht, wenn eine Zahl kommt
+      if not ((str[i] = '0') or (str[i] = '1') or (str[i] = '2') or (str[i] = '3')) then
       begin
-        ldap := ldap + str[i];
+        while not (str[i] = ';') do     //Benutzernamen einlesen
+        begin
+          ldap := ldap + str[i];
+          i := i + 1;
+        end;
+
         i := i + 1;
       end;
 
-      i := i + 1;
       while (not (str[i] = ';') and (length(str) >= i + 1)) do
       begin                          //Geburtsdatum einlesen
         birth := birth + str[i];
         i := i + 1;
       end;
       birthDate := StrToDate(birth, '-');
+
       // Vergleich ob bereits vorhanden
       students := self.getStudentsByFirstLastClassNameBirthdate(fname,
-        lname, '', birthDate);
+        lname, '', birthDate);    //TODO: waiting for a function from Connection
 
       //Verarbeitung
       if (length(students) = 0) then
       begin                 //Fall Einfügen eines neuen Schülers
 
-        id := self.SNew(lname, fname, cname, '', birthDate);
+        id := self.SNew(lname, fname, cname, ldap, birthDate);
         if not (id = -1) then
         begin
           if (RnOld) then
@@ -708,27 +703,32 @@ begin
     Result := True;
 end;
 
-function TManagement.SLdapNew(student:TStudent): String;
-Var fName, lName, ldap :String;
-    i : Integer;
+function TManagement.SLdapNew(student: TStudent): string;
+var
+  fName, lName, ldap: string;
+  i: integer;
 begin
-  fName:=student.getFirstName();
-  lName:=student.getLastName();
-  ldap:='';
+  fName := student.getFirstName();
+  lName := student.getLastName();
+  ldap := '';
 
-  for i:=0 to 5 do                  //6 Zeichen des Nachnamens, falls vorhanden
+  for i := 0 to 5 do                  //6 Zeichen des Nachnamens, falls vorhanden
   begin
-    if (i<lName.Length) then ldap:=ldap+lName.Chars[i]
-    else break;
+    if (i < lName.Length) then
+      ldap := ldap + lName.Chars[i]
+    else
+      break;
   end;
 
-  for i:=0 to 1 do                 //2 Zeichen des Vornamens, falls vorhanden
+  for i := 0 to 1 do                 //2 Zeichen des Vornamens, falls vorhanden
   begin
-    if (i<fName.Length) then ldap:=ldap+fName.Chars[i]
-    else break;
+    if (i < fName.Length) then
+      ldap := ldap + fName.Chars[i]
+    else
+      break;
   end;
 
-  Result:=ldap;
+  Result := ldap.ToLower;
 end;
 
 function TManagement.SNew(lastN, firstN, classN, ldap_user: string; birth: TDate): int64;
@@ -738,7 +738,8 @@ var
   student: TStudent;
   students: ArrayOfStudents;
 begin
-  students := self.getStudentsByFirstLastClassNameBirthdate(firstN, lastN, classN, birth);
+  students := self.getStudentsByFirstLastClassNameBirthdate(firstN,
+    lastN, classN, birth);     //TODO waiting for a function from connection
   if (length(students) = 0) then
   begin
     pz := 0;
@@ -760,11 +761,21 @@ begin
     student := TStudent.Create;
     student.setId(id);
     if (student.setFirstName(firstN) and student.setLastName(lastN) and
-      student.setClassName(classN) and student.setBirth(birth) and
-      student.setLDAPUser(ldap_user)) then
+      student.setClassName(classN) and student.setBirth(birth)) then
     begin
-      self.SUpdate(student);
-      Result := id;
+      if (ldap_user = '') then           //Überprüft, ob ldap vorhanden
+        ldap_user := self.SLdapNew(student);
+
+      if (student.setLDAPUser(ldap_user)) then
+      begin
+        self.SUpdate(student);
+        Result := id;
+      end
+      else
+      begin
+        student.Destroy;
+        Result := -1;
+      end;
     end
     else
     begin
