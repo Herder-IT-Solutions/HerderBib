@@ -735,7 +735,7 @@ begin
     with SQLQuery do
     begin
       SQL.Text :=
-        'SELECT COUNT(*) as count FROM rental where book_id = (:book) and WHERE ISNULL(return_date)';
+        'SELECT COUNT(*) as count FROM rental where book_id = (:book) AND return_date IS NULL';
       ParamByName('book').AsLargeInt := book.getId;
       Open;
 
