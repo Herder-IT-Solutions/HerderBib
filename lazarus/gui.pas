@@ -449,6 +449,16 @@ var
     check := (10 - (sum mod 10));
     Result := (check = StrToInt(isbn[13]));
   end;
+  
+  function convert(isbn: string): string;
+  var temp: Cardinal;
+  begin
+    setLength(isbn, 9);
+    isbn := '978' + isbn;
+    temp := (3*(strtoint(isbn[2])+strtoint(isbn[4])+strtoint(isbn[6])+strtoint(isbn[8])+strtoint(isbn[10])+strtoint(isbn[12]))+(strtoint(isbn[1])+strtoint(isbn[3])+strtoint(isbn[5])+strtoint(isbn[7])+strtoint(isbn[9])+strtoint(isbn[11]))) mod 10;
+    if temp <> 0 then temp := 10 - temp;
+    Result := isbn + inttostr(temp);
+  end;   
 
 begin
   a := False;
@@ -459,7 +469,8 @@ begin
     if (length(s) = 13) then
       b := CheckSumISBN13(s)
     else
-      a := True;
+      if length(s) = 10 then s := convert(s)
+      else a := True;
     LbAddBookError.Visible := False;
     if not (b) then
     begin
