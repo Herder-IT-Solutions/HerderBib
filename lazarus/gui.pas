@@ -48,6 +48,7 @@ type
     CBInfoRelGrade: TComboBox;
     CBInfoRelSubject: TComboBox;
     CBInfoRelFilter: TCheckBox;
+    EdInfoStudLDAP: TEdit;
     EdRentBook: TEdit;
     EdRetBook: TEdit;
     EdAddBookName: TEdit;
@@ -67,6 +68,7 @@ type
     ImRetHerder: TImage;
     ImAddHerder: TImage;
     ImPrintHerder: TImage;
+    LbInfoStudLDAP: TLabel;
     LbInfoAdminTestmode: TLabel;
     LEInfoAdminCSV: TLabeledEdit;
     LbInfoAdminCSV: TLabel;
@@ -189,6 +191,7 @@ type
     procedure EdRetStudChange(Sender: TObject);
     procedure EdRentStudChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure LbInfoStudLDAPClick(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
@@ -278,6 +281,11 @@ begin
   PermissionLevel := 1;
   management := tmanagement.Create();
   //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
+end;
+
+procedure TForm1.LbInfoStudLDAPClick(Sender: TObject);
+begin
+
 end;
 
 
@@ -840,7 +848,7 @@ begin
       YY := SeInfoStudYear.Value;
       birth := EncodeDate(YY, MM, DD);
       EdinfoStudID.Text := IntToStr(management.SNew(EdinfoStudLastName.Text,
-        EdinfoStudFirstName.Text, EdInfoStudGrade.Text, '', birth));
+        EdinfoStudFirstName.Text, EdInfoStudGrade.Text, EdInfoStudLDAP.Text, birth));
     end;
   except
     On EConvertError do
@@ -870,6 +878,7 @@ begin
     stud.setfirstname(EdInfoStudFirstName.Text);
     stud.setclassname(EdInfoStudGrade.Text);
     stud.setBirth(birth);
+    if (EdInfoStudLDAP.text <> '') then stud.setLDAPUser(EdInfoStudLDAP.text);
     management.supdate(stud);
   except
     On EConvertError do
@@ -954,6 +963,7 @@ begin
     EdInfoStudFirstName.Text := stud.getfirstname;
     EdInfoStudLastName.Text := stud.getlastname;
     EdInfoStudGrade.Text := stud.getclassname;
+    EdInfoStudLDAP.text := stud.getLDAPuser;
 
     birth := stud.getBirth();
     DecodeDate(birth, YY, MM, DD);
