@@ -123,10 +123,10 @@ type
     LbRentBookName: TLabel;
     LbRetStudName: TLabel;
     LiPrintQueue: TListBox;
+    LBInfoBooktypeShowAll: TListBox;
     MeCredits: TMemo;
     MeInfoStudRel: TMemo;
     MeInfoRel: TMemo;
-    MeInfoBooktypeShowAll: TMemo;
     MenuItem1: TMenuItem;
     PageControl1: TPageControl;
     PCInfos: TPageControl;
@@ -296,23 +296,26 @@ begin
 end;
 
 procedure TForm1.MenuItem1Click(Sender: TObject);
-    var i : Integer;
-    var item, barcode : string;
+var
+  i: integer;
+var
+  item, barcode: string;
 begin
-    if LiPrintQueue.SelCount = 0 then exit;
+  if LiPrintQueue.SelCount = 0 then
+    exit;
 
-     for i := LiPrintQueue.Items.Count - 1 downto 0 do
-     begin
-       if not LiPrintQueue.Selected[i] then
-         continue;
+  for i := LiPrintQueue.Items.Count - 1 downto 0 do
+  begin
+    if not LiPrintQueue.Selected[i] then
+      continue;
 
-       item := LiPrintQueue.Items[i];
-       //ShowMessage(item);
-       barcode := copy(item, 1, 8);
-       //showMessage(barcode);
-       TBarcodePrinter.instance.delete_barcode(barcode);
-       LiPrintQueue.Items.delete(i);
-     end;
+    item := LiPrintQueue.Items[i];
+    //ShowMessage(item);
+    barcode := copy(item, 1, 8);
+    //showMessage(barcode);
+    TBarcodePrinter.instance.delete_barcode(barcode);
+    LiPrintQueue.Items.Delete(i);
+  end;
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -457,16 +460,21 @@ var
     check := (10 - (sum mod 10));
     Result := (check = StrToInt(isbn[13]));
   end;
-  
+
   function convert(isbn: string): string;
-  var temp: Cardinal;
+  var
+    temp: cardinal;
   begin
     setLength(isbn, 9);
     isbn := '978' + isbn;
-    temp := (3*(strtoint(isbn[2])+strtoint(isbn[4])+strtoint(isbn[6])+strtoint(isbn[8])+strtoint(isbn[10])+strtoint(isbn[12]))+(strtoint(isbn[1])+strtoint(isbn[3])+strtoint(isbn[5])+strtoint(isbn[7])+strtoint(isbn[9])+strtoint(isbn[11]))) mod 10;
-    if temp <> 0 then temp := 10 - temp;
-    Result := isbn + inttostr(temp);
-  end;   
+    temp := (3 * (StrToInt(isbn[2]) + StrToInt(isbn[4]) + StrToInt(isbn[6]) +
+      StrToInt(isbn[8]) + StrToInt(isbn[10]) + StrToInt(isbn[12])) +
+      (StrToInt(isbn[1]) + StrToInt(isbn[3]) + StrToInt(isbn[5]) + StrToInt(
+      isbn[7]) + StrToInt(isbn[9]) + StrToInt(isbn[11]))) mod 10;
+    if temp <> 0 then
+      temp := 10 - temp;
+    Result := isbn + IntToStr(temp);
+  end;
 
 begin
   a := False;
@@ -477,8 +485,10 @@ begin
     if (length(s) = 13) then
       b := CheckSumISBN13(s)
     else
-      if length(s) = 10 then s := convert(s)
-      else a := True;
+    if length(s) = 10 then
+      s := convert(s)
+    else
+      a := True;
     LbAddBookError.Visible := False;
     if not (b) then
     begin
@@ -627,7 +637,7 @@ begin
       book := management.getBookByID(StrToInt(EdInfoBookID.Text));
       stud := management.getStudentWhoRentedBook(book);
       if stud <> nil then;
-        //management.deleteRentalRelationByBook(book);
+      //management.deleteRentalRelationByBook(book);
     end;
 
   except
@@ -758,9 +768,21 @@ begin
 end;
 
 procedure TForm1.BtInfoBooktypeShowAllClick(Sender: TObject);
+var
+  btypelist: array of TBooktype;
+  len,i : CARDINAL;
+  tmp :STRING;
 begin
-
-  MeInfoBooktypeShowAll.Lines.Clear;
+  i := 1;
+  LBInfoBooktypeShowAll.Items.Clear;
+  btypelist := management.getBooktypes;
+  len:= Length(btypelist);
+  while i<len+1 do
+  begin
+    tmp:= BTypeList[i].getISBN + '' + BTypeList[i].getTitle;
+    LBInfoBooktypeShowAll.Items.Add(tmp);
+    INC(i);
+  end;
 end;
 
 procedure TForm1.BtInfoBooktypeShowClick(Sender: TObject);
@@ -836,7 +858,7 @@ end;
 procedure TForm1.BtInfoStudCreateClick(Sender: TObject);
 //sollte nur dem admin möglich sein
 var
-   YY, MM, DD: word;
+  YY, MM, DD: word;
   birth: TDate;
 begin
   try
@@ -878,7 +900,8 @@ begin
     stud.setfirstname(EdInfoStudFirstName.Text);
     stud.setclassname(EdInfoStudGrade.Text);
     stud.setBirth(birth);
-    if (EdInfoStudLDAP.text <> '') then stud.setLDAPUser(EdInfoStudLDAP.text);
+    if (EdInfoStudLDAP.Text <> '') then
+      stud.setLDAPUser(EdInfoStudLDAP.Text);
     management.supdate(stud);
   except
     On EConvertError do
@@ -963,7 +986,7 @@ begin
     EdInfoStudFirstName.Text := stud.getfirstname;
     EdInfoStudLastName.Text := stud.getlastname;
     EdInfoStudGrade.Text := stud.getclassname;
-    EdInfoStudLDAP.text := stud.getLDAPuser;
+    EdInfoStudLDAP.Text := stud.getLDAPuser;
 
     birth := stud.getBirth();
     DecodeDate(birth, YY, MM, DD);
@@ -1045,7 +1068,8 @@ begin
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);
-var book : TBook;
+var
+  book: TBook;
 begin
   LbRetError.Visible := False;
   try
