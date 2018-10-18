@@ -181,6 +181,7 @@ type
     procedure BtPrintClick(Sender: TObject);
     procedure BtPrintDeleteClick(Sender: TObject);
     procedure BtRentClick(Sender: TObject);
+    procedure BtRentUndoClick(Sender: TObject);
     procedure BtRetClick(Sender: TObject);
     procedure BtInfoSuportErrorClick(Sender: TObject);
     procedure BtClick(Sender: TObject);
@@ -194,9 +195,11 @@ type
     procedure LbInfoStudLDAPClick(Sender: TObject);
     procedure LbRetStudNameClick(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
     procedure PCInfosChange(Sender: TObject);
     procedure SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
     procedure SEInfoStudMonthChange(Sender: TObject);
+    procedure setFocusAuto;
     procedure TabRetContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: boolean);
   private
@@ -235,7 +238,7 @@ end;
 
 procedure TForm1.SEInfoAdminDeleteRentalsMonthChange(Sender: TObject);
 begin
-  //This procedure limits the number of days according to the month
+  //This procedure limits the number of days for each month
   case SEInfoAdminDeleteRentalsMonth.Value of
     1: SEInfoAdminDeleteRentalsDay.MaxValue := 31;
     2: SEInfoAdminDeleteRentalsDay.MaxValue := 29;
@@ -255,7 +258,7 @@ end;
 procedure TForm1.SEInfoStudMonthChange(Sender: TObject);
 begin
   case SeInfoStudMonth.Value of
-    //This procedure limits the number of days according to the month
+    //This procedure limits the number of days for each month
     1: SeInfoStudDay.MaxValue := 31;
     2: SeInfoStudDay.MaxValue := 29;
     3: SeInfoStudDay.MaxValue := 31;
@@ -280,6 +283,7 @@ begin
   // LbRentStudInstruct := 'Hello' + #13#10 + 'world';
   PermissionLevel := 1;
   management := tmanagement.Create();
+
   //management := TVerwaltung.create(SQLQuery,SQLTransaction,SQLite3Connection)
 end;
 
@@ -316,6 +320,29 @@ begin
     TBarcodePrinter.instance.delete_barcode(barcode);
     LiPrintQueue.Items.Delete(i);
   end;
+end;
+
+
+procedure TForm1.setFocusAuto;
+begin
+  if(PageControl1.TabIndex = 0) then
+       EdRentStud.setFocus;
+    if(PageControl1.TabIndex = 1) then
+       EdRetStud.setFocus;
+    if(PageControl1.TabIndex = 2) then
+       EdAddBookName.setFocus;
+    if((PageControl1.TabIndex = 4) AND (PCInfos.TabIndex=0)) then
+       EdInfoStudID.setFocus;
+    if((PageControl1.TabIndex = 4) AND (PCInfos.TabIndex=1)) then
+       EdInfoBookID.setFocus;
+    if((PageControl1.TabIndex = 4) AND (PCInfos.TabIndex=3)) then
+       EdInfoBooktypeISBN.setFocus;
+end;
+
+
+procedure TForm1.PageControl1Change(Sender: TObject);
+begin
+   setFocusAuto;
 end;
 
 procedure TForm1.confirmNumbers(Sender: TObject; var Key: char);
@@ -1065,6 +1092,11 @@ begin
         'Fehler 3: Eines der erforderlichen Felder enthaelt kein gültiges Datum';
     end;
   end;
+end;
+
+procedure TForm1.BtRentUndoClick(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.BtRetClick(Sender: TObject);

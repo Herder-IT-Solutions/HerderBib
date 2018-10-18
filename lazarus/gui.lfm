@@ -11583,6 +11583,7 @@ object Form1: TForm1
     ActivePage = TabRent
     TabIndex = 0
     TabOrder = 0
+    OnChange = PageControl1Change
     object TabRent: TTabSheet
       Caption = 'Ausleihen'
       ClientHeight = 572
@@ -17202,17 +17203,18 @@ object Form1: TForm1
         Width = 215
         Caption = 'Letztes Ausleihen rückgängig machen'
         Enabled = False
+        OnClick = BtRentUndoClick
         TabOrder = 3
       end
     end
     object TabRet: TTabSheet
       Caption = 'Zurückgeben'
-      ClientHeight = 574
+      ClientHeight = 572
       ClientWidth = 774
       OnContextPopup = TabRetContextPopup
       object EdRetStud: TEdit
         Left = 8
-        Height = 21
+        Height = 23
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'#13#10'alternativ den Nutzernamen des Schülers.'
         Top = 40
         Width = 408
@@ -17223,7 +17225,7 @@ object Form1: TForm1
       end
       object EdRetBook: TEdit
         Left = 8
-        Height = 21
+        Height = 23
         Hint = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentfikationsnummer ein.'#13#10'Scannen Sie hierfür den Barcode. '
         Top = 104
         Width = 408
@@ -17234,17 +17236,17 @@ object Form1: TForm1
       end
       object LbRetStudInstruct: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 16
-        Width = 400
+        Width = 447
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Schüleridentifikationsnummer ein.'
         ParentColor = False
       end
       object LbRetBookInstruct: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 80
-        Width = 388
+        Width = 435
         Caption = 'Bitte tragen Sie hier mit dem Barcode-Scanner die Buchidentifikationsnummer ein.'
         ParentColor = False
       end
@@ -17289,7 +17291,7 @@ object Form1: TForm1
       end
       object LbRetBookTrack1: TLabel
         Left = 16
-        Height = 13
+        Height = 15
         Top = 208
         Width = 6
         Caption = '1'
@@ -17297,7 +17299,7 @@ object Form1: TForm1
       end
       object LbRetBookTrack5: TLabel
         Left = 265
-        Height = 13
+        Height = 15
         Top = 208
         Width = 6
         Caption = '5'
@@ -17305,7 +17307,7 @@ object Form1: TForm1
       end
       object LbRetBookTrack3: TLabel
         Left = 141
-        Height = 13
+        Height = 15
         Top = 208
         Width = 6
         Caption = '3'
@@ -17313,17 +17315,17 @@ object Form1: TForm1
       end
       object LbRetBookState: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 152
-        Width = 171
+        Width = 189
         Caption = 'Zustand des Buches (in Schulnoten)'
         ParentColor = False
       end
       object LbRetError: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 280
-        Width = 52
+        Width = 55
         Caption = 'LbRetError'
         ParentColor = False
         Visible = False
@@ -22869,11 +22871,11 @@ object Form1: TForm1
     end
     object TabAdd: TTabSheet
       Caption = 'Einpflegen'
-      ClientHeight = 574
+      ClientHeight = 572
       ClientWidth = 774
       object EdAddBookName: TEdit
         Left = 232
-        Height = 21
+        Height = 23
         Hint = 'Bitte geben Sie den Namen des Buches ein.'#13#10'Strukturieren Sie ihn wiefolgt:'#13#10'"Name Klasse, Verlag"'
         Top = 8
         Width = 512
@@ -22883,7 +22885,7 @@ object Form1: TForm1
       end
       object EdAddBookISBN: TEdit
         Left = 232
-        Height = 21
+        Height = 23
         Hint = 'Bitte geben Sie die ISBN des Buches ein. Diese finden Sie auf dem Buchrücken und ist 13 Ziffern lang.'
         Top = 40
         Width = 512
@@ -22896,7 +22898,7 @@ object Form1: TForm1
       end
       object SEAddBookQuantity: TSpinEdit
         Left = 232
-        Height = 21
+        Height = 23
         Top = 104
         Width = 50
         TabOrder = 2
@@ -22942,33 +22944,33 @@ object Form1: TForm1
       end
       object LbAddBookName: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 16
-        Width = 197
+        Width = 218
         Caption = 'Bitte geben Sie den Namen des Buchs ein'
         ParentColor = False
       end
       object LbAddBookISBN: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 48
-        Width = 183
+        Width = 200
         Caption = 'Bitte geben Sie die ISBN des Buchs ein'
         ParentColor = False
       end
       object LbAddBookQuantity: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 112
-        Width = 141
+        Width = 155
         Caption = 'Bitte geben Sie die Anzahl ein'
         ParentColor = False
       end
       object LbAddBookSubject: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 80
-        Width = 142
+        Width = 153
         Caption = 'Bitte wählen Sie das Fach aus'
         ParentColor = False
       end
@@ -22986,19 +22988,19 @@ object Form1: TForm1
       end
       object LbAddBookError: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 176
-        Width = 59
+        Width = 64
         Caption = 'Keine Fehler'
         ParentColor = False
         Visible = False
       end
       object LbAddBookHint: TLabel
         Left = 8
-        Height = 13
+        Height = 15
         Top = 200
-        Width = 432
-        Caption = 'Bitte beachten Sie das die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
+        Width = 472
+        Caption = 'Bitte beachten Sie dass die ISBN ohne Bindestriche eingegeben wird und 13 Ziffern lang ist.'
         ParentColor = False
       end
       object ImAddHerder: TImage
@@ -34720,7 +34722,7 @@ object Form1: TForm1
         end
         object TabCreditsHelp: TTabSheet
           Caption = 'Impressum und Hilfe'
-          ClientHeight = 550
+          ClientHeight = 548
           ClientWidth = 768
           object MeCredits: TMemo
             Left = 424
@@ -34768,13 +34770,14 @@ object Form1: TForm1
               'Icon: https://icons8.com/'
             )
             ReadOnly = True
+            ScrollBars = ssAutoVertical
             TabOrder = 0
           end
           object LbInfoSupport: TLabel
             Left = 8
-            Height = 13
+            Height = 15
             Top = 8
-            Width = 399
+            Width = 444
             Caption = 'Für generelle Hilfestellungen besuchen Sie bitte die Dokumentation des Programms.'
             ParentColor = False
           end
@@ -34789,18 +34792,18 @@ object Form1: TForm1
           end
           object LbInfoSupport2: TLabel
             Left = 8
-            Height = 39
+            Height = 45
             Top = 87
-            Width = 322
-            Caption = 'Im äußersten Notfall könenn Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
+            Width = 359
+            Caption = 'Im äußersten Notfall können Sie sich auch an den Administrator'#13#10' wenden. Nur der Administrator hat die Möglichkeit Schülerdaten zu'#13#10'verändern bzw. Schüler hinzuzufügen und zu löschen.'
             ParentColor = False
           end
           object LbInfoSupportError: TLabel
             Left = 8
-            Height = 39
+            Height = 45
             Top = 144
-            Width = 365
-            Caption = 'Wenn Sie auf einen Fehler gestoßen sind den Sie sich nicht erklären können,'#13#10'merken Sie sich den Fehlercode und klicken Sie auf die Schaltfläche. '#13#10'Dort finden Sie weitere Informationen.'
+            Width = 402
+            Caption = 'Wenn Sie auf einen Fehler gestoßen sind, den Sie sich nicht erklären können,'#13#10'merken Sie sich den Fehlercode und klicken Sie auf die Schaltfläche. '#13#10'Dort finden Sie weitere Informationen.'
             ParentColor = False
           end
           object BtInfoSuportError: TButton
@@ -34814,9 +34817,9 @@ object Form1: TForm1
           end
           object LbInfoSupportLicense: TLabel
             Left = 8
-            Height = 39
+            Height = 45
             Top = 240
-            Width = 252
+            Width = 271
             Caption = 'Dieses Projekt steht unter der CC-BY-SA-4.0  Lizenz '#13#10'(Creative Commons Attribution Share Alike 4.0). '#13#10'Mehr Informationen finden Sie hier.'
             ParentColor = False
           end
